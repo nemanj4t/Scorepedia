@@ -15,6 +15,6 @@ use Ahsan\Neo4j\Facade\Cypher;
 
 
 Route::get('/', function () {
-    dd(Cypher::run("MATCH (n) RETURN n"));
+    //dd(Cypher::run("MATCH (n) RETURN n"));
     return view('welcome');
 });
