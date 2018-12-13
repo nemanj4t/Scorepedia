@@ -10472,3 +10472,12 @@ a.text-dark:focus {
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
+/*----------------------------*/
+
+#img {
+  max-width: 50px;
+  max-height: 50px;
+  align-content: center;
+  alignment: center;
+  align-self: center;
+}
