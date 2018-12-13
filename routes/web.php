@@ -13,11 +13,17 @@
 
 use Ahsan\Neo4j\Facade\Cypher;
 
+/*funkcija za vracanje propertija iz recorda $record->getPropertiesOfNode() */
+/*funkcija za vracanje Id-a iz recorda $record->getIdOfNode() */
 
 Route::get('/', function () {
-    //dd(Cypher::run("MATCH (n) RETURN n"));
     return view('welcome');
 });
+//Admin
+Route::get('/admin', "Auth\LoginController@showLoginForm");
+Route::post('/admin', "Auth\LoginController@login")->name('login');
+Route::post('/logout', "Auth\LoginController@logout")->name('logout');
+Route::get('/apanel', "AdminController@index");
 
 // TeamController
 Route::get('/teams', "TeamController@index");          // prikaz svih timova
