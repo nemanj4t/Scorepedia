@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Ahsan\Neo4j\Facade\Cypher;
 
 class PlayerController extends Controller
 {
@@ -11,9 +12,25 @@ class PlayerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+    }
+
     public function index()
     {
-        //
+        $result = Cypher::run("MATCH (n:Player) RETURN n");
+        $players = [];
+
+        foreach($result->getRecords() as $record)
+        {
+            $properties_array = $record->getPropertiesOfNode();
+            $id_array = ["id" =>  $record->getIdOfNode()];
+            $player = array_merge($properties_array, $id_array);
+            array_push($players, $player);
+        }
+
+        return view('players.index', compact('players'));
     }
 
     /**
@@ -23,7 +40,8 @@ class PlayerController extends Controller
      */
     public function create()
     {
-        //
+        // Ako je korisnik ulogovans
+        return view('players.create');
     }
 
     /**
@@ -34,7 +52,7 @@ class PlayerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -45,7 +63,11 @@ class PlayerController extends Controller
      */
     public function show($id)
     {
-        //
+        $result = Cypher::Run("MATCH (n:Player) WHERE ID(n) = $id return n")->getRecords()[0];
+        $properties = $result->getPropertiesOfNode();
+        $player = array_merge(["id" => $result->getIdOfNode()], $properties);
+
+        return view('players.show', compact('player'));
     }
 
     /**
