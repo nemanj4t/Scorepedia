@@ -42,7 +42,6 @@
 
                         </div><!-- END tab-content -->
                     </div>
-
                     <div class="panel-footer text-center">
                         <ul class="pagination">
                             <li ><a>«</a></li>

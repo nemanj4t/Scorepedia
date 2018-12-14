@@ -14,7 +14,7 @@ class TeamController extends Controller
      */
     public function index()
     {
-        $result = Cypher::run("MATCH (n:Team) RETURN n");
+        $result = Cypher::run("MATCH (n:TEAM) RETURN n");
         $teams = [];
 
         foreach($result->getRecords() as $record)
@@ -25,7 +25,7 @@ class TeamController extends Controller
             array_push($teams, $team);
         }
 
-        return view('teams', [
+        return view('teams/show', [
            'teams' => $teams]
         );
     }
@@ -38,6 +38,18 @@ class TeamController extends Controller
     public function create()
     {
         //
+        $result = Cypher::run("MATCH (n:Coach)
+                               WHERE NOT ()-[:TEAM_COACH]->(n)
+                               RETURN n");
+        $coaches = [];
+        foreach ($result->getRecords() as $record)
+        {
+            $properties_array = $record->getPropertiesOfNode();
+            $id_array = ["id" =>  $record->getIdOfNode()];
+            $coach = array_merge($properties_array, $id_array);
+            array_push($coaches, $coach);
+        }
+        return view('teams/create',  compact('coaches', $coaches));
     }
 
     /**
@@ -49,6 +61,15 @@ class TeamController extends Controller
     public function store(Request $request)
     {
         //
+        Cypher::run("CREATE ($request[short_name]:TEAM {name: '$request[name]', short_name: '$request[short_name]',
+                    city: '$request[city]', description: '$request[description]', image: '$request[image]'})");
+
+
+        Cypher::run("MATCH (a:TEAM), (b:Coach)
+                    WHERE a.name = '$request[name]' and ID(b) = $request[coach]
+                    CREATE (a)-[r:TEAM_COACH]->(b)");
+
+        return redirect('/teams');
     }
 
     /**

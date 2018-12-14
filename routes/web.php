@@ -26,9 +26,10 @@ Route::post('/logout', "Auth\LoginController@logout")->name('logout');
 Route::get('/apanel', "AdminController@index");
 
 // TeamController
+Route::get('/teams/create', "TeamController@create");   // pogled za kreiranje tima (zasto je ova ruta morala da se prebaci na vrh?!)
 Route::get('/teams', "TeamController@index");          // prikaz svih timova
 Route::get('/teams/{team}', "TeamController@show");    // prikaz konkretnog tima
-Route::get('/teams/create', "TeamController@create");  // pogled za kreiranje tima
+
 Route::post('/teams', "TeamController@store");          // usnimanje kreiranog tima
 Route::put('/teams/{team}', "TeamController@update");
 Route::delete('/teams', "TeamController@destroy");
