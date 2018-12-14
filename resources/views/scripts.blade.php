@@ -1,13 +1,3 @@
-@extends('layouts.app')
-
-@section('content')
-
-    {{--Unos liste timova za koje igrac igrac igra ili je igrao--}}
-    <div id="input-container" class="list-group">
-        <input type="text" name="team" id="team_0" onkeyup="addNewInput(this)" class="list-group-item"/>
-    </div>
-
-@endsection
 
 @section('scripts')
     <script>
@@ -18,7 +8,8 @@
             } else if (element.nextElementSibling)
                 return;
             let newInput = element.cloneNode();
-            newInput.id = newInput.name + '_' + (parseInt(element.id.substring(element.id.indexOf('_') + 1)) + 1);
+            let inputType = newInput.id.split('_');
+            newInput.id = inputType + '_' + (parseInt(element.id.substring(element.id.indexOf('_') + 1)) + 1);
             newInput.value = '';
             element.parentNode.appendChild(newInput);
         }
