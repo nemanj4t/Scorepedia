@@ -12,11 +12,6 @@ class PlayerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
-    public function __construct()
-    {
-    }
-
     public function index()
     {
         $result = Cypher::run("MATCH (n:Player) RETURN n");
@@ -77,7 +72,8 @@ class PlayerController extends Controller
         // 2. Preporuka za slicne igrace
         // 3. Mozda za svaki tim da se prikazu saigraci sa kojima je igrao u tom trenutku
 
-        return view('players.show', compact('player'));
+        dd($player);
+        //return view('players.show', compact('player'));
     }
 
     /**
@@ -88,7 +84,11 @@ class PlayerController extends Controller
      */
     public function edit($id)
     {
-        //
+        $result = Cypher::Run("MATCH (n:Player) WHERE ID(n) = $id return n")->getRecords()[0];
+        $properties = $result->getPropertiesOfNode();
+        $player = array_merge(["id" => $result->getIdOfNode()], $properties);
+
+        return view('players.edit', compact('player'));
     }
 
     /**
@@ -100,7 +100,18 @@ class PlayerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // Prva tri inputa su: method, token, id
+        //$updatedProps = json_encode(array_slice($request->all(), 3));
+
+        Cypher::Run("MATCH (n:Player) WHERE ID(n) = $id SET n = {
+            name: '$request[name]',
+            bio: '$request[bio]',
+            height: '$request[height]',
+            weight: '$request[weight]',
+            city: '$request[city]',
+            image: '$request[image]'}");
+
+        return redirect('/players');
     }
 
     /**
