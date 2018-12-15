@@ -68,12 +68,35 @@ class PlayerController extends Controller
         $properties = $result->getPropertiesOfNode();
         $player = array_merge(["id" => $result->getIdOfNode()], $properties);
 
-        // 1. Fali prikaz svih timova za koje je igrao kao i trenutni tim
+        // Svi timovi za koje je igrao
+        $teamsResult = Cypher::Run("MATCH (n:Player)-[r:PLAYS_FOR_TEAM]-(t:Team) WHERE ID(n) = $id return r, t");
+        $plays_for_teams = [];
+        foreach($teamsResult->getRecords() as $record)
+        {
+            // Vraca vrednosti za tim za koji igrac igra
+            $team = $record->nodeValue('t');
+            $team_props = $team->values();
+            $team_id = ["id" => $team->identity()];
+
+            // Vraca vrednosti za relaciju PLAYS_FOR_TEAM
+            $relationship = $record->relationShipValue('r');
+            $relationship_props = $relationship->values();
+            $relationship_id = ["id" => $relationship->identity()];
+
+            // Spaja kljuceve i propertije
+            $team = array_merge($team_props, $team_id);
+            $plays_for_team = array_merge($relationship_props, $relationship_id);
+
+            // Niz koji sadrzi relaciju i tim
+            $plays = ['plays_for' => $plays_for_team, 'team' => $team];
+
+            array_push($plays_for_teams, $plays);
+        }
+
         // 2. Preporuka za slicne igrace
         // 3. Mozda za svaki tim da se prikazu saigraci sa kojima je igrao u tom trenutku
 
-        dd($player);
-        //return view('players.show', compact('player'));
+        return view('players.show', compact('player'), compact('plays_for_teams'));
     }
 
     /**
