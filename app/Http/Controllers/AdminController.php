@@ -30,7 +30,7 @@ class AdminController extends Controller
         $result = Cypher::run("MATCH (n:$active) RETURN n");
         $data = [];
         switch ($active) {
-            case "TEAM":
+            case "Team":
                 foreach($result->getRecords() as $record) {
                     $id = $record->getIdOfNode();
                     $properties = $record->getPropertiesOfNode();

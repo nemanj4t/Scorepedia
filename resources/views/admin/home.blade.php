@@ -44,7 +44,7 @@
                         <a class="nav-link {{$active == 'Overview' ? "active" : ""}}" href="/apanel">Overview </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{$active == 'TEAM' ? "active" : ""}}" href="/apanel?active=TEAM&route=teams">Teams </a>
+                        <a class="nav-link {{$active == 'Team' ? "active" : ""}}" href="/apanel?active=Team&route=teams">Teams </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{$active == 'Player' ? "active" : ""}}" href="/apanel?active=Player&route=players">Players </a>
