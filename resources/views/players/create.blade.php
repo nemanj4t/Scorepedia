@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container" class="col-xs-1 center-block">
         <div class="col-sm-7">
             <div class="card">
                 <div class="card-body">
@@ -71,8 +71,12 @@
                 }
             }
             if (!hasValue) {
-                parent.parentNode.removeChild(parent);
-                return;
+                if(parent.parentNode.children.length === 1) {
+                    return;
+                } else {
+                    parent.parentNode.removeChild(parent);
+                    return;
+                }
             } else if (parent.nextElementSibling)
                 return;
 
