@@ -47593,7 +47593,7 @@ var staticRenderFns = [
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
               _vm._v(
-                "\r\n                        I'm an example component.\r\n                    "
+                "\n                        I'm an example component.\n                    "
               )
             ])
           ])
