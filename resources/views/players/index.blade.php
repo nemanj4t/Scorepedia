@@ -6,7 +6,7 @@
     <!------ Include the above in your HEAD tag ---------->
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/lumen/bootstrap.min.css">
+
     <link rel="stylesheet" href="https://daneden.github.io/animate.css/animate.min.css">
 
     <div class="container" style="margin-top:20px;">
