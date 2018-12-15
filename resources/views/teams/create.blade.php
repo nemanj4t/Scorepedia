@@ -33,7 +33,11 @@
                         </div>
                         <div class="form-group">
                             <label>Image url</label>
-                            <input type="textarea" class="form-control" name="image" placeholder="url">
+                            <input type="text" class="form-control" name="image" placeholder="url">
+                        </div>
+                        <div class="form-group">
+                            <label>Background image url</label>
+                            <input type="text" class="form-control" name="background_image" placeholder="url">
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
