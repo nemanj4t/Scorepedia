@@ -52,7 +52,13 @@ class PlayerController extends Controller
      */
     public function store(Request $request)
     {
+        //
+        Cypher::run("CREATE (:Player {name: '$request[name]', height: '$request[height]', 
+            weight: '$request[weight]', city: '$request[city]', bio: '$request[bio]', image: '$request[image]'})");
 
+        // Ovde fali dodavanje globalne statistike za novog igraca u redis
+
+        return redirect('/players');
     }
 
     /**
@@ -66,6 +72,10 @@ class PlayerController extends Controller
         $result = Cypher::Run("MATCH (n:Player) WHERE ID(n) = $id return n")->getRecords()[0];
         $properties = $result->getPropertiesOfNode();
         $player = array_merge(["id" => $result->getIdOfNode()], $properties);
+
+        // 1. Fali prikaz svih timova za koje je igrao kao i trenutni tim
+        // 2. Preporuka za slicne igrace
+        // 3. Mozda za svaki tim da se prikazu saigraci sa kojima je igrao u tom trenutku
 
         return view('players.show', compact('player'));
     }
@@ -101,6 +111,11 @@ class PlayerController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Brise cvor i sve njegove veze
+        Cypher::Run("MATCH (n:Player) WHERE ID(n) = $id DETACH DELETE n");
+
+        // Fali brisanje tog cvora iz redisa
+
+        return redirect('/players');
     }
 }

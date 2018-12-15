@@ -30,7 +30,7 @@
                                     <tbody>
                                     @foreach ($players as $player)
                                         <tr class="ok">
-                                            <td class="avatar"><img id="img" src={{$player['image']}}></td>
+                                            <td class="avatar"><img id="img" class="avatar" src={{$player['image']}}></td>
                                             <td><a href="/players/{{$player['id']}}">{{$player['name']}}</a></td>
                                             <td>{{$player['bio']}}</td>
                                             <td>{{$player['height']}} cm</td>
