@@ -25,9 +25,7 @@ class TeamController extends Controller
             array_push($teams, $team);
         }
 
-        return view('teams/show', [
-           'teams' => $teams]
-        );
+        return view('teams.index', compact('teams', $teams));
     }
 
     /**
@@ -49,7 +47,7 @@ class TeamController extends Controller
             $coach = array_merge($properties_array, $id_array);
             array_push($coaches, $coach);
         }
-        return view('teams/create',  compact('coaches', $coaches));
+        return view('teams.create',  compact('coaches', $coaches));
     }
 
     /**
@@ -61,8 +59,13 @@ class TeamController extends Controller
     public function store(Request $request)
     {
         //
+
         Cypher::run("CREATE ($request[short_name]:Team {name: '$request[name]', short_name: '$request[short_name]',
                     city: '$request[city]', description: '$request[description]', image: '$request[image]'})");
+
+        Cypher::run("CREATE ($request[short_name]:Team {name: '$request[name]', short_name: '$request[short_name]',
+                    city: '$request[city]', description: '$request[description]', image: '$request[image]', background_image: '$request[background_image]'})");
+
 
 
         Cypher::run("MATCH (a:Team), (b:Coach)
@@ -80,7 +83,24 @@ class TeamController extends Controller
      */
     public function show($id)
     {
-        //
+
+        $result = Cypher::run("MATCH (a:Team), (b:Coach) WHERE ID(a) = $id and (a)-[:TEAM_COACH]->(b) RETURN b")->getRecords()[0];
+        $coach = array_merge($result->getPropertiesOfNode(), ["id" => $result->getIdOfNode()]);
+
+        $result = Cypher::run("MATCH (n:Team), (p:Player) WHERE ID(n) = $id and (n)-[:TEAM_PLAYER]-(p) RETURN p");
+        $players = [];
+        foreach($result->getRecords() as $record)
+        {
+            $properties_array = $record->getPropertiesOfNode();
+            $id_array = ["id" =>  $record->getIdOfNode()];
+            $player = array_merge($properties_array, $id_array);
+            array_push($players, $player);
+        };
+
+        $result = Cypher::run("MATCH (a:Team) WHERE ID(a) = $id RETURN a")->getRecords()[0];
+        $team = $result->getPropertiesOfNode();
+
+        return view('teams.show', compact('players', 'coach', 'team'));
     }
 
     /**
