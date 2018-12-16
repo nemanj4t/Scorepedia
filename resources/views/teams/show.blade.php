@@ -85,16 +85,19 @@
             </div>
             <div class="col-md-6">
                 <div class="row">
-                    @for($i = 0; $i<3; $i++)
+                    @foreach($players as $key => $player)
+                        @if($key == 3)
+                            @break
+                        @endif
                         <div class="col-md-4">
                             <div class="team-members">
                                 <div class="team-avatar">
-                                    <img class="img-responsive img-thumbnail" style="max-height: 250px;" src={{$players[$i]['image']}} alt="">
+                                    <img class="img-responsive img-thumbnail" style="max-height: 250px;" src={{$player['image']}} alt="">
                                 </div>
-                                <a href="/players/{{$players[$i]['id']}}">
+                                <a href="/players/{{$player['id']}}">
                                     <div class="team-desc">
-                                        <h4>{{$players[$i]['name']}}</h4>
-                                        <span>Height: {{$players[$i]['height']}} cm</span>
+                                        <h4>{{$player['name']}}</h4>
+                                        <span>Height: {{$player['height']}} cm</span>
                                     </div>
                                 </a>
                             </div>
@@ -103,36 +106,27 @@
                                 </div>
                             </div>
                         </div>
-                    @endfor
+                    @endforeach
                 </div>
+                @if(count($players) > 3)
                 <div class="row" style="justify-content: center">
-                    <div class="col-sm-4 col-sm-offset-2">
-                        <div class="team-members">
-                            <div class="team-avatar">
-                                <img class="img-responsive img-thumbnail" style="max-height: 250px;" src={{$players[3]['image']}} alt="">
-                            </div>
-                            <a href="/players/{{$players[3]['id']}}">
-                                <div class="team-desc">
-                                    <h4>{{$players[3]['name']}}</h4>
-                                    <span>Height: {{$players[3]['height']}} cm</span>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
+                    @for($i=3; $i < 5; $i++)
                     <div class="col-sm-4">
                         <div class="team-members">
                             <div class="team-avatar">
-                                <img class="img-responsive img-thumbnail" style="max-height: 250px;" src={{$players[4]['image']}} alt="">
+                                <img class="img-responsive img-thumbnail" style="max-height: 250px;" src={{$players[$i]['image']}} alt="">
                             </div>
-                            <a href="/players/{{$players[4]['id']}}">
+                            <a href="/players/{{$players[$i]['id']}}">
                                 <div class="team-desc">
-                                    <h4>{{$players[4]['name']}}</h4>
-                                    <span>Height: {{$players[4]['height']}} cm</span>
+                                    <h4>{{$players[$i]['name']}}</h4>
+                                    <span>Height: {{$players[$i]['height']}} cm</span>
                                 </div>
                             </a>
                         </div>
                     </div>
+                    @endfor
                 </div><!-- //end row -->
+                @endif
             </div>
         </div>
     </div>
