@@ -106,7 +106,6 @@
                                             </div>
                                         </div>
                                         <hr />
-
                                     </div>
                                     {{--Teams tab--}}
                                     <div class="tab-pane fade" id="teams" role="tabpanel" aria-labelledby="teams-tab">

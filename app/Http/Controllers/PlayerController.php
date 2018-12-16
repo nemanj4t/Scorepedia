@@ -70,11 +70,11 @@ class PlayerController extends Controller
         $player = array_merge(["id" => $result->getIdOfNode()], $properties);
 
         // Svi timovi za koje je igrao
-        $teamsResult = Cypher::Run("MATCH (n:Player)-[r:PLAYS_FOR_TEAM]-(t:Team) WHERE ID(n) = $id return r, t");
+        $teamsResult = Cypher::Run("MATCH (n:Player)-[r:PLAYS_FOR_TEAM]-(t:Team) WHERE ID(n) = $id return r, t
+                      ORDER BY r.until DESC");
+
         $plays_for_teams = [];
-        $current_team = [];
-        foreach($teamsResult->getRecords() as $record)
-        {
+        foreach ($teamsResult->getRecords() as $record) {
             // Vraca vrednosti za tim za koji igrac igra
             $team = $record->nodeValue('t');
             $team_props = $team->values();
@@ -84,11 +84,6 @@ class PlayerController extends Controller
             $relationship = $record->relationShipValue('r');
             $relationship_props = $relationship->values();
             $relationship_id = ["id" => $relationship->identity()];
-            if(!isset($relationship_props['until']))
-            {
-                $current_team = array_merge($relationship_props, $relationship_id);
-            }
-
 
             // Spaja kljuceve i propertije
             $team = array_merge($team_props, $team_id);
@@ -100,23 +95,23 @@ class PlayerController extends Controller
             array_push($plays_for_teams, $plays);
         }
 
-        // Vraca igrace koji su igrali na toj poziciji
-        $recommendedResult = Cypher::Run("MATCH (n:Player)-[r:PLAYS_FOR_TEAM]-() WHERE r.position = '" . $current_team['position'] .
-            "' AND ID(n) <> " . $player['id'] . " return distinct n LIMIT 5");
         $recPlayers = [];
-        foreach($recommendedResult->getRecords() as $record)
-        {
-            $props_array = $record->getPropertiesOfNode();
-            $id_array = ["id" =>  $record->getIdOfNode()];
-            $recPlayer = array_merge($props_array, $id_array);
+        if (!empty($plays_for_teams)) {
+            // Vraca igrace koji su igrali na toj poziciji
+            $recommendedResult = Cypher::Run("MATCH (n:Player)-[r:PLAYS_FOR_TEAM]-() 
+                WHERE r.position = '" . $plays_for_teams[0]['plays_for']['position'] .
+                "' AND ID(n) <> " . $player['id'] . " return distinct n LIMIT 5");
 
-            array_push($recPlayers, $recPlayer);
+            foreach ($recommendedResult->getRecords() as $record) {
+                $props_array = $record->getPropertiesOfNode();
+                $id_array = ["id" => $record->getIdOfNode()];
+                $recPlayer = array_merge($props_array, $id_array);
+
+                array_push($recPlayers, $recPlayer);
+            }
         }
 
-        return view('players.show',
-            compact('player'),
-            compact('plays_for_teams'),
-            compact('recPlayers'));
+        return view('players.show', compact('player', 'plays_for_teams', 'recPlayers'));
     }
 
     /**
