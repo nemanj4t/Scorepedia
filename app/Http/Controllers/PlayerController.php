@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Ahsan\Neo4j\Facade\Cypher;
+use Carbon\Facade;
 
 class PlayerController extends Controller
 {
@@ -71,6 +72,7 @@ class PlayerController extends Controller
         // Svi timovi za koje je igrao
         $teamsResult = Cypher::Run("MATCH (n:Player)-[r:PLAYS_FOR_TEAM]-(t:Team) WHERE ID(n) = $id return r, t");
         $plays_for_teams = [];
+        $current_team = [];
         foreach($teamsResult->getRecords() as $record)
         {
             // Vraca vrednosti za tim za koji igrac igra
@@ -82,6 +84,11 @@ class PlayerController extends Controller
             $relationship = $record->relationShipValue('r');
             $relationship_props = $relationship->values();
             $relationship_id = ["id" => $relationship->identity()];
+            if(!isset($relationship_props['until']))
+            {
+                $current_team = array_merge($relationship_props, $relationship_id);
+            }
+
 
             // Spaja kljuceve i propertije
             $team = array_merge($team_props, $team_id);
@@ -93,10 +100,23 @@ class PlayerController extends Controller
             array_push($plays_for_teams, $plays);
         }
 
-        // 2. Preporuka za slicne igrace
-        // 3. Mozda za svaki tim da se prikazu saigraci sa kojima je igrao u tom trenutku
+        // Vraca igrace koji su igrali na toj poziciji
+        $recommendedResult = Cypher::Run("MATCH (n:Player)-[r:PLAYS_FOR_TEAM]-() WHERE r.position = '" . $current_team['position'] .
+            "' AND ID(n) <> " . $player['id'] . " return distinct n LIMIT 5");
+        $recPlayers = [];
+        foreach($recommendedResult->getRecords() as $record)
+        {
+            $props_array = $record->getPropertiesOfNode();
+            $id_array = ["id" =>  $record->getIdOfNode()];
+            $recPlayer = array_merge($props_array, $id_array);
 
-        return view('players.show', compact('player'), compact('plays_for_teams'));
+            array_push($recPlayers, $recPlayer);
+        }
+
+        return view('players.show',
+            compact('player'),
+            compact('plays_for_teams'),
+            compact('recPlayers'));
     }
 
     /**
