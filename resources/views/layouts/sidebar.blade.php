@@ -1,9 +1,9 @@
 <aside class="col-md-3 blog-sidebar">
 
-    {{-- Odeljak za arhive u sidebaru --}}
-    <div class="p-3">
-        <h4 class="font-italic">Simmilar players</h4>
+    {{-- Odeljak za slicne igrace sidebaru --}}
+    <div>
         <div class="container" style="margin-top:20px;">
+            <h4 class="font-italic">Simmilar players</h4>
             <div class="row">
                 <div id="user" class="col-md-12" >
                     <div class="panel panel-primary panel-table animated slideInDown">
@@ -12,12 +12,12 @@
                                 <div role="tabpanel" class="tab-pane active" id="list">
                                     <table class="table table-striped table-bordered table-list">
                                         <tbody>
-                                        {{--@foreach ($recommendedPlayers as $player)--}}
-                                            {{--<tr class="ok">--}}
-                                                {{--<td class="avatar"><img id="img" class="avatar" src={{$player['image']}}></td>--}}
-                                                {{--<td><a href="/players/{{$player['id']}}">{{$player['name']}}</a></td>--}}
-                                            {{--</tr>--}}
-                                        {{--@endforeach--}}
+                                        @foreach ($recPlayers as $player)
+                                            <tr class="ok" class="col-md-12">
+                                                <td class="avatar"><img id="img" class="avatar" src={{$player['image']}}></td>
+                                                <td><a href="/players/{{$player['id']}}">{{$player['name']}}</a></td>
+                                            </tr>
+                                        @endforeach
                                         </tbody>
                                     </table>
                                 </div><!-- END id="list" -->
