@@ -165,6 +165,6 @@ class PlayerController extends Controller
 
         // Fali brisanje tog cvora iz redisa
 
-        return redirect('/players');
+        return redirect('/apanel');
     }
 }

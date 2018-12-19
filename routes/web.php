@@ -16,9 +16,7 @@ use Ahsan\Neo4j\Facade\Cypher;
 /*funkcija za vracanje propertija iz recorda $record->getPropertiesOfNode() */
 /*funkcija za vracanje Id-a iz recorda $record->getIdOfNode() */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', "HomeController@index");
 //Admin
 Route::get('/admin', "Auth\LoginController@showLoginForm");
 Route::post('/admin', "Auth\LoginController@login")->name('login');
@@ -32,7 +30,7 @@ Route::get('/teams/{team}', "TeamController@show");    // prikaz konkretnog tima
 
 Route::post('/teams', "TeamController@store");          // usnimanje kreiranog tima
 Route::put('/teams/{team}', "TeamController@update");
-Route::delete('/teams', "TeamController@destroy");
+Route::delete('/teams/{team}', "TeamController@destroy");
 
 // PlayerController
 Route::get('/players', "PlayerController@index");          // prikaz svih igraca
@@ -41,7 +39,7 @@ Route::get('/players/edit/{player}', "PlayerController@edit");  // pogled za edi
 Route::get('/players/{player}', "PlayerController@show");  // prikaz konkretnog igraca
 Route::post('/players', "PlayerController@store");         // usnimanje kreiranog igraca
 Route::put('/players/{player}', "PlayerController@update");
-Route::delete('/players', "PlayerController@destroy");
+Route::delete('/players/{player}', "PlayerController@destroy");
 
 // CoachController
 Route::get('/coaches', "CoachController@index");             // prikaz svih trenera
@@ -49,7 +47,7 @@ Route::get('/coaches/{coach}', "CoachController@show");      // prikaz konkretno
 Route::get('/coaches/create', "CoachController@create");     // kreiranje novog trenera
 Route::post('/coaches', "CoachController@store");            // usnimanje novog trenra
 Route::put('/coaches/{coach}', "CoachController@update");
-Route::delete('/coaches', "CoachController@destroy");
+Route::delete('/coaches/{coach}', "CoachController@destroy");
 
 // MatchesController
 // Ukoliko nam mecevi nisu na home page-u

@@ -11,7 +11,6 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -19,11 +18,6 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
-    <!--teams.show-->
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 </head>
 <body>
@@ -40,10 +34,13 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
                 <ul class="navbar-nav mr-auto">
-                    <a class="p-2 text-dark" href="#">Features</a>
-                    <a class="p-2 text-dark" href="#">Enterprise</a>
-                    <a class="p-2 text-dark" href="#">Support</a>
-                    <a class="p-2 text-dark" href="#">Pricing</a>
+                    <a class="p-2 text-dark" href="/">Home</a>
+                    <a class="p-2 text-dark" href="/teams">Teams</a>
+                    <a class="p-2 text-dark" href="/players">Players</a>
+                    <a class="p-2 text-dark" href="/coaches">Coaches</a>
+                    <a class="p-2 text-dark" href="#">Standings</a>
+                    <a class="p-2 text-dark" href="#">Statistics</a>
+                    <a class="p-2 text-dark" href="#">Matches </a><img style="height: 15px" src="https://mareeg.com/wp-content/uploads/2017/02/LIVE.png">
                 </ul>
 
                 <!-- Right Side Of Navbar -->

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Ahsan\Neo4j\Facade\Cypher;
 
 class CoachController extends Controller
 {
@@ -69,6 +70,11 @@ class CoachController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Brise cvor i sve njegove veze
+        Cypher::Run("MATCH (n:Coach) WHERE ID(n) = $id DETACH DELETE n");
+
+        // Fali brisanje tog cvora iz redisa
+
+        return redirect('/apanel');
     }
 }

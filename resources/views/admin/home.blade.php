@@ -2,9 +2,18 @@
 
 @section('content')
     <style>
-        .sidebar a{
+        .sidebar {
+            padding: 0px;
+            min-height: 100vh
+        }
+
+        #container {
+
+        }
+
+        .sidebar a {
             font-size: 16px;
-            color:white;
+            color: white;
 
         }
         .counter {
@@ -36,10 +45,10 @@
             color: #4ad1e5;
         }
     </style>
-    <div class="container-fluid">
+    <div class="container-fluid" id="container">
         <div class="row">
             <nav class="col-sm-3 col-md-2 hidden-xs-down bg-dark sidebar">
-                <ul class="nav nav-pills flex-column mt-4">
+                <ul class="nav nav-pills flex-column mt-4" id="sidenav">
                     <li class="nav-item">
                         <a class="nav-link {{$active == 'Overview' ? "active" : ""}}" href="/apanel">Overview </a>
                     </li>
@@ -113,7 +122,11 @@
                             <td>{{$single_data->city}}</td>
                             <td><img class="avatar" src="{{$single_data->image}}"></td>
                             <td>
-                                <button class="btn btn-sm btn-danger float-right ml-2">Delete</button>
+                                <form action="{{$_GET['route']}}/{{$single_data->id}}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="_method" value="delete" />
+                                    <button class="btn btn-sm btn-danger float-right ml-2">Delete</button>
+                                </form>
                                 <button class="btn btn-sm btn-primary float-right">Edit</button>
                             </td>
                         </tr>

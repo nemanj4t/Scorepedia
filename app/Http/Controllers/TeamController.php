@@ -123,6 +123,11 @@ class TeamController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Brise cvor i sve njegove veze
+        Cypher::Run("MATCH (n:Team) WHERE ID(n) = $id DETACH DELETE n");
+
+        // Fali brisanje tog cvora iz redisa
+
+        return redirect('/apanel');
     }
 }
