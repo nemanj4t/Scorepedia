@@ -12,16 +12,29 @@
                             <input type="text" class="form-control" name="name"  placeholder="Enter name">
                         </div>
                         <div class="form-group">
-                            <label>Abreviation</label>
-                            <input type="text" class="form-control" name="short_name" placeholder="Abreviation">
+                            <label>Abbreviation</label>
+                            <input type="text" class="form-control" name="short_name" placeholder="Abbreviation">
                         </div>
                         <div class="form-group">
                             <label>Coach</label>
                             <select class="form-control" name="coach">
+                                <option value="" selected>No current coach</option>
                                 @foreach($coaches as $coach)
                                     <option value={{$coach['id']}}>{{$coach['name']}}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="row justify-content-center">
+                                <div class="col-md-6">
+                                    <label>Coached since:</label>
+                                    <input class="form-control" style="margin-right: 20px; float: left;" type="date" value="" name="coached_since">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Coached until: </label>
+                                    <input class="form-control" type="date" value="" name="coached_until">
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>City</label>

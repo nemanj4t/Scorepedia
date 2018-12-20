@@ -12,6 +12,27 @@
                             <input type="text" class="form-control" name="name"  placeholder="Enter name" required="required">
                         </div>
                         <div class="form-group">
+                            <label>Team:</label>
+                            <select class="form-control" name="team">
+                                <option value="" selected>No current team</option>
+                                @foreach ($teams as $team)
+                                    <option value="{{$team['id']}}">{{$team['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="row justify-content-center">
+                                <div class="col-md-6">
+                                    <label>Coached since:</label>
+                                    <input class="form-control" style="margin-right: 20px; float: left;" type="date" value="" name="coached_since">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Coached until: </label>
+                                    <input class="form-control" type="date" value="" name="coached_until">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label>Bio:</label>
                             <input type="textarea" class="form-control" name="bio" placeholder="Biography" required="required">
                         </div>
@@ -49,6 +70,7 @@
 @endsection
 
 @section('scripts')
+
     <script>
         function addNewInput(element) {
             let parent = element.parentNode;    // div u okviru koga se nalazi

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Ahsan\Neo4j\Facade\Cypher;
+use Carbon\Carbon;
 
 class TeamController extends Controller
 {
@@ -36,7 +37,7 @@ class TeamController extends Controller
     public function create()
     {
         //
-        $result = Cypher::run("MATCH (n:Coach)
+       /* $result = Cypher::run("MATCH (n:Coach)
                                WHERE NOT ()-[:TEAM_COACH]->(n)
                                RETURN n");
         $coaches = [];
@@ -47,7 +48,52 @@ class TeamController extends Controller
             $coach = array_merge($properties_array, $id_array);
             array_push($coaches, $coach);
         }
-        return view('teams.create',  compact('coaches', $coaches));
+        return view('teams.create',  compact('coaches', $coaches));*/
+
+
+        $coaches = [];
+
+        $result = Cypher::run("MATCH (c:Coach) WHERE NOT ()-[:TEAM_COACH]->(c) RETURN c");
+
+        foreach ($result->getRecords() as $record) {
+            $coach_props = $record->getPropertiesOfNode();
+            $coach = array_merge($coach_props, ['id' => $record->getIdOfNode()]);
+
+
+            array_push($coaches, $coach);
+        }
+
+
+        $result = Cypher::run("MATCH (t:Team)-[r:TEAM_COACH]-(c:Coach) RETURN c, r ORDER BY r.coached_until DESC");
+
+        foreach ($result->getRecords() as $record) {
+            $coach = $record->nodeValue('c');
+            $coach_props = $coach->values();
+            $coach_id = ["id" => $coach->identity()];
+
+            $relationship = $record->relationShipValue('r');
+            $relationship_props = $relationship->values();
+
+            $coach = array_merge($coach_props, $coach_id);
+
+
+            if (Carbon::parse($relationship_props['coached_until'])->lt(Carbon::now())) {
+                if (!in_array($coach, $coaches, true))
+                    array_push($coaches, $coach);
+            }
+
+            if (Carbon::parse($relationship_props['coached_until'])->gt(Carbon::now())) {
+                if (!in_array($coach, $coaches, true)) {
+                    if (($key = array_search($coach['id'], $coaches)) !== false) {
+                        unset($coaches[$coach['id']]);
+                    }
+                }
+            }
+
+        }
+
+        return view('teams.create', compact('coaches'));
+
     }
 
     /**
@@ -60,17 +106,16 @@ class TeamController extends Controller
     {
         //
 
-        Cypher::run("CREATE ($request[short_name]:Team {name: '$request[name]', short_name: '$request[short_name]',
-                    city: '$request[city]', description: '$request[description]', image: '$request[image]'})");
+        if($request['coach'] != null)
+            Cypher::run("MATCH (c:Coach) WHERE ID(c) = $request[coach]
+                        CREATE (t:Team {name: '$request[name]', short_name: '$request[short_name]',
+                        city: '$request[city]', description: '$request[description]', image: '$request[image]',
+                        background_image: '$request[background_image]'})-[:TEAM_COACH{coached_since: '$request[coached_since]', coached_until: '$request[coached_until]'}]->(c)");
+        else
+            Cypher::run("CREATE (t:Team {name: '$request[name]', short_name: '$request[short_name]',
+                        city: '$request[city]', description: '$request[description]', image: '$request[image]',
+                        background_image: '$request[background_image]'})");
 
-        Cypher::run("CREATE ($request[short_name]:Team {name: '$request[name]', short_name: '$request[short_name]',
-                    city: '$request[city]', description: '$request[description]', image: '$request[image]', background_image: '$request[background_image]'})");
-
-
-
-        Cypher::run("MATCH (a:Team), (b:Coach)
-                    WHERE a.name = '$request[name]' and ID(b) = $request[coach]
-                    CREATE (a)-[r:TEAM_COACH]->(b)");
 
         return redirect('/teams');
     }

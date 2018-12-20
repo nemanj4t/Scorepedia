@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use function GuzzleHttp\Psr7\str;
 use Illuminate\Http\Request;
 use Ahsan\Neo4j\Facade\Cypher;
 use Symfony\Component\HttpKernel\Tests\DependencyInjection\ContainerAwareRegisterTestController;
@@ -111,7 +112,13 @@ class CoachController extends Controller
     public function store(Request $request)
     {
         //
-        Cypher::run("CREATE (c:Coach {name: '$request[name]', bio: '$request[bio]', city: '$request[city]', image: '$request[image]'})");
+
+        if($request['team'] != null)
+            Cypher::run("MATCH (t:Team) WHERE ID(t) = $request[team]
+                        CREATE (t)-[:TEAM_COACH{coached_since: '$request[coached_since]', coached_until: '$request[coached_until]'}]->(c:Coach {name: '$request[name]', bio: '$request[bio]', city: '$request[city]', image: '$request[image]'})");
+        else
+            Cypher::run("CREATE (c:Coach {name: '$request[name]', bio: '$request[bio]', city: '$request[city]', image: '$request[image]'})");
+
         return redirect('/coaches');
     }
 
@@ -150,6 +157,7 @@ class CoachController extends Controller
 
             if (Carbon::parse($relationship_props['coached_until'])->gt(Carbon::now()))
                 $current_team = $team;
+
 
                     // Niz koji sadrzi relaciju i tim
             $coaches = ['coach_team' => $coach_team, 'team' => $team];
