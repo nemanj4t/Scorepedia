@@ -42,9 +42,9 @@ Route::put('/players/{player}', "PlayerController@update");
 Route::delete('/players/{player}', "PlayerController@destroy");
 
 // CoachController
-Route::get('/coaches', "CoachController@index");             // prikaz svih trenera
-Route::get('/coaches/{coach}', "CoachController@show");      // prikaz konkretnog trenera
-Route::get('/coaches/create', "CoachController@create");     // kreiranje novog trenera
+Route::get('/coaches', "CoachController@index");
+Route::get('/coaches/create', "CoachController@create"); // prikaz svih trenera
+Route::get('/coaches/{coach}', "CoachController@show");      // prikaz konkretnog trenera // kreiranje novog trenera
 Route::post('/coaches', "CoachController@store");            // usnimanje novog trenra
 Route::put('/coaches/{coach}', "CoachController@update");
 Route::delete('/coaches/{coach}', "CoachController@destroy");

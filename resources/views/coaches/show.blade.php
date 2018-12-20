@@ -147,6 +147,7 @@
                 </div>
             </div>
             {{--Sidebar za preporuke igraca--}}
+            @include('layouts/sidebar')
         </div>
     </div>
 

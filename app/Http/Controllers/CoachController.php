@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Ahsan\Neo4j\Facade\Cypher;
+use Symfony\Component\HttpKernel\Tests\DependencyInjection\ContainerAwareRegisterTestController;
 
 class CoachController extends Controller
 {
@@ -15,7 +16,38 @@ class CoachController extends Controller
      */
     public function index()
     {
-        //
+        $resultCoaches = Cypher::run("MATCH (c:Coach) RETURN c");
+        $coaches = [];
+        foreach ($resultCoaches->getRecords() as $record) {
+            $coach = $record->getPropertiesOfNode();
+            $coach = array_merge($coach, ['id' => $record->getIdOfNode()]);
+            $current_team = '';
+
+            $team_coach = $coachResult = Cypher::run("MATCH (t:Team)-[r:TEAM_COACH]-(c:Coach) WHERE ID(c) =". $record->getIdOfNode()." RETURN t, r
+                                    ORDER BY r.coached_until DESC");
+
+            foreach ($team_coach->getRecords() as $record) {
+                $team = $record->nodeValue('t');
+                $team_props = $team->values();
+                $team_id = ["id" => $team->identity()];
+
+                // Vraca vrednosti za relaciju TEAM_COACH
+                $relationship = $record->relationShipValue('r');
+                $relationship_props = $relationship->values();
+
+
+                // Spaja kljuceve i propertije
+                $team = array_merge($team_props, $team_id);
+
+                if (Carbon::parse($relationship_props['coached_until'])->gt(Carbon::now()))
+                    $current_team = $team;
+
+            }
+            $coach = array_merge($coach, ['team' => $current_team]);
+            array_push($coaches, $coach);
+        }
+
+        return view('coaches.index', compact('coaches'));
     }
 
     /**
@@ -26,6 +58,48 @@ class CoachController extends Controller
     public function create()
     {
         //
+        $teams = [];
+
+        $result = Cypher::run("MATCH (t:Team) WHERE NOT (t)-[:TEAM_COACH]->() RETURN t");
+
+        foreach ($result->getRecords() as $record) {
+            $team_props = $record->getPropertiesOfNode();
+            $team = array_merge($team_props, ['id' => $record->getIdOfNode()]);
+
+
+            array_push($teams, $team);
+        }
+
+
+        $result = Cypher::run("MATCH (t:Team)-[r:TEAM_COACH]-(c:Coach) RETURN t, r ORDER BY r.coached_until DESC");
+
+        foreach ($result->getRecords() as $record) {
+            $team = $record->nodeValue('t');
+            $team_props = $team->values();
+            $team_id = ["id" => $team->identity()];
+
+            $relationship = $record->relationShipValue('r');
+            $relationship_props = $relationship->values();
+
+            $team = array_merge($team_props, $team_id);
+
+
+            if (Carbon::parse($relationship_props['coached_until'])->lt(Carbon::now())) {
+                if (!in_array($team, $teams, true))
+                    array_push($teams, $team);
+            }
+
+            if (Carbon::parse($relationship_props['coached_until'])->gt(Carbon::now())) {
+                if (!in_array($team, $teams, true)) {
+                    if (($key = array_search($team['id'], $teams)) !== false) {
+                        unset($teams[$team['id']]);
+                    }
+                }
+            }
+
+        }
+
+        return view('coaches.create', compact('teams'));
     }
 
     /**
@@ -37,6 +111,8 @@ class CoachController extends Controller
     public function store(Request $request)
     {
         //
+        Cypher::run("CREATE (c:Coach {name: '$request[name]', bio: '$request[bio]', city: '$request[city]', image: '$request[image]'})");
+        return redirect('/coaches');
     }
 
     /**
@@ -52,7 +128,7 @@ class CoachController extends Controller
 
         //tim koji trenira
         $coachResult = Cypher::run("MATCH (t:Team)-[r:TEAM_COACH]-(c:Coach) WHERE ID(c) = $id RETURN t, r
-                                    ORDER BY r.until DESC");
+                                    ORDER BY r.coached_until DESC");
         $coached_teams = [];
         $current_team = '';
 
@@ -82,7 +158,28 @@ class CoachController extends Controller
         }
 
 
-        return view('coaches.show', compact('coach', 'coached_teams', 'current_team'));
+        $recPlayers = [];
+        if (!empty($coached_teams)) {
+            // Vraca trenere koji su nekada trenirali taj tim
+            if ($current_team != '') {
+                $current_team_id = $current_team['id'];
+
+                $recommendedResult = Cypher::Run("MATCH (t:Team)-[r:TEAM_COACH]-(c:Coach) 
+                WHERE ID(t) =". $current_team_id . " AND ID(c) <>" . (int)$id . " return distinct c LIMIT 5");
+
+                foreach ($recommendedResult->getRecords() as $record) {
+                    $props_array = $record->getPropertiesOfNode();
+                    $id_array = ["id" => $record->getIdOfNode()];
+                    $recPlayer = array_merge($props_array, $id_array);
+
+                    array_push($recPlayers, $recPlayer);
+                }
+            }
+
+
+        }
+
+        return view('coaches.show', compact('coach', 'coached_teams', 'current_team', 'recPlayers'));
     }
 
 
