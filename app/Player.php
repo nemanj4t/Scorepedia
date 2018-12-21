@@ -17,4 +17,6 @@ class Player extends Model
     public $bio;
     public $height;
     public $weight;
+
+
 }

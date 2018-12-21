@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Player_Team;
 use Illuminate\Http\Request;
 use Ahsan\Neo4j\Facade\Cypher;
 use Carbon\Facade;
+use App\Team;
 
 class PlayerController extends Controller
 {
@@ -37,7 +39,9 @@ class PlayerController extends Controller
     public function create()
     {
         // Ako je korisnik ulogovans
-        return view('players.create');
+        $teams = Team::getTeams();
+
+        return view('players.create', compact('teams'));
     }
 
     /**
@@ -48,9 +52,28 @@ class PlayerController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        Cypher::run("CREATE (:Player {name: '$request[name]', height: '$request[height]', 
+        Cypher::run("CREATE (:Player {name: '$request[name]', height: '$request[height]',
             weight: '$request[weight]', city: '$request[city]', bio: '$request[bio]', image: '$request[image]'})");
+
+        $result = Cypher::run("MATCH (n:Player) WHERE n.name = '$request[name]' return ID(n)")->getRecords();
+        $player_id = $result[0]->values()[0];
+        $keys_array = ["team_name", "player_number", "player_position", "player_since", "player_until"];
+
+        $count = 0;
+        // Dok ne nadje prvi input za vezu tim_igrac koji je prazan
+        while($request[$keys_array[0] . '_' . $count] != null)
+        {
+            $rel = array();
+            $rel['player_id'] = $player_id;
+            foreach($keys_array as $key)
+            {
+                $rel[$key] = $request[$key . "_" . $count];
+            }
+            $plays = new Player_Team($rel);
+            $plays->save();
+
+            $count++;
+        }
 
         // Ovde fali dodavanje globalne statistike za novog igraca u redis
 
