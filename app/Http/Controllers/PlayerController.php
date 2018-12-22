@@ -92,32 +92,10 @@ class PlayerController extends Controller
         $properties = $result->getPropertiesOfNode();
         $player = array_merge(["id" => $result->getIdOfNode()], $properties);
 
-        // Svi timovi za koje je igrao
-        $teamsResult = Cypher::Run("MATCH (n:Player)-[r:PLAYS_FOR_TEAM]-(t:Team) WHERE ID(n) = $id return r, t
-                      ORDER BY r.until DESC");
+        $plays_for_teams = Player_Team::getByPlayerId($id);
 
-        $plays_for_teams = [];
-        foreach ($teamsResult->getRecords() as $record) {
-            // Vraca vrednosti za tim za koji igrac igra
-            $team = $record->nodeValue('t');
-            $team_props = $team->values();
-            $team_id = ["id" => $team->identity()];
-
-            // Vraca vrednosti za relaciju PLAYS_FOR_TEAM
-            $relationship = $record->relationShipValue('r');
-            $relationship_props = $relationship->values();
-            $relationship_id = ["id" => $relationship->identity()];
-
-            // Spaja kljuceve i propertije
-            $team = array_merge($team_props, $team_id);
-            $plays_for_team = array_merge($relationship_props, $relationship_id);
-
-            // Niz koji sadrzi relaciju i tim
-            $plays = ['plays_for' => $plays_for_team, 'team' => $team];
-
-            array_push($plays_for_teams, $plays);
-        }
-
+        // Ovo je bolje kao poseban servis za recommendation da se napravi
+        // i da ima par razlicitih funkcija na osnovu kojih ce da preporucuje
         $recPlayers = [];
         if (!empty($plays_for_teams)) {
             // Vraca igrace koji su igrali na toj poziciji
@@ -133,7 +111,6 @@ class PlayerController extends Controller
                 array_push($recPlayers, $recPlayer);
             }
         }
-
         return view('players.show', compact('player', 'plays_for_teams', 'recPlayers'));
     }
 

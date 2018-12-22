@@ -32,6 +32,11 @@ Route::post('/teams', "TeamController@store");          // usnimanje kreiranog t
 Route::put('/teams/{team}', "TeamController@update");
 Route::delete('/teams/{team}', "TeamController@destroy");
 
+// PlaysForTeamController
+Route::get('/players/edit/{player}/plays_for_teams', "PlaysForTeamController@edit");
+Route::put('/players/edit/{player}/plays_for_teams', "PlaysForTeamController@update");
+Route::delete('/players/edit/{player}/plays_for_teams', "PlaysForTeamController@destroy");
+
 // PlayerController
 Route::get('/players', "PlayerController@index");          // prikaz svih igraca
 Route::get('/players/create', "PlayerController@create");   // pogled za kreiranje igraca
