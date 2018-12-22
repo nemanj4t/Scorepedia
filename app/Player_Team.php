@@ -15,6 +15,7 @@ class Player_Team
     public $plays_since;
     public $plays_until;
 
+
     public function __construct($props)
     {
         $this->player_id = $props["player_id"];
@@ -51,6 +52,30 @@ class Player_Team
         }
     }
 
+    public function update()
+    {
+        if($this->plays_until)
+        {
+            $plays_since = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_since)->format("Ymd");
+            $plays_until = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_until)->format("Ymd");
+            Cypher::Run ("MATCH (p:Player)-[r:PLAYS_FOR_TEAM]-(t:Team) 
+                WHERE ID(p) = " . $this->player_id . " AND ID(t) = " . $this->team_id .
+                " SET r.position = '" . $this->position . "', 
+                    r.number = " . $this->number . ", 
+                    r.since = " . $plays_since . ",  
+                    r.until = " . $plays_until);
+        }
+        else
+        {
+            $plays_since = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_since)->format("Ymd");
+            Cypher::Run ("MATCH (p:Player)-[r:PLAYS_FOR_TEAM]-(t:Team) 
+                WHERE ID(p) = " . $this->player_id . " AND ID(t) = " . $this->team_id .
+                " SET r.position = '" . $this->position . "', 
+                    r.number = " . $this->number . ", 
+                    r.since = " . $plays_since);
+        }
+    }
+
     // Vraca timove u kojima je igrac sa datim '$id' igrao
     public static function getByPlayerId($id)
     {
@@ -80,5 +105,13 @@ class Player_Team
             array_push($plays_for_teams, $plays);
         }
         return $plays_for_teams;
+    }
+
+    // Brisanje veze
+    public static function delete($player_id, $team_id)
+    {
+        Cypher::run("MATCH (n:Player)-[r:PLAYS_FOR_TEAM]-(t:Team)
+            WHERE ID(n) = ".$player_id." AND ID(t) = ".$team_id.
+            " DELETE r");
     }
 }

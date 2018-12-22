@@ -36,6 +36,7 @@ Route::delete('/teams/{team}', "TeamController@destroy");
 Route::get('/players/edit/{player}/plays_for_teams', "PlaysForTeamController@edit");
 Route::put('/players/edit/{player}/plays_for_teams', "PlaysForTeamController@update");
 Route::delete('/players/edit/{player}/plays_for_teams', "PlaysForTeamController@destroy");
+Route::post('/players/edit/{player}/plays_for_teams', "PlaysForTeamController@store");
 
 // PlayerController
 Route::get('/players', "PlayerController@index");          // prikaz svih igraca
