@@ -82,10 +82,10 @@
                                                 <label style="font-weight:bold;">Team</label>
                                             </div>
                                             <div class="col-md-8 col-6">
-                                                @if($current_team == '')
+                                                @if($coach['current_team'] == '')
                                                     <p>No proffessional engagement currently</p>
                                                     @else
-                                                    <p><a href="/teams/{{$current_team['id']}}">{{$current_team['name']}}</a></p>
+                                                    <p><a href="/teams/{{$coach['current_team']['id']}}">{{$coach['current_team']['name']}}</a></p>
                                                 @endif
                                             </div>
                                         </div>
@@ -121,12 +121,12 @@
                                                                         </tr>
                                                                         </thead>
                                                                         <tbody>
-                                                                        @foreach ($coached_teams as $team)
+                                                                        @foreach ($coach['all_teams'] as $team)
                                                                             <tr class="ok">
-                                                                                <td class="avatar"><img id="img" src={{$team['team']['image']}}></td>
-                                                                                <td><a href="/teams/{{$team['team']['id']}}">{{$team['team']['name']}}</a></td>
-                                                                                <td>{{$team['coach_team']['coached_since']}}</td>
-                                                                                <td>{{$team['coach_team']['coached_until']}}</td>
+                                                                                <td class="avatar"><img id="img" src={{$team['image']}}></td>
+                                                                                <td><a href="/teams/{{$team['id']}}">{{$team['name']}}</a></td>
+                                                                                <td>{{$team['coached_since']}}</td>
+                                                                                <td>{{$team['coached_until']}}</td>
                                                                             </tr>
                                                                         @endforeach
                                                                         </tbody>

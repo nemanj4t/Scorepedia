@@ -25,10 +25,10 @@
                                             <td class="avatar"><img id="img" class="avatar" src={{$coach['image']}}></td>
                                             <td><a href="/coaches/{{$coach['id']}}">{{$coach['name']}}</a></td>
                                             <td>{{$coach['bio']}}</td>
-                                            @if($coach['team']== '')
+                                            @if($coach['current_team']== '')
                                                 <td>No professional engagement currently</td>
                                                 @else
-                                                    <td><a href="/teams/{{$coach['team']['id']}}">{{$coach['team']['name']}}</a></td>
+                                                    <td><a href="/teams/{{$coach['current_team']['id']}}">{{$coach['current_team']['name']}}</a></td>
                                             @endif
                                             <td>{{$coach['city']}}</td>
                                         </tr>
