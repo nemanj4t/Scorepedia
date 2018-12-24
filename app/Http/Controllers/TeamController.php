@@ -18,9 +18,7 @@ class TeamController extends Controller
     public function index()
     {
 
-        $team = new Team();
-        $teams = $team->getAll();
-        dd($teams);
+        $teams = Team::getAll();
 
         return view('teams.index', compact('teams', $teams));
     }
@@ -36,8 +34,7 @@ class TeamController extends Controller
 
         $coaches = [];
 
-        $Coach = new Coach();
-        $allCoaches = $Coach->getAll();
+        $allCoaches = Coach::getAll();
 
         foreach ($allCoaches as $coach) {
             if ($coach['current_team'] == "")

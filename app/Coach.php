@@ -16,7 +16,7 @@ class Coach extends Model
     public $image;
 
 
-    public function getAll() {
+    public static function getAll() {
 
         $resultCoaches = Cypher::run("MATCH (c:Coach) RETURN c");
         $coaches = [];
@@ -57,7 +57,7 @@ class Coach extends Model
         return $coaches;
     }
 
-    public function saveCoach($request) {
+    public static function saveCoach($request) {
 
         if($request['team'] != null)
             Cypher::run("MATCH (t:Team) WHERE ID(t) = $request[team]
@@ -66,9 +66,9 @@ class Coach extends Model
             Cypher::run("CREATE (c:Coach {name: '$request[name]', bio: '$request[bio]', city: '$request[city]', image: '$request[image]'})");
     }
 
-    public function getById($id) {
+    public static function getById($id) {
 
-        $coaches = $this->getAll();
+        $coaches = Coach::getAll();
         foreach ($coaches as $coach)
             if ($coach['id'] == $id)
                 return $coach;

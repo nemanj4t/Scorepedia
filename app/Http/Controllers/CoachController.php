@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Coach;
 use App\Team;
+use App\Team_Coach;
 use Carbon\Carbon;
 use function GuzzleHttp\Psr7\str;
 use Illuminate\Http\Request;
@@ -32,17 +33,9 @@ class CoachController extends Controller
     public function create()
     {
         //
-        $teams = [];
 
         $Team = new Team();
-        $allTeams = $Team->getAll();
-
-        foreach ($allTeams as $team) {
-            if ($team['current_coach'] === "")
-                array_push($teams, $team);
-        }
-
-        
+        $teams = $Team->getAll();
 
         return view('coaches.create', compact('teams'));
     }
@@ -59,6 +52,34 @@ class CoachController extends Controller
 
         $coach = new Coach();
         $coach->saveCoach($request);
+
+        $coach_id = null;
+        $coach = new Coach();
+        $allCoaches = $coach->getAll();
+
+        foreach ($allCoaches as $coach)
+            if ($coach['name'] == $request['name'])
+                $coach_id = $coach['id'];
+
+
+        $keys_array = ["team_name", "coached_since", "coached_until"];
+
+        $count = 0;
+        // Dok ne nadje prvi input za vezu tim_igrac koji je prazan
+        while($request[$keys_array[0] . '_' . $count] != null)
+        {
+            $rel = array();
+            $rel['coach_id'] = $coach_id;
+            foreach($keys_array as $key)
+            {
+                $rel[$key] = $request[$key . "_" . $count];
+            }
+            $team_coach = new Team_Coach($rel);
+            $team_coach->save();
+
+            $count++;
+        }
+
 
         return redirect('/coaches');
     }

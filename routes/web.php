@@ -55,6 +55,12 @@ Route::post('/coaches', "CoachController@store");            // usnimanje novog 
 Route::put('/coaches/{coach}', "CoachController@update");
 Route::delete('/coaches/{coach}', "CoachController@destroy");
 
+// TeamCoachController
+Route::get('/coaches/edit/{coach}/team_coach', "TeamCoachController@edit");
+Route::put('/coaches/edit/{coach}/team_coach', "TeamCoachController@update");
+Route::delete('/coaches/edit/{coach}/team_coach', "TeamCoachController@destroy");
+Route::post('/coaches/edit/{coach}/team_coach', "TeamCoachController@store");
+
 // MatchesController
 // Ukoliko nam mecevi nisu na home page-u
 Route::get('/matches', "MatchController@index");            // prikaz liste meceva (kesirani ???)

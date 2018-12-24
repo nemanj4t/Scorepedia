@@ -34,7 +34,7 @@ class Team extends Model
         return $teams;
     }
 
-    public function getAll() {
+    public static function getAll() {
 
         $resultTeams = Cypher::run("MATCH (t:Team) RETURN t");
         $teams = [];
@@ -106,7 +106,7 @@ class Team extends Model
         return $teams;
     }
 
-    public function saveTeam($request) {
+    public static function saveTeam($request) {
 
         if($request['coach'] != null)
             Cypher::run("MATCH (c:Coach) WHERE ID(c) = $request[coach]
@@ -120,9 +120,9 @@ class Team extends Model
 
     }
 
-    public function getById($id) {
+    public static function getById($id) {
 
-        $teams = $this->getAll();
+        $teams = Team::getAll();
         foreach ($teams as $team)
             if ($team['id'] == $id)
                 return $team;
