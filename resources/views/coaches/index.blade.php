@@ -28,7 +28,7 @@
                                             @if($coach['current_team']== '')
                                                 <td>No professional engagement currently</td>
                                                 @else
-                                                    <td><a href="/teams/{{$coach['current_team']['id']}}">{{$coach['current_team']['name']}}</a></td>
+                                                    <td><a href="/teams/{{$coach['current_team']['team']['id']}}">{{$coach['current_team']['team']['name']}}</a></td>
                                             @endif
                                             <td>{{$coach['city']}}</td>
                                         </tr>

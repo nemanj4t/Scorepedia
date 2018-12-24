@@ -34,8 +34,8 @@ class CoachController extends Controller
     {
         //
 
-        $Team = new Team();
-        $teams = $Team->getAll();
+
+        $teams = Team::getAll();
 
         return view('coaches.create', compact('teams'));
     }
@@ -50,12 +50,10 @@ class CoachController extends Controller
     {
         //
 
-        $coach = new Coach();
-        $coach->saveCoach($request);
+        Coach::saveCoach($request);
 
         $coach_id = null;
-        $coach = new Coach();
-        $allCoaches = $coach->getAll();
+        $allCoaches = Coach::getAll();
 
         foreach ($allCoaches as $coach)
             if ($coach['name'] == $request['name'])

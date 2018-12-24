@@ -85,7 +85,7 @@
                                                 @if($coach['current_team'] == '')
                                                     <p>No proffessional engagement currently</p>
                                                     @else
-                                                    <p><a href="/teams/{{$coach['current_team']['id']}}">{{$coach['current_team']['name']}}</a></p>
+                                                    <p><a href="/teams/{{$coach['current_team']['team']['id']}}">{{$coach['current_team']['team']['name']}}</a></p>
                                                 @endif
                                             </div>
                                         </div>
@@ -123,10 +123,10 @@
                                                                         <tbody>
                                                                         @foreach ($coach['all_teams'] as $team)
                                                                             <tr class="ok">
-                                                                                <td class="avatar"><img id="img" src={{$team['image']}}></td>
-                                                                                <td><a href="/teams/{{$team['id']}}">{{$team['name']}}</a></td>
-                                                                                <td>{{$team['coached_since']}}</td>
-                                                                                <td>{{$team['coached_until']}}</td>
+                                                                                <td class="avatar"><img id="img" src={{$team['team']['image']}}></td>
+                                                                                <td><a href="/teams/{{$team['team']['id']}}">{{$team['team']['name']}}</a></td>
+                                                                                <td>{{$team['coached']['coached_since']}}</td>
+                                                                                <td>{{$team['coached']['coached_until']}}</td>
                                                                             </tr>
                                                                         @endforeach
                                                                         </tbody>

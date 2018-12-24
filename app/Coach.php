@@ -24,34 +24,18 @@ class Coach extends Model
             $coach = $record->getPropertiesOfNode();
             $coach = array_merge($coach, ['id' => $record->getIdOfNode()]);
             $current_team = '';
-            $all_teams = [];
 
-            $team_coach = Cypher::run("MATCH (t:Team)-[r:TEAM_COACH]-(c:Coach) WHERE ID(c) =". $record->getIdOfNode()." RETURN t, r
-                                    ORDER BY r.coached_until DESC");
+            $team_coach = Team_Coach::getByCoachId($record->getIdOfNode());
 
-            foreach ($team_coach->getRecords() as $record) {
-                $team = $record->nodeValue('t');
-                $team_props = $team->values();
-                $team_id = ["id" => $team->identity()];
-
-                // Vraca vrednosti za relaciju TEAM_COACH
-                $relationship = $record->relationShipValue('r');
-                $relationship_props = $relationship->values();
-
-
-                // Spaja kljuceve i propertije
-                $team = array_merge($team_props, $team_id);
-                $team = array_merge($team, ['coached_since' => $relationship_props['coached_since']]);
-                $team = array_merge($team, ['coached_until' => $relationship_props['coached_until']]);
-
-                if (Carbon::parse($relationship_props['coached_until'])->gt(Carbon::now()))
+            foreach ($team_coach as $team) {
+                if (Carbon::parse($team['coached']['coached_until'])->gt(Carbon::now()))
                     $current_team = $team;
-
-                array_push($all_teams, $team);
             }
+
+            $coach = array_merge($coach, ['all_teams' => $team_coach]);
             $coach = array_merge($coach, ['current_team' => $current_team]);
-            $coach = array_merge($coach, ['all_teams' => $all_teams]);
             array_push($coaches, $coach);
+
         }
 
         return $coaches;
