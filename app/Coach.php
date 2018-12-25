@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Ahsan\Neo4j\Facade\Cypher;
 use Carbon\Carbon;
 
-class Coach extends Model
+class Coach
 {
     public $id;
     public $name;
@@ -58,5 +58,30 @@ class Coach extends Model
                 return $coach;
 
         return null;
+    }
+
+    public static function update($id, $request) {
+        $coach = Coach::getById($id);
+        Cypher::run("MATCH (c:Coach) WHERE ID(c) = $id SET c.name = '$request[name]', c.bio = '$request[bio]', c.city = '$request[city]', c.image = '$request[image]'");
+        $team_coach = new Team_Coach(["coach_id" => $id, "team_name" => $request['team'], "coached_since" => $request['coached_since'], "coached_until" => $request['coached_until']]);
+        if ($request['team'] != '') {
+            if ($coach['current_team'] != '') {
+                if ($coach['current_team']['team']['id'] == $request['team']) {
+                    $team_coach->update();
+                } else {
+                    Team_Coach::delete($coach['current_team']['team']['id'], $id);
+                    $team_coach->save();
+                }
+            }
+            else {
+                $team_coach->save();
+            }
+        }
+        else {
+            if ($coach['current_team'] != '')
+                Team_Coach::delete($coach['current_team']['team']['id'], $id);
+        }
+
+
     }
 }

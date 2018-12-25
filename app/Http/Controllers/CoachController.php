@@ -99,7 +99,7 @@ class CoachController extends Controller
         if (!empty($coach['all_teams'])) {
             // Vraca trenere koji su nekada trenirali taj tim
             if ($coach['current_team'] != '') {
-                $current_team_id = $coach['current_team']['id'];
+                $current_team_id = $coach['current_team']['team']['id'];
 
                 $recommendedResult = Cypher::Run("MATCH (t:Team)-[r:TEAM_COACH]-(c:Coach) 
                 WHERE ID(t) =". $current_team_id . " AND ID(c) <>" . (int)$id . " return distinct c LIMIT 5");
@@ -127,9 +127,19 @@ class CoachController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    public function edit($id) {
+        $coach = Coach::getById($id);
+        $teams = Team::getAll();
+        return view("coaches.edit", compact('coach', 'teams'));
+    }
+
     public function update(Request $request, $id)
     {
         //
+        Coach::update($id, $request);
+
+        return redirect("/coaches/" . $id);
     }
 
     /**

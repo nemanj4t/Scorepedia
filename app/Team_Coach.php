@@ -48,6 +48,7 @@ class Team_Coach
                 r.coached_until = '" . $this->coached_until. "'");
     }
 
+
     public static function getByCoachId($id)
     {
         $teamsResult = Cypher::Run("MATCH (t:Team)-[r:TEAM_COACH]-(c:Coach) WHERE ID(c) = $id return r, t
@@ -72,6 +73,36 @@ class Team_Coach
 
             // Niz koji sadrzi relaciju i tim
             $one_rel = ['coached' => $rel_info, 'team' => $team];
+
+            array_push($team_coach, $one_rel);
+        }
+        return $team_coach;
+    }
+
+    public static function getByTeamId($id)
+    {
+        $teamsResult = Cypher::Run("MATCH (t:Team)-[r:TEAM_COACH]-(c:Coach) WHERE ID(t) = $id return r, c
+                      ORDER BY r.coached_until DESC");
+
+        $team_coach = [];
+
+        foreach ($teamsResult->getRecords() as $record) {
+            // Vraca vrednosti za tim za koji igrac igra
+            $coach = $record->nodeValue('c');
+            $coach_props = $coach->values();
+            $coach_id = ["id" => $coach->identity()];
+
+            // Vraca vrednosti za relaciju PLAYS_FOR_TEAM
+            $relationship = $record->relationShipValue('r');
+            $relationship_props = $relationship->values();
+            $relationship_id = ["id" => $relationship->identity()];
+
+            // Spaja kljuceve i propertije
+            $coach = array_merge($coach_props, $coach_id);
+            $rel_info = array_merge($relationship_props, $relationship_id);
+
+            // Niz koji sadrzi relaciju i tim
+            $one_rel = ['coached' => $rel_info, 'coach' => $coach];
 
             array_push($team_coach, $one_rel);
         }
