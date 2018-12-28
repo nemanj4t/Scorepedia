@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Ahsan\Neo4j\Facade\Cypher;
-use PhpParser\Node\Stmt\DeclareDeclare;
+use Illuminate\Support\Facades\Redis;
 
 class AdminController extends Controller
 {
@@ -70,6 +70,8 @@ class AdminController extends Controller
                 break;
         }
 
-        return view('admin.home', compact('active', 'data'));
+        $count = Redis::get('user:count');
+
+        return view('admin.home', compact('active', 'data', 'count'));
     }
 }

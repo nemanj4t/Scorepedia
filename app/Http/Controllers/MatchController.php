@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Team;
+use App\Match;
 
 class MatchController extends Controller
 {
@@ -23,7 +25,9 @@ class MatchController extends Controller
      */
     public function create()
     {
-        //
+        $teams = Team::getTeams();
+
+        return view('matches.create', compact('teams'));
     }
 
     /**
@@ -34,7 +38,7 @@ class MatchController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Match::saveMatch($request);
     }
 
     /**

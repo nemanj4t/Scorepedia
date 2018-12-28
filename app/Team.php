@@ -28,6 +28,7 @@ class Team
         }
         return $teams;
     }
+
     public static function getAll() {
         $resultTeams = Cypher::run("MATCH (t:Team) RETURN t");
         $teams = [];

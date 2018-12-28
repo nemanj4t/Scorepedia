@@ -74,8 +74,8 @@
                         <div class="col">
                             <div class="counter">
                                 <i class="fa fa-code fa-2x"></i>
-                                <h2 class="timer count-title count-number" data-to="100" data-speed="1500"></h2>
-                                <p class="count-text ">Our Visitors</p>
+                                <h2 class="timer count-title count-number" data-to="{{$count}}" data-speed="1500"></h2>
+                                <p class="count-text ">Count Visitors</p>
                             </div>
                         </div>
                         <div class="col">
