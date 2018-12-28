@@ -3,7 +3,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Ahsan\Neo4j\Facade\Cypher;
 use Carbon\Carbon;
-class Team extends Model
+class Team
 {
     public $id;
     public $name;
@@ -51,6 +51,7 @@ class Team extends Model
                 $relationship_props = $relationship->values();
                 // Spaja kljuceve i propertije
                 $coach = array_merge($coach_props, $coach_id);
+                $coach = array_merge($coach, $relationship_props);
                 if (Carbon::parse($relationship_props['coached_until'])->gt(Carbon::now()))
                     $current_coach = $coach;
                 array_push($all_coaches, $coach);
@@ -99,5 +100,29 @@ class Team extends Model
             if ($team['id'] == $id)
                 return $team;
         return null;
+    }
+
+    public static function update($id, $request) {
+        $team = Team::getById($id);
+        Cypher::run("MATCH (t:Team) WHERE ID(t) = $id SET t.name = '$request[name]', t.short_name = '$request[short_name]',t.city = '$request[city]', t.image = '$request[image]', t.background_image = '$request[background_image]', t.description = '$request[description]'");
+        $team_coach = new Team_Coach(["coach_id" => $request['coach'], "team_name" => $id, "coached_since" => $request['coached_since'], "coached_until" => $request['coached_until']]);
+        if ($request['coach'] != '') {
+            if ($team['current_coach'] != '') {
+                if ($team['current_coach']['id'] == $request['coach']) {
+                    $team_coach->update();
+                } else {
+                    Team_Coach::delete($id, $team['current_coach']['id']);
+                    $team_coach->save();
+                }
+            }
+            else {
+                $team_coach->save();
+            }
+        }
+        else {
+            if ($team['current_coach'] != '')
+                Team_Coach::delete($id, $team['current_coach']['id']);
+        }
+
     }
 }
