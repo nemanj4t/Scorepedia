@@ -99,7 +99,7 @@ class PlayerController extends Controller
         $recPlayers = [];
         if (!empty($plays_for_teams)) {
             // Vraca igrace koji su igrali na toj poziciji
-            $recommendedResult = Cypher::Run("MATCH (n:Player)-[r:PLAYS_FOR_TEAM]-() 
+            $recommendedResult = Cypher::Run("MATCH (n:Player)-[r:PLAYER_TEAM]-() 
                 WHERE r.position = '" . $plays_for_teams[0]['plays_for']['position'] .
                 "' AND ID(n) <> " . $player['id'] . " return distinct n LIMIT 5");
 
