@@ -84,9 +84,29 @@ class TeamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    public function edit($id)
+    {
+        $team = Team::getById($id);
+        $coaches = [];
+
+        $allCoaches = Coach::getAll();
+
+        foreach ($allCoaches as $coach) {
+            if ($coach['current_team'] == "")
+                array_push($coaches, $coach);
+        }
+
+        return view('teams.edit', compact('team', 'coaches'));
+    }
+
     public function update(Request $request, $id)
     {
         //
+        Team::update($id, $request);
+
+        return redirect("/teams/" . $id);
+
     }
 
     /**

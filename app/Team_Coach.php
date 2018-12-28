@@ -108,7 +108,6 @@ class Team_Coach
         }
         return $team_coach;
     }
-
     public static function delete($team_id, $coach_id)
     {
         Cypher::run("MATCH (t:Team)-[r:TEAM_COACH]-(c:Coach)
@@ -117,3 +116,4 @@ class Team_Coach
     }
 
 }
+
