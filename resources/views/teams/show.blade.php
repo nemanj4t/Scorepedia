@@ -32,11 +32,11 @@
                     <div class="col-md-6">
                         <div class="team-members">
                             <div class="team-avatar">
-                                <img class="img-thumbnail" id="coach-img" src={{$team['current_coach']['image']}} alt="">
+                                <img class="img-thumbnail" id="coach-img" src={{$team['current_coach']['coach']['image']}} alt="">
                             </div>
-                            <a href="/coaches/{{$team['current_coach']['id']}}">
+                            <a href="/coaches/{{$team['current_coach']['coach']['id']}}">
                             <div class="team-desc">
-                                <h3>{{$team['current_coach']['name']}}</h3>
+                                <h3>{{$team['current_coach']['coach']['name']}}</h3>
                                 <span>Coach</span>
                             </div>
                             </a>
@@ -65,11 +65,11 @@
                                                 <tbody>
                                                 @foreach ($team['current_players'] as $player)
                                                     <tr class="ok">
-                                                        <td class="avatar"><img id="img" src={{$player['image']}}></td>
+                                                        <td class="avatar"><img id="img" src={{$player['player']['image']}}></td>
                                                         <td>number</td>
-                                                        <td><a href="/players/{{$player['id']}}">{{$player['name']}}</a></td>
+                                                        <td><a href="/players/{{$player['player']['id']}}">{{$player['player']['name']}}</a></td>
                                                         <td>pos</td>
-                                                        <td>{{$player['height']}} cm</td>
+                                                        <td>{{$player['player']['height']}} cm</td>
                                                     </tr>
                                                 @endforeach
                                                 </tbody>
@@ -92,12 +92,12 @@
                         <div class="col-md-4">
                             <div class="team-members">
                                 <div class="team-avatar">
-                                    <img class="img-responsive img-thumbnail" style="max-height: 250px;" src={{$player['image']}} alt="">
+                                    <img class="img-responsive img-thumbnail" style="max-height: 250px;" src={{$player['player']['image']}} alt="">
                                 </div>
-                                <a href="/players/{{$player['id']}}">
+                                <a href="/players/{{$player['player']['id']}}">
                                     <div class="team-desc">
-                                        <h4>{{$player['name']}}</h4>
-                                        <span>Height: {{$player['height']}} cm</span>
+                                        <h4>{{$player['player']['name']}}</h4>
+                                        <span>Height: {{$player['player']['height']}} cm</span>
                                     </div>
                                 </a>
                             </div>
@@ -114,12 +114,12 @@
                     <div class="col-sm-4">
                         <div class="team-members">
                             <div class="team-avatar">
-                                <img class="img-responsive img-thumbnail" style="max-height: 250px;" src={{$team['current_players'][$i]['image']}} alt="">
+                                <img class="img-responsive img-thumbnail" style="max-height: 250px;" src={{$team['current_players'][$i]['player']['image']}} alt="">
                             </div>
-                            <a href="/players/{{$team['current_players'][$i]['id']}}">
+                            <a href="/players/{{$team['current_players'][$i]['player']['id']}}">
                                 <div class="team-desc">
-                                    <h4>{{$team['current_players'][$i]['name']}}</h4>
-                                    <span>Height: {{$team['current_players'][$i]['height']}} cm</span>
+                                    <h4>{{$team['current_players'][$i]['player']['name']}}</h4>
+                                    <span>Height: {{$team['current_players'][$i]['player']['height']}} cm</span>
                                 </div>
                             </a>
                         </div>

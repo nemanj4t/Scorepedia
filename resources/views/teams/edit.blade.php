@@ -21,7 +21,7 @@
                             <select class="form-control" name="coach">
                                 @if ($team["current_coach"] != '')
                                     <option value="">No current coach</option>
-                                    <option value="{{$team["current_coach"]["id"]}}" selected>{{$team["current_coach"]["name"]}}</option>
+                                    <option value="{{$team["current_coach"]['coach']["id"]}}" selected>{{$team["current_coach"]['coach']["name"]}}</option>
                                 @else
                                     <option value="" selected>No current coach</option>
                                 @endif
@@ -35,7 +35,7 @@
                                 <div class="col-md-6">
                                     <label>Coached since:</label>
                                     @if ($team["current_coach"] != "")
-                                        <input class="form-control" style="margin-right: 20px; float: left;" type="date" value="{{$team["current_coach"]["coached_since"]}}" name="coached_since">
+                                        <input class="form-control" style="margin-right: 20px; float: left;" type="date" value="{{$team["current_coach"]['coached']["coached_since"]}}" name="coached_since">
                                         @else
                                         <input class="form-control" style="margin-right: 20px; float: left;" type="date" value="" name="coached_since">
                                     @endif
@@ -43,7 +43,7 @@
                                 <div class="col-md-6">
                                     <label>Coached until: </label>
                                     @if ($team["current_coach"] != "")
-                                        <input class="form-control" type="date" value="{{$team["current_coach"]["coached_until"]}}" name="coached_until">
+                                        <input class="form-control" type="date" value="{{$team["current_coach"]['coached']["coached_until"]}}" name="coached_until">
                                         @else
                                             <input class="form-control" type="date" value="" name="coached_until">
                                     @endif
