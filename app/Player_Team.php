@@ -30,6 +30,7 @@ class Player_Team
     {
         $plays_since = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_since)->format("Ymd");
 
+
         if($this->plays_until)
         {
             $plays_until = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_until)->format("Ymd");
@@ -80,18 +81,41 @@ class Player_Team
                 Cypher::Run ("MATCH (p:Player)-[r:PLAYS]-(t:Team) WHERE ID(p) = ". $this->player_id .
                     " AND ID(t) = ". $this->team_id .
                     " CREATE (p)-[r2:PLAYED]->(t) 
-                        SET r2 = r
-                        WITH r
+                        SET r2 = r,
+                        r2.position = '" . $this->position . "',
+                        r2.number = " . $this->number . ",
+                        r2.since = " . $plays_since . ",
+                        r2.until = " . $plays_until .
+                        " WITH r
                         DELETE r");
             }
         }
-        else {
-            // Ako je bilo PLAYS i ako je i dalje PLAYS
-            Cypher::Run("MATCH (p:Player)-[r:PLAYS]-(t:Team) 
+        else
+        {
+            // Ako je bilo PLAYED i a treba da se promeni u PLAYS
+            if($relType == "PLAYED")
+            {
+                Cypher::Run ("MATCH (p:Player)-[r:PLAYED]-(t:Team) WHERE ID(p) = ". $this->player_id .
+                    " AND ID(t) = ". $this->team_id .
+                    " CREATE (p)-[r2:PLAYS]->(t) 
+                        SET r2 = r,
+                        r2.position = '" . $this->position . "',
+                        r2.number = " . $this->number . ",
+                        r2.since = " . $plays_since . ",
+                        r2.until = null 
+                         WITH r
+                        DELETE r");
+            }
+            else
+            {
+                // Ako je bilo PLAYED i ako je i dalje PLAYS
+                Cypher::Run("MATCH (p:Player)-[r:PLAYS]-(t:Team) 
                 WHERE ID(p) = " . $this->player_id . " AND ID(t) = " . $this->team_id .
-                " SET r.position = '" . $this->position . "', 
+                    " SET r.position = '" . $this->position . "', 
                     r.number = " . $this->number . ", 
                     r.since = " . $plays_since);
+            }
+
         }
     }
 
