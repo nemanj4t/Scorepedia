@@ -20,6 +20,14 @@ class PlaysForTeamController extends Controller
 
     public function store($id, Request $request)
     {
+        // Validacija
+        $request->validate([
+            'team_name' => 'required',
+            'player_position' => 'required',
+            'player_number' => 'required|numeric',
+            'player_since' => 'required'
+        ]);
+
         // Kreiranje nove veze
         // $request['team_name'] ima zapravo vrednost id-ja tima
         $rel = new Player_Team([
@@ -37,6 +45,14 @@ class PlaysForTeamController extends Controller
 
     public function update($id, Request $request)
     {
+        // Validacija
+        $request->validate([
+            'team_name' => 'required',
+            'player_position' => 'required',
+            'player_number' => 'required|numeric',
+            'player_since' => 'required'
+        ]);
+
         $rel = new Player_Team([
             'player_id' => $id,
             'team_name' => $request['team_id'],
