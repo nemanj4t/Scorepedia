@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
+use Ahsan\Neo4j\Facade\Cypher;
 use App\Team;
 use App\Match;
+use App\Player;
 
 class MatchController extends Controller
 {
@@ -15,7 +18,9 @@ class MatchController extends Controller
      */
     public function index()
     {
-        //
+        $matches = Match::getAll();
+
+        return view('matches.index', compact('matches'));
     }
 
     /**
@@ -39,6 +44,8 @@ class MatchController extends Controller
     public function store(Request $request)
     {
         Match::saveMatch($request);
+
+        return redirect('/matches');
     }
 
     /**
@@ -49,7 +56,31 @@ class MatchController extends Controller
      */
     public function show($id)
     {
-        //
+        $match = Match::getById($id);
+
+        $home = Redis::hgetall("match:{$id}:team:{$match['home']['id']}");
+        $guest = Redis::hgetall("match:{$id}:team:{$match['guest']['id']}");
+
+        $homePlayers = [];
+        $guestPlayers = [];
+
+        foreach(Redis::keys("*match:{$id}:team:{$match['home']['id']}:*") as $key) {
+            $playerIndex = intval(explode(":", $key)[5]);
+            $player = Player::getById($playerIndex);
+            $stats = Redis::hgetall($key);
+            $player = array_merge($player, $stats);
+            array_push($homePlayers, $player);
+        };
+
+        foreach(Redis::keys("*match:{$id}:team:{$match['guest']['id']}:*") as $key) {
+            $playerIndex = intval(explode(":", $key)[5]);
+            $player = Player::getById($playerIndex);
+            $stats = Redis::hgetall($key);
+            $player = array_merge($player, $stats);
+            array_push($guestPlayers, $player);
+        };
+
+        return view("matches.show", compact('match', 'home', 'guest', 'homePlayers', 'guestPlayers'));
     }
 
 

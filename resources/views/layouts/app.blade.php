@@ -38,9 +38,9 @@
                     <a class="p-2 text-dark" href="/teams">Teams</a>
                     <a class="p-2 text-dark" href="/players">Players</a>
                     <a class="p-2 text-dark" href="/coaches">Coaches</a>
-                    <a class="p-2 text-dark" href="#">Standings</a>
-                    <a class="p-2 text-dark" href="#">Statistics</a>
-                    <a class="p-2 text-dark" href="#">Matches </a><img style="height: 15px" src="https://mareeg.com/wp-content/uploads/2017/02/LIVE.png">
+                    <a class="p-2 text-dark" href="/standings">Standings</a>
+                    <a class="p-2 text-dark" href="/standings">Statistics</a>
+                    <a class="p-2 text-dark" href="/matches">Matches </a><img style="height: 15px" src="https://mareeg.com/wp-content/uploads/2017/02/LIVE.png">
                 </ul>
 
                 <!-- Right Side Of Navbar -->
