@@ -48,7 +48,7 @@
                                 <form method="POST" action="/players/edit/{{ $player_id }}/plays_for_teams">
                                     @csrf
                                     <div class="list-group-item" id="team">
-                                        <select name="team_name" required="required">
+                                        <select name="team_id" required="required">
                                             @foreach($teams as $team)
                                                 <option value="{{$team['id'] }}">{{ $team['name'] }}</option>
                                             @endforeach

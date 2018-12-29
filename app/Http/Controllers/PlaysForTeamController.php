@@ -6,6 +6,7 @@ use GraphAware\Bolt\Tests\Integration\Packing\PackingListIntegrationTest;
 use Illuminate\Http\Request;
 use App\Player_Team;
 use App\Team;
+use Ahsan\Neo4j\Facade\Cypher;
 
 class PlaysForTeamController extends Controller
 {
@@ -20,19 +21,19 @@ class PlaysForTeamController extends Controller
 
     public function store($id, Request $request)
     {
-        // Validacija
-        $request->validate([
-            'team_name' => 'required',
-            'player_position' => 'required',
-            'player_number' => 'required|numeric',
-            'player_since' => 'required'
-        ]);
+//        // Validacija
+//        $request->validate([
+//            'team_id' => 'required',
+//            'player_position' => 'required',
+//            'player_number' => 'required|numeric',
+//            'player_since' => 'required'
+//        ]);
 
         // Kreiranje nove veze
         // $request['team_name'] ima zapravo vrednost id-ja tima
         $rel = new Player_Team([
             'player_id' => $id,
-            'team_name' => $request['team_name'],
+            'team_id' => $request['team_id'],
             'player_position' => $request['player_position'],
             'player_number' => $request['player_number'],
             'player_since' => $request['player_since'],
@@ -46,16 +47,16 @@ class PlaysForTeamController extends Controller
     public function update($id, Request $request)
     {
         // Validacija
-        $request->validate([
-            'team_name' => 'required',
-            'player_position' => 'required',
-            'player_number' => 'required|numeric',
-            'player_since' => 'required'
-        ]);
+//        $request->validate([
+//            'team_id' => 'required',
+//            'player_position' => 'required',
+//            'player_number' => 'required|numeric',
+//            'player_since' => 'required'
+//        ]);
 
         $rel = new Player_Team([
             'player_id' => $id,
-            'team_name' => $request['team_id'],
+            'team_id' => $request['team_id'],
             'player_position' => $request['position'],
             'player_number' => $request['number'],
             'player_since' => $request['since'],

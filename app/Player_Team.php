@@ -19,7 +19,7 @@ class Player_Team
     public function __construct($props)
     {
         $this->player_id = $props["player_id"];
-        $this->team_id = $props['team_name'];
+        $this->team_id = $props['team_id'];
         $this->position = $props['player_position'];
         $this->number = $props['player_number'];
         $this->plays_since = $props['player_since'];
@@ -28,12 +28,15 @@ class Player_Team
 
     public function save()
     {
+        $plays_since = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_since)->format("Ymd");
+
         if($this->plays_until)
         {
-            $plays_since = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_since)->format("Ymd");
             $plays_until = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_until)->format("Ymd");
+
+            // umesto TEAM_PLAYER je PLAYED ili PLAYS
             Cypher::Run ("MATCH (n:Player), (t:Team) WHERE ID(n) = " . $this->player_id . " AND ID(t) = " . $this->team_id .
-                " CREATE (n)-[:PLAYER_TEAM {
+                " CREATE (n)-[:PLAYED {
             position: '" . $this->position . "', 
             number: " . $this->number . ", 
             since: " . $plays_since . ",  
@@ -42,9 +45,8 @@ class Player_Team
         }
         else
         {
-            $plays_since = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_since)->format("Ymd");
             Cypher::Run ("MATCH (n:Player), (t:Team) WHERE ID(n) = " . $this->player_id . " AND ID(t) = " . $this->team_id .
-                " CREATE (n)-[:PLAYER_TEAM {
+                " CREATE (n)-[:PLAYS {
             position: '" . $this->position . "', 
             number: " . $this->number . ", 
             since: " . $plays_since . "  
@@ -54,21 +56,38 @@ class Player_Team
 
     public function update()
     {
+        $plays_since = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_since)->format("Ymd");
+        // Proveri se koja je veza bila ranije
+        $relType = Cypher::Run ("MATCH (p:Player)-[r]-(t:Team) WHERE ID(p) = " . $this->player_id .
+            " AND ID(t) = " . $this->team_id . " RETURN type(r)")->getRecords()[0]->value("type(r)");
+
         if($this->plays_until)
         {
-            $plays_since = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_since)->format("Ymd");
             $plays_until = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_until)->format("Ymd");
-            Cypher::Run ("MATCH (p:Player)-[r:PLAYER_TEAM]-(t:Team) 
+            // Ako je i ranije bila PLAYED onda se samo menja atribut "until"
+            if($relType == "PLAYED")
+            {
+                Cypher::Run ("MATCH (p:Player)-[r:PLAYED]-(t:Team) 
                 WHERE ID(p) = " . $this->player_id . " AND ID(t) = " . $this->team_id .
-                " SET r.position = '" . $this->position . "', 
+                    " SET r.position = '" . $this->position . "', 
                     r.number = " . $this->number . ", 
                     r.since = " . $plays_since . ",  
                     r.until = " . $plays_until);
+            }
+            else
+            {
+                // Ako je bila PLAYS onda se prethodna veza zamenjuje vezom PLAYED
+                Cypher::Run ("MATCH (p:Player)-[r:PLAYS]-(t:Team) WHERE ID(p) = ". $this->player_id .
+                    " AND ID(t) = ". $this->team_id .
+                    " CREATE (p)-[r2:PLAYED]->(t) 
+                        SET r2 = r
+                        WITH r
+                        DELETE r");
+            }
         }
-        else
-        {
-            $plays_since = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_since)->format("Ymd");
-            Cypher::Run ("MATCH (p:Player)-[r:PLAYER_TEAM]-(t:Team) 
+        else {
+            // Ako je bilo PLAYS i ako je i dalje PLAYS
+            Cypher::Run("MATCH (p:Player)-[r:PLAYS]-(t:Team) 
                 WHERE ID(p) = " . $this->player_id . " AND ID(t) = " . $this->team_id .
                 " SET r.position = '" . $this->position . "', 
                     r.number = " . $this->number . ", 
@@ -79,7 +98,7 @@ class Player_Team
     // Vraca timove u kojima je igrac sa datim '$id' igrao
     public static function getByPlayerId($id)
     {
-        $teamsResult = Cypher::Run("MATCH (n:Player)-[r:PLAYER_TEAM]-(t:Team) WHERE ID(n) = $id return r, t
+        $teamsResult = Cypher::Run("MATCH (n:Player)-[r:PLAYS|PLAYED]-(t:Team) WHERE ID(n) = $id return r, t
                       ORDER BY r.until DESC");
 
         $plays_for_teams = [];
@@ -110,7 +129,7 @@ class Player_Team
     // Brisanje veze
     public static function delete($player_id, $team_id)
     {
-        Cypher::run("MATCH (n:Player)-[r:PLAYER_TEAM]-(t:Team)
+        Cypher::run("MATCH (n:Player)-[r:PLAYS|PLAYED]-(t:Team)
             WHERE ID(n) = ".$player_id." AND ID(t) = ".$team_id.
             " DELETE r");
     }

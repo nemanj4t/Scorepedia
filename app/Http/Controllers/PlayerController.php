@@ -52,6 +52,7 @@ class PlayerController extends Controller
      */
     public function store(Request $request)
     {
+        // ovaj upit moze da vrati id na kraju
         Cypher::run("CREATE (:Player {name: '$request[name]', height: '$request[height]',
             weight: '$request[weight]', city: '$request[city]', bio: '$request[bio]', image: '$request[image]'})");
 
