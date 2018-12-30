@@ -2,13 +2,6 @@
 
 @section('content')
 
-
-    <!------ Include the above in your HEAD tag ---------->
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/lumen/bootstrap.min.css">
-    <link rel="stylesheet" href="https://daneden.github.io/animate.css/animate.min.css">
-
     <div class="container" style="margin-top:20px;">
         <div class="row">
             <div id="user" class="col-md-12" >
@@ -39,17 +32,7 @@
                                     </tbody>
                                 </table>
                             </div><!-- END id="list" -->
-
                         </div><!-- END tab-content -->
-                    </div>
-                    <div class="panel-footer text-center">
-                        <ul class="pagination">
-                            <li ><a>«</a></li>
-                            <li class="active"><a href="#">1</a></li>
-                            <li ><a href="#">2</a></li>
-                            <li ><a href="#">3</a></li>
-                            <li ><a>»</a></li>
-                        </ul>
                     </div>
                 </div><!--END panel-table-->
             </div>

@@ -150,6 +150,68 @@ class Player_Team
         return $plays_for_teams;
     }
 
+    public static function getByTeamId($id)
+    {
+        $playerResult = Cypher::Run("MATCH (p:Player)-[r:PLAYS|PLAYED]-(t:Team) WHERE ID(t) = $id return r, p
+                      ORDER BY r.until DESC");
+
+        $plays_for_teams = [];
+
+        foreach ($playerResult->getRecords() as $record) {
+            // Vraca vrednosti za tim za koji igrac igra
+            $player = $record->nodeValue('p');
+            $player_props = $player->values();
+            $player_id = ["id" => $player->identity()];
+
+            // Vraca vrednosti za relaciju PLAYS_FOR_TEAM
+            $relationship = $record->relationShipValue('r');
+            $relationship_props = $relationship->values();
+            $relationship_id = ["id" => $relationship->identity()];
+
+            // Spaja kljuceve i propertije
+            $player = array_merge($player_props, $player_id);
+            $plays_for_team = array_merge($relationship_props, $relationship_id);
+
+            // Niz koji sadrzi relaciju i tim
+            $plays = ['plays_for' => $plays_for_team, 'player' => $player];
+
+            array_push($plays_for_teams, $plays);
+        }
+        return $plays_for_teams;
+    }
+
+
+    public static function getCurrentPlayers($id)
+    {
+        $playerResult = Cypher::Run("MATCH (p:Player)-[r:PLAYS]-(t:Team) WHERE ID(t) = $id return r, p
+                      ORDER BY r.until DESC");
+
+        $plays_for_teams = [];
+
+        foreach ($playerResult->getRecords() as $record) {
+            // Vraca vrednosti za tim za koji igrac igra
+            $player = $record->nodeValue('p');
+            $player_props = $player->values();
+            $player_id = ["id" => $player->identity()];
+
+            // Vraca vrednosti za relaciju PLAYS_FOR_TEAM
+            $relationship = $record->relationShipValue('r');
+            $relationship_props = $relationship->values();
+            $relationship_id = ["id" => $relationship->identity()];
+
+            // Spaja kljuceve i propertije
+            $player = array_merge($player_props, $player_id);
+            $plays_for_team = array_merge($relationship_props, $relationship_id);
+
+            // Niz koji sadrzi relaciju i tim
+            $plays = ['plays_for' => $plays_for_team, 'player' => $player];
+
+            array_push($plays_for_teams, $plays);
+        }
+        return $plays_for_teams;
+    }
+
+
     // Brisanje veze
     public static function delete($player_id, $team_id)
     {

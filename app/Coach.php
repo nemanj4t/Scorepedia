@@ -23,15 +23,8 @@ class Coach
         foreach ($resultCoaches->getRecords() as $record) {
             $coach = $record->getPropertiesOfNode();
             $coach = array_merge($coach, ['id' => $record->getIdOfNode()]);
-            $current_team = '';
-
+            $current_team = self::getCurrentTeam($record->getIdOfNode());
             $team_coach = Team_Coach::getByCoachId($record->getIdOfNode());
-
-            foreach ($team_coach as $team) {
-                if (Carbon::parse($team['coached']['coached_until'])->gt(Carbon::now()))
-                    $current_team = $team;
-            }
-
             $coach = array_merge($coach, ['all_teams' => $team_coach]);
             $coach = array_merge($coach, ['current_team' => $current_team]);
             array_push($coaches, $coach);
@@ -39,6 +32,33 @@ class Coach
         }
 
         return $coaches;
+    }
+
+    public static function getById($id) {
+
+        $coach = null;
+        $result = Cypher::run("MATCH (c:Coach) WHERE ID(c) = $id RETURN c")->getRecords();
+        $record = $result[0];
+        $coach = $record->getPropertiesOfNode();
+        $coach = array_merge($coach, ['id' => $record->getIdOfNode()]);
+        $current_team = self::getCurrentTeam($record->getIdOfNode());
+        $team_coach = Team_Coach::getByCoachId($record->getIdOfNode());
+        $coach = array_merge($coach, ['all_teams' => $team_coach]);
+        $coach = array_merge($coach, ['current_team' => $current_team]);
+
+        return $coach;
+    }
+
+    public static function getCurrentTeam($id) {
+
+        $current_team = '';
+        $team_coach = Team_Coach::getByCoachId($id);
+        foreach ($team_coach as $rel) {
+            if (Carbon::parse($rel['coached']['coached_until'])->gt(Carbon::now()))
+                $current_team = $rel;
+        }
+
+        return $current_team;
     }
 
     public static function saveCoach($request) {
@@ -50,15 +70,6 @@ class Coach
             Cypher::run("CREATE (c:Coach {name: '$request[name]', bio: '$request[bio]', city: '$request[city]', image: '$request[image]'})");
     }
 
-    public static function getById($id) {
-
-        $coaches = Coach::getAll();
-        foreach ($coaches as $coach)
-            if ($coach['id'] == $id)
-                return $coach;
-
-        return null;
-    }
 
     public static function update($id, $request) {
         $coach = Coach::getById($id);
@@ -82,6 +93,11 @@ class Coach
                 Team_Coach::delete($coach['current_team']['team']['id'], $id);
         }
 
+    }
+
+    public static function delete($id) {
+
+        Cypher::Run("MATCH (n:Coach) WHERE ID(n) = $id DETACH DELETE n");
 
     }
 }

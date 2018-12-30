@@ -150,7 +150,7 @@ class CoachController extends Controller
     public function destroy($id)
     {
         // Brise cvor i sve njegove veze
-        Cypher::Run("MATCH (n:Coach) WHERE ID(n) = $id DETACH DELETE n");
+        Coach::delete($id);
 
         // Fali brisanje tog cvora iz redisa
 

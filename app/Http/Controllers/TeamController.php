@@ -118,7 +118,7 @@ class TeamController extends Controller
     public function destroy($id)
     {
         // Brise cvor i sve njegove veze
-        Cypher::Run("MATCH (n:Team) WHERE ID(n) = $id DETACH DELETE n");
+        Team::delete($id);
 
         // Fali brisanje tog cvora iz redisa
 
