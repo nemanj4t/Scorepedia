@@ -62,7 +62,7 @@
                         <a class="nav-link {{$active == 'Coach' ? "active" : ""}}" href="/apanel?active=Coach&route=coaches">Coaches </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{$active == 'Match' ? "active" : ""}}" href="#">Matches </a>
+                        <a class="nav-link {{$active == 'Match' ? "active" : ""}}" href="/apanel?active=Match&route=matches">Matches </a>
                     </li>
                 </ul>
             </nav>
@@ -100,11 +100,11 @@
                         </div>
                     </div>
                 </div>
-                @if(isSet($_GET['active']))
+                @if(isSet($_GET['active']) && ($_GET['route'] == "players" || $_GET['route'] == "coaches" || $_GET['route'] == "teams"))
                 <br>
                 <h2>{{$active}}</h2>
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped mb-5">
                         <thead>
                         <tr>
                             <th>ID</th>
@@ -127,13 +127,57 @@
                                     <input type="hidden" name="_method" value="delete" />
                                     <button class="btn btn-sm btn-danger float-right ml-2">Delete</button>
                                 </form>
-                                <button class="btn btn-sm btn-primary float-right">Edit</button>
+                                <a href="{{$_GET['route']}}/edit/{{$single_data->id}}" class="btn btn-sm btn-primary float-right">Edit</a>
                             </td>
                         </tr>
                         @endforeach
                         </tbody>
                     </table>
                 </div>
+                @elseif(isset($_GET['active']) && $_GET['route'] == "matches")
+                    <div class="container mt-4 mb-4">
+                        <h2>Matches</h2>
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th><a href="{{$_GET['route']}}/create" class="btn btn-primary float-right">Add</a></th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <div class="row justify-content-between">
+                            @foreach($data as $match)
+                                <div class="col-md-5 m-4 card" style="border: solid 1px; padding: 0">
+                                    <div class="card-header">
+                                        <label class="float-left" for="">{{$match['date']}}</label>
+                                        <form action="matches/{{$match['id']}}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="_method" value="delete" />
+                                            <button class="btn btn-sm btn-danger float-right ml-2">Delete</button>
+                                        </form>
+                                        <a href="#" class="btn btn-primary btn-sm float-right">Manage</a>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <img class="float-left" style="max-width: 100%;" src={{$match['home']['image']}}>
+                                            </div>
+                                            <div class="col-md-4" style="font-size: 20px;">
+                                                <div class="col-md-12 text-center">{{$match['home']['points']}} - {{$match['guest']['points']}}</div>
+                                                <div class="col-md-12 text-center"><a href="/matches/{{$match['id']}}" class="btn btn-sm btn-dark">Details</a></div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <img class="float-right" style="max-width: 100%;" src={{$match['guest']['image']}}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
                 @else
                     <div class="container mt-4">
                         <div class="jumbotron text-center">

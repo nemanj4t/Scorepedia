@@ -4,7 +4,7 @@
     <div class="container card mt-4 mb-4">
         <div class="card-body">
             <h1>Live</h1>
-            <div class="row justify-content-center">
+            <div class="row justify-content-between">
                 @foreach($matches as $match)
                     <div class="col-md-5 m-4" style="border: solid 1px; padding: 20px">
                         <div class="row">

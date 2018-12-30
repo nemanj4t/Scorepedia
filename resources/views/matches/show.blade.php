@@ -5,7 +5,7 @@
         <div class="row">
             <div id="home" class="col-md-4 p-4">
                 <div class="row">
-                    <table class="table">
+                    <table class="table table-striped">
                         <thead>
                         <tr>
                             <th scope="col">ID</th>
@@ -84,7 +84,7 @@
             </div>
             <div id="guest" class="col-md-4 p-4">
                 <div class="row">
-                    <table class="table">
+                    <table class="table table-striped">
                         <thead>
                         <tr>
                             <th scope="col">ID</th>

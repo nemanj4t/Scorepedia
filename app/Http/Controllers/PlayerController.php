@@ -78,7 +78,7 @@ class PlayerController extends Controller
 
         // Ovde fali dodavanje globalne statistike za novog igraca u redis
 
-        return redirect('/players');
+        return redirect('/apanel?active=Player&route=players');
     }
 
     /**
@@ -166,6 +166,6 @@ class PlayerController extends Controller
 
         // Fali brisanje tog cvora iz redisa
 
-        return redirect('/apanel');
+        return redirect('/apanel?active=Player&route=players');
     }
 }

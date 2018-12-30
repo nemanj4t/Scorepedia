@@ -58,7 +58,7 @@ class TeamController extends Controller
         $team->saveTeam($request);
 
 
-        return redirect('/teams');
+        return redirect('/apanel?active=Team&route=teams');
     }
 
     /**
@@ -122,6 +122,6 @@ class TeamController extends Controller
 
         // Fali brisanje tog cvora iz redisa
 
-        return redirect('/apanel');
+        return redirect('/apanel?active=Team&route=teams');
     }
 }

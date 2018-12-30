@@ -69,7 +69,7 @@ Route::get('/matches/create', "MatchController@create");    // pogled za kreiran
 Route::post('/matches', "MatchController@store");           // usnimanje kreiranog meca
 Route::put('/matches/{match}', "MatchController@update");
 Route::get('/matches/{match}', "MatchController@show");
-Route::delete('/matches', "MatchController@destroy");
+Route::delete('/matches/{match}', "MatchController@destroy");
 
 // StatisticController
 Route::get('/statistics', "StatisticController@index");          // prikazuje za svaku od par statistika po 5 igraca npr.

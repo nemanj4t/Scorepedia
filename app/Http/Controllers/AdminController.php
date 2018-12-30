@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Ahsan\Neo4j\Facade\Cypher;
 use Illuminate\Support\Facades\Redis;
+use App\Match;
 
 class AdminController extends Controller
 {
@@ -65,6 +66,9 @@ class AdminController extends Controller
                     $coach->image = $properties['image'];
                     array_push($data, $coach);
                 }
+                break;
+            case "Match":
+                $data = Match::getAll();
                 break;
             case "Overview":
                 break;

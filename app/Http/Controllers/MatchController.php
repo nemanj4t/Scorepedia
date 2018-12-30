@@ -45,7 +45,7 @@ class MatchController extends Controller
     {
         Match::saveMatch($request);
 
-        return redirect('/matches');
+        return redirect('/apanel?active=Match&route=matches');
     }
 
     /**
@@ -104,6 +104,11 @@ class MatchController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Brise cvor i sve njegove veze
+        Cypher::Run("MATCH (m:Match) WHERE ID(m) = $id DETACH DELETE m");
+
+        // Fali brisanje tog cvora iz redisa
+
+        return redirect('/apanel?active=Match&route=matches');
     }
 }

@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use function GuzzleHttp\Psr7\str;
 use Illuminate\Http\Request;
 use Ahsan\Neo4j\Facade\Cypher;
-use Symfony\Component\HttpKernel\Tests\DependencyInjection\ContainerAwareRegisterTestController;
 
 class CoachController extends Controller
 {
@@ -79,7 +78,7 @@ class CoachController extends Controller
         }
 
 
-        return redirect('/coaches');
+        return redirect('/apanel?active=Coach&route=coaches');
     }
 
     /**
@@ -155,6 +154,6 @@ class CoachController extends Controller
 
         // Fali brisanje tog cvora iz redisa
 
-        return redirect('/apanel');
+        return redirect('/apanel?active=Coach&route=coaches');
     }
 }
