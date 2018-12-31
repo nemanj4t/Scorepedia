@@ -20,8 +20,11 @@ Route::get('/', "HomeController@index");
 //Admin
 Route::get('/admin', "Auth\LoginController@showLoginForm");
 Route::post('/admin', "Auth\LoginController@login")->name('login');
+Route::get('/admin/matches/{match}', "AdminController@matchManager");
 Route::post('/logout', "Auth\LoginController@logout")->name('logout');
 Route::get('/apanel', "AdminController@index");
+Route::get('/admin/matches/data/{match}', "AdminController@data");
+
 
 // TeamController
 Route::get('/teams', "TeamController@index");
