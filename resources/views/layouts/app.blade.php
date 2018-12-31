@@ -10,11 +10,12 @@
     <title>NEO-REDIS</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -38,7 +39,7 @@
                     <a class="p-2 text-dark" href="/teams">Teams</a>
                     <a class="p-2 text-dark" href="/players">Players</a>
                     <a class="p-2 text-dark" href="/coaches">Coaches</a>
-                    <a class="p-2 text-dark" href="/standings">Standings</a>
+                    <a class="p-2 text-dark" href="/statistics">Standings</a>
                     <a class="p-2 text-dark" href="/standings">Statistics</a>
                     <a class="p-2 text-dark" href="/matches">Matches </a><img style="height: 15px" src="https://mareeg.com/wp-content/uploads/2017/02/LIVE.png">
                 </ul>

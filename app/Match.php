@@ -57,7 +57,7 @@ class Match extends Model
             $homeTeamQuery = Cypher::Run(
                 "MATCH (m:Match)-[:TEAM_MATCH {status: \"home\"}]-(t:Team) 
                  WHERE ID(m) = {$id} RETURN t");
-
+            
             $homeTeamProps = $homeTeamQuery->getRecords()[0]->values()[0]->values();
             $homeTeamId = $homeTeamQuery->getRecords()[0]->values()[0]->identity();
             $homeTeamScore = Redis::hget("match:{$id}:team:{$homeTeamId}", "points");

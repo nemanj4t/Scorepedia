@@ -116,20 +116,5 @@
             </div>
         </div>
     </div>
-    <style>
-        #club-logo {
-            max-width: 100%;
-        }
-
-        #result {
-            margin-top: auto;
-            font-size: 40px;
-        }
-
-        #match-view {
-            padding: 10px;
-        }
-
-    </style>
 @endsection
 
