@@ -54,9 +54,7 @@ class TeamController extends Controller
     public function store(Request $request)
     {
         //
-        $team = new Team();
-        $team->saveTeam($request);
-
+        Team::save($request);
 
         return redirect('/apanel?active=Team&route=teams');
     }

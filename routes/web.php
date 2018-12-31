@@ -77,6 +77,9 @@ Route::get('/statistics/points', "StatisticController@points"); // prikazuje det
 Route::get('/statistics/rebounds', "StatisticController@rebounds"); // isto kao iznad
 // ...
 
+// StandingsController
+Route::get('/standings', "StandingsController@index");
+
 // CommentController
 // Komentari su u okviru meca
 Route::post('/matches/{match}/comments', "CommentController@store");   // usnimanje novog komentara (mozda ne treba kontroler)

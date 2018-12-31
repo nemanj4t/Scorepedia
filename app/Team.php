@@ -79,7 +79,7 @@ class Team
     }
 
 
-    public static function saveTeam($request) {
+    public static function save($request) {
         if($request['coach'] != null)
             Cypher::run("MATCH (c:Coach) WHERE ID(c) = $request[coach]
                         CREATE (t:Team {name: '$request[name]', short_name: '$request[short_name]',
@@ -89,6 +89,8 @@ class Team
             Cypher::run("CREATE (t:Team {name: '$request[name]', short_name: '$request[short_name]',
                         city: '$request[city]', description: '$request[description]', image: '$request[image]',
                         background_image: '$request[background_image]'})");
+
+
     }
 
 
