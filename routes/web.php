@@ -76,6 +76,7 @@ Route::delete('/matches/{match}', "MatchController@destroy");
 
 // StatisticController
 Route::get('/statistics', "StatisticController@index");          // prikazuje za svaku od par statistika po 5 igraca npr.
+Route::get('/statistics/full', "StatisticsController@full");    // prikazuje celokupnu stats tabelu
 Route::get('/statistics/points', "StatisticController@points"); // prikazuje detaljnije statistiku za poene npr. sa vise igraca
 Route::get('/statistics/rebounds', "StatisticController@rebounds"); // isto kao iznad
 // ...
