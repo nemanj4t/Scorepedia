@@ -48434,82 +48434,83 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
     methods: {
-        test: function test() {
-            var _this = this;
-
-            axios.post('/admin/matches/data/' + this.id, {
-                userId: this.something
-            }).then(function (response) {
-                _this.something = response.data;
-            });
-        },
-        addition: function addition(statistic, team) {
-            if (team == "home") switch (statistic) {
-                case "block":
-                    {
+        addition: function addition(statistic, team, playerId) {
+            if (team == "home") {
+                switch (statistic) {
+                    case "blocks":
                         this.home.blocks = Number(this.home.blocks) + 1;
-                    }
-                    break;
-                case "steal":
-                    this.home.steals = Number(this.home.steals) + 1;
-                    break;
-                case "assist":
-                    this.home.assists = Number(this.home.assists) + 1;
-                    break;
-                case "rebound":
-                    this.home.rebounds = Number(this.home.rebounds) + 1;
-                    break;
-                case "foul":
-                    this.home.fouls = Number(this.home.fouls) + 1;
-                    break;
+                        break;
+                    case "steals":
+                        this.home.steals = Number(this.home.steals) + 1;
+                        break;
+                    case "assists":
+                        this.home.assists = Number(this.home.assists) + 1;
+                        break;
+                    case "rebounds":
+                        this.home.rebounds = Number(this.home.rebounds) + 1;
+                        break;
+                    case "fouls":
+                        this.home.fouls = Number(this.home.fouls) + 1;
+                        break;
+                }
+                this.postAddition(this.match.home.id, playerId, 1, statistic);
             } else {
                 switch (statistic) {
-                    case "block":
+                    case "blocks":
                         this.guest.blocks = Number(this.guest.blocks) + 1;
                         break;
-                    case "steal":
+                    case "steals":
                         this.guest.steals = Number(this.guest.steals) + 1;
                         break;
-                    case "assist":
+                    case "assists":
                         this.guest.assists = Number(this.guest.assists) + 1;
                         break;
-                    case "rebound":
+                    case "rebounds":
                         this.guest.rebounds = Number(this.guest.rebounds) + 1;
                         break;
-                    case "foul":
+                    case "fouls":
                         this.guest.fouls = Number(this.guest.fouls) + 1;
                         break;
                 }
+                this.postAddition(this.match.guest.id, playerId, 1, statistic);
             }
         },
-        score: function score(team) {
+        score: function score(team, playerId) {
             var value = 0;
             if (team == "home") {
                 document.getElementsByName('homeoptradio').forEach(function (element) {
                     if (element.checked) value = element.value;
                 });
                 this.home.points = Number(this.home.points) + Number(value);
+                this.postAddition(this.match.home.id, playerId, value, "points");
             } else {
-                console.log('asdasd');
                 document.getElementsByName('guestoptradio').forEach(function (element) {
                     if (element.checked) value = element.value;
                 });
                 this.guest.points = Number(this.guest.points) + Number(value);
-                console.log(this.guest.points);
+                this.postAddition(this.match.guest.id, playerId, value, "points");
             }
+        },
+        postAddition: function postAddition(teamId, playerId, value, key) {
+            axios.post('/admin/matches/data/' + this.id, {
+                teamId: teamId,
+                playerId: playerId,
+                value: value,
+                key: key
+            });
         }
     },
 
     mounted: function mounted() {
-        var _this2 = this;
+        var _this = this;
 
         axios.get('/admin/matches/data/' + this.id).then(function (response) {
-            _this2.match = response.data.match;
-            _this2.home = response.data.home;
-            _this2.guest = response.data.guest;
-            _this2.homePlayers = response.data.homePlayers;
-            _this2.guestPlayers = response.data.guestPlayers;
-            console.log(response.data.home);
+            _this.match = response.data.match;
+            _this.home = response.data.home;
+            _this.guest = response.data.guest;
+            _this.homePlayers = response.data.homePlayers;
+            _this.guestPlayers = response.data.guestPlayers;
+            console.log(response.data);
         });
     }
 });
@@ -48556,7 +48557,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                _vm.score("home")
+                                _vm.score("home", player.id)
                               }
                             }
                           },
@@ -48574,7 +48575,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                _vm.addition("block", "home")
+                                _vm.addition("blocks", "home", player.id)
                               }
                             }
                           },
@@ -48592,7 +48593,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                _vm.addition("rebound", "home")
+                                _vm.addition("rebounds", "home", player.id)
                               }
                             }
                           },
@@ -48610,7 +48611,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                _vm.addition("foul", "home")
+                                _vm.addition("fouls", "home", player.id)
                               }
                             }
                           },
@@ -48628,7 +48629,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                _vm.addition("assist", "home")
+                                _vm.addition("assists", "home", player.id)
                               }
                             }
                           },
@@ -48646,7 +48647,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                _vm.addition("steal", "home")
+                                _vm.addition("steals", "home", player.id)
                               }
                             }
                           },
@@ -48782,7 +48783,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                _vm.score("guest")
+                                _vm.score("guest", player.id)
                               }
                             }
                           },
@@ -48800,7 +48801,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                _vm.addition("block", "guest")
+                                _vm.addition("blocks", "guest", player.id)
                               }
                             }
                           },
@@ -48818,7 +48819,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                _vm.addition("rebound", "guest")
+                                _vm.addition("rebounds", "guest", player.id)
                               }
                             }
                           },
@@ -48836,7 +48837,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                _vm.addition("foul", "guest")
+                                _vm.addition("fouls", "guest", player.id)
                               }
                             }
                           },
@@ -48854,7 +48855,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                _vm.addition("assist", "guest")
+                                _vm.addition("assists", "guest", player.id)
                               }
                             }
                           },
@@ -48872,7 +48873,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                _vm.addition("steal", "guest")
+                                _vm.addition("steals", "guest", player.id)
                               }
                             }
                           },

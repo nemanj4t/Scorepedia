@@ -37,42 +37,42 @@
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <button
                                         type="button"
-                                        @click="score('home')"
+                                        @click="score('home', player.id)"
                                         class="btn btn-sm btn-secondary"
                                     >
                                         P
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('block', 'home')"
+                                        @click="addition('blocks', 'home', player.id)"
                                         class="btn btn-sm btn-secondary"
                                     >
                                         B
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('rebound', 'home')"
+                                        @click="addition('rebounds', 'home', player.id)"
                                         class="btn btn-sm btn-secondary"
                                     >
                                         R
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('foul', 'home')"
+                                        @click="addition('fouls', 'home', player.id)"
                                         class="btn btn-sm btn-secondary"
                                     >
                                         F
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('assist', 'home')"
+                                        @click="addition('assists', 'home', player.id)"
                                         class="btn btn-sm btn-secondary"
                                     >
                                         A
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('steal', 'home')"
+                                        @click="addition('steals', 'home', player.id)"
                                         class="btn btn-sm btn-secondary"
                                     >
                                         S
@@ -167,42 +167,42 @@
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <button
                                         type="button"
-                                        @click="score('guest')"
+                                        @click="score('guest', player.id)"
                                         class="btn btn-sm btn-secondary"
                                     >
                                         P
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('block', 'guest')"
+                                        @click="addition('blocks', 'guest', player.id)"
                                         class="btn btn-sm btn-secondary"
                                     >
                                         B
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('rebound', 'guest')"
+                                        @click="addition('rebounds', 'guest', player.id)"
                                         class="btn btn-sm btn-secondary"
                                     >
                                         R
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('foul', 'guest')"
+                                        @click="addition('fouls', 'guest', player.id)"
                                         class="btn btn-sm btn-secondary"
                                     >
                                         F
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('assist', 'guest')"
+                                        @click="addition('assists', 'guest', player.id)"
                                         class="btn btn-sm btn-secondary"
                                     >
                                         A
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('steal', 'guest')"
+                                        @click="addition('steals', 'guest', player.id)"
                                         class="btn btn-sm btn-secondary"
                                     >
                                         S
@@ -240,73 +240,75 @@
         },
 
         methods: {
-            test() {
-                axios.post('/admin/matches/data/' + this.id, {
-                    userId: this.something,
-                })
-                    .then(response => {
-                        this.something = response.data;
-                    })
-            },
-
-            addition(statistic, team) {
-                if (team == "home")
+            addition(statistic, team, playerId) {
+                if (team == "home") {
                     switch (statistic) {
-                        case "block" : {
+                        case "blocks" :
                             this.home.blocks = Number(this.home.blocks) + 1;
-                        }
                             break;
-                        case "steal" :
+                        case "steals" :
                             this.home.steals = Number(this.home.steals) + 1;
                             break;
-                        case "assist" :
+                        case "assists" :
                             this.home.assists = Number(this.home.assists) + 1;
                             break;
-                        case "rebound" :
+                        case "rebounds" :
                             this.home.rebounds = Number(this.home.rebounds) + 1;
                             break;
-                        case "foul" :
+                        case "fouls" :
                             this.home.fouls = Number(this.home.fouls) + 1;
                             break;
                     }
+                    this.postAddition(this.match.home.id, playerId, 1, statistic);
+                }
                 else {
                     switch (statistic) {
-                        case "block" :
+                        case "blocks" :
                             this.guest.blocks = Number(this.guest.blocks) + 1;
                             break;
-                        case "steal" :
+                        case "steals" :
                             this.guest.steals = Number(this.guest.steals) + 1;
                             break;
-                        case "assist" :
+                        case "assists" :
                             this.guest.assists = Number(this.guest.assists) + 1;
                             break;
-                        case "rebound" :
+                        case "rebounds" :
                             this.guest.rebounds = Number(this.guest.rebounds) + 1;
                             break;
-                        case "foul" :
+                        case "fouls" :
                             this.guest.fouls = Number(this.guest.fouls) + 1;
                             break;
                     }
+                    this.postAddition(this.match.guest.id, playerId, 1, statistic);
                 }
             },
 
-            score(team){
+            score(team, playerId){
                 var value = 0;
                 if(team == "home") {
                     document.getElementsByName('homeoptradio').forEach(element => {
                         if(element.checked) value = element.value;
                     });
                     this.home.points = Number(this.home.points) + Number(value);
+                    this.postAddition(this.match.home.id, playerId, value, "points")
                 }
                 else {
-                    console.log('asdasd');
                     document.getElementsByName('guestoptradio').forEach(element => {
                         if(element.checked) value = element.value;
                     });
                     this.guest.points = Number(this.guest.points) + Number(value);
-                    console.log(this.guest.points);
+                    this.postAddition(this.match.guest.id, playerId, value, "points")
                 }
             },
+
+            postAddition(teamId, playerId, value, key) {
+                axios.post('/admin/matches/data/' + this.id, {
+                    teamId: teamId,
+                    playerId: playerId,
+                    value: value,
+                    key: key
+                })
+            }
         },
 
         mounted() {
@@ -317,7 +319,7 @@
                     this.guest = response.data.guest;
                     this.homePlayers = response.data.homePlayers;
                     this.guestPlayers = response.data.guestPlayers;
-                    console.log(response.data.home)
+                    console.log(response.data)
                 });
         }
     }
