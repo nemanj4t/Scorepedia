@@ -83,6 +83,13 @@ Route::get('/statistics/rebounds', "StatisticController@rebounds"); // isto kao 
 
 // StandingsController
 Route::get('/standings', "StandingsController@index");
+Route::get('/standings/points', "StandingsController@points");
+Route::get('/standings/wins', "StandingsController@wins");
+Route::get('/standings/losses', "StandingsController@losses");
+Route::get('/standings/percentage', "StandingsController@percentage");
+Route::get('/standings/home', "StandingsController@home");
+Route::get('/standings/road', "StandingsController@road");
+Route::get('/standings/streak', "StandingsController@streak");
 
 // CommentController
 // Komentari su u okviru meca

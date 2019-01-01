@@ -29,7 +29,21 @@ class Team
         return $teams;
     }
 
+    public static function getTeamById($id)
+    {
+        $result = Cypher::run("MATCH (n:Team) WHERE ID(n) = $id RETURN n");
+        $record = $result->getRecords()[0];
+
+        $properties_array = $record->getPropertiesOfNode();
+        $id_array = ["id" =>  $record->getIdOfNode()];
+        $team = array_merge($properties_array, $id_array);
+
+
+        return $team;
+    }
+
     public static function getAll() {
+
         $resultTeams = Cypher::run("MATCH (t:Team) RETURN t");
         $teams = [];
         foreach ($resultTeams->getRecords() as $record) {
@@ -49,6 +63,7 @@ class Team
     }
 
     public static function getById($id) {
+
         $team = null;
         $result = Cypher::run("MATCH (t:Team) WHERE ID(t) = $id RETURN t")->getRecords();
         $record = $result[0];
@@ -80,22 +95,39 @@ class Team
 
 
     public static function save($request) {
+
         if($request['coach'] != null)
-            Cypher::run("MATCH (c:Coach) WHERE ID(c) = $request[coach]
+           $t = Cypher::run("MATCH (c:Coach) WHERE ID(c) = $request[coach]
                         CREATE (t:Team {name: '$request[name]', short_name: '$request[short_name]',
                         city: '$request[city]', description: '$request[description]', image: '$request[image]',
-                        background_image: '$request[background_image]'})-[:TEAM_COACH{coached_since: '$request[coached_since]', coached_until: '$request[coached_until]'}]->(c)");
+                        background_image: '$request[background_image]'})-[:TEAM_COACH{coached_since: '$request[coached_since]', coached_until: '$request[coached_until]'}]->(c) RETURN t");
         else
-            Cypher::run("CREATE (t:Team {name: '$request[name]', short_name: '$request[short_name]',
+           $t = Cypher::run("CREATE (t:Team {name: '$request[name]', short_name: '$request[short_name]',
                         city: '$request[city]', description: '$request[description]', image: '$request[image]',
-                        background_image: '$request[background_image]'})");
+                        background_image: '$request[background_image]'}) RETURN t");
 
+        Redis::zadd("points", 0, $t->getRecords()[0]->getIdOfNode());
+        Redis::zadd("wins", 0, $t->getRecords()[0]->getIdOfNode());
+        Redis::zadd("loses", 0, $t->getRecords()[0]->getIdOfNode());
+        Redis::zadd("percentage", 0, $t->getRecords()[0]->getIdOfNode());
+        Redis::zadd("home", 0, $t->getRecords()[0]->getIdOfNode());
+        Redis::zadd("road", 0, $t->getRecords()[0]->getIdOfNode());
+        Redis::zadd("streak", 0, $t->getRecords()[0]->getIdOfNode());
+
+        Redis::hmset(
+            "team:standings:{$t->getRecords()[0]->getIdOfNode()}",
+            "points", 0,
+            "wins", 0,
+            "loses", 0,
+            "percentage", 0,
+            "home", 0,
+            "road", 0,
+            "streak", 0);
 
     }
 
-
-
     public static function update($id, $request) {
+
         $team = Team::getById($id);
         Cypher::run("MATCH (t:Team) WHERE ID(t) = $id SET t.name = '$request[name]', t.short_name = '$request[short_name]',t.city = '$request[city]', t.image = '$request[image]', t.background_image = '$request[background_image]', t.description = '$request[description]'");
         $team_coach = new Team_Coach(["coach_id" => $request['coach'], "team_name" => $id, "coached_since" => $request['coached_since'], "coached_until" => $request['coached_until']]);
