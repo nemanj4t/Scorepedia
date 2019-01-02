@@ -40,7 +40,7 @@
                     <a class="p-2 text-dark" href="/players">Players</a>
                     <a class="p-2 text-dark" href="/coaches">Coaches</a>
                     <a class="p-2 text-dark" href="/standings">Standings</a>
-                    <a class="p-2 text-dark" href="/statistics">Statistics</a>
+                    <a class="p-2 text-dark" href="/statistics?show=short">Statistics</a>
                     <a class="p-2 text-dark" href="/matches">Matches </a><img style="height: 15px" src="https://mareeg.com/wp-content/uploads/2017/02/LIVE.png">
                 </ul>
 

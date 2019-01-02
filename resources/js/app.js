@@ -20,7 +20,7 @@ window.Vue = require('vue');
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('match-manager', require('./components/MatchManager.vue'));
 Vue.component('standings', require('./components/Standings.vue'));
-
+Vue.component('statistics', require('./components/Stats.vue'));
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))

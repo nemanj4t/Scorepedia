@@ -11,26 +11,38 @@ class StatisticController extends Controller
 {
     public function index()
     {
-        // Top 5 stats
-        $records = PlayerStatistic::getTopOfEach(5);
-        $stats = [];
-        foreach($records as $key => $set)
-        {
-            $statsSet = [];
-            foreach($set as $id => $item)
-            {
-                $result = Player::getById($id);
-                $player = [
-                    "id" => $id,
-                    "name" => $result['name'],
-                    "score" => $item
-                ];
-                array_push($statsSet, $player);
-            }
-            $stats += [$key => $statsSet];
+        if(isset($_GET['show'])) {
+            $show = $_GET['show'];
         }
+        else {
+            $show = 'short';
+        }
+
+        if($show == 'short') {
+            // Top 5 stats
+            $records = PlayerStatistic::getTopOfEach(5);
+            $stats = [];
+            foreach($records as $key => $set)
+            {
+                $statsSet = [];
+                foreach($set as $id => $item)
+                {
+                    $result = Player::getById($id);
+                    $player = [
+                        "id" => $id,
+                        "name" => $result['name'],
+                        "score" => $item
+                    ];
+                    array_push($statsSet, $player);
+                }
+                $stats += [$key => $statsSet];
+            }
     
-        return view('stats.index', compact('stats'));
+            return view('stats.index', compact('stats'));
+        }
+        else {
+            return view('stats.full');
+        }
     }
 
     public function full()
@@ -53,6 +65,6 @@ class StatisticController extends Controller
             array_push($players, $player);
         }
         
-        return json_encode($players);
+        return $players;
     }
 }
