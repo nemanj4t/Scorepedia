@@ -14,6 +14,25 @@ class PlayerStatistic extends Model
     public $assists;
     public $fouls;
 
+    public static function getById($id)
+    {
+        $points = Redis::zscore("players:points", $id);
+        $blocks = Redis::zscore("players:blocks", $id);
+        $rebounds = Redis::zscore("players:rebounds", $id);
+        $steals = Redis::zscore("players:steals", $id);
+        $assists = Redis::zscore("players:assists", $id);
+        $fouls = Redis::zscore("players:fouls", $id);
+
+        return [
+            "points" => $points,
+            "blocks" => $blocks,
+            "rebounds" => $rebounds,
+            "steals" => $steals,
+            "assists" => $assists,
+            "fouls" => $fouls
+        ];
+    }
+
     public static function getTopOfEach($number)
     {
         $points = Redis::zrange("players:points", 0, $number - 1, "WITHSCORES");

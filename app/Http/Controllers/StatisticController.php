@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\PlayerStatistic;
 use Illuminate\Http\Request;
+use Ahsan\Neo4j\Facade\Cypher;
 use App\Player;
 
 class StatisticController extends Controller
@@ -28,11 +29,30 @@ class StatisticController extends Controller
             }
             $stats += [$key => $statsSet];
         }
+    
         return view('stats.index', compact('stats'));
     }
 
     public function full()
     {
-        // Full stats
+        $result = Cypher::run("MATCH (n:Player) RETURN n");
+        $players = [];
+
+        foreach($result->getRecords() as $record)
+        {
+            $properties_array = $record->getPropertiesOfNode();
+            unset($properties_array['image'], 
+            $properties_array['city'],
+            $properties_array['bio'],
+            $properties_array['height'],
+            $properties_array['weight']);
+            $id = $record->getIdOfNode();
+            $id_array = ["id" =>  $id];
+            $stats = PlayerStatistic::getById($id);
+            $player = array_merge($properties_array, $id_array, $stats);
+            array_push($players, $player);
+        }
+        
+        return json_encode($players)
     }
 }
