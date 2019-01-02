@@ -14125,7 +14125,7 @@ if (typeof DEBUG !== 'undefined' && DEBUG) {
   ) }
 }
 
-var listToStyles = __webpack_require__(49)
+var listToStyles = __webpack_require__(48)
 
 /*
 type StyleObject = {
@@ -14338,7 +14338,7 @@ function applyToTag (styleElement, obj) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(15);
-module.exports = __webpack_require__(57);
+module.exports = __webpack_require__(56);
 
 
 /***/ }),
@@ -14353,9 +14353,8 @@ module.exports = __webpack_require__(57);
  */
 
 __webpack_require__(16);
-__webpack_require__(39);
 
-window.Vue = __webpack_require__(40);
+window.Vue = __webpack_require__(39);
 
 /**
  * The following block of code may be used to automatically register your
@@ -14365,9 +14364,9 @@ window.Vue = __webpack_require__(40);
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-Vue.component('example-component', __webpack_require__(43));
-Vue.component('match-manager', __webpack_require__(46));
-Vue.component('standings', __webpack_require__(52));
+Vue.component('example-component', __webpack_require__(42));
+Vue.component('match-manager', __webpack_require__(45));
+Vue.component('standings', __webpack_require__(51));
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))
@@ -14476,129 +14475,6 @@ jQuery(function ($) {
         $this.countTo(options);
     }
 });
-
-function addNewInput(element) {
-    var parent = element.parentNode; // div u okviru koga se nalazi
-    var hasValue = false;
-    for (var i = 0; i < parent.children.length; i++) {
-        if (parent.children[i].value) {
-            hasValue = true;
-            break;
-        }
-    }
-    if (!hasValue) {
-        if (parent.parentNode.children.length === 1) {
-            return;
-        } else {
-            parent.parentNode.removeChild(parent);
-            return;
-        }
-    } else if (parent.nextElementSibling) return;
-
-    var newInput = parent.cloneNode(); // novi div
-    var nameParts = newInput.id.split('_');
-    newInput.id = nameParts[0] + '_' + (parseInt(nameParts[1]) + 1);
-    for (var _i = 0; _i < parent.children.length; _i++) {
-        var newChild = void 0;
-        if (parent.children[_i].type === "select-one") {
-            newChild = parent.children[_i].cloneNode(true); // cloneNode([deep])
-        } else {
-            newChild = parent.children[_i].cloneNode();
-        }
-        var _nameParts = newChild.name.split('_');
-        var name = _nameParts[0] + '_' + _nameParts[1] + '_' + (parseInt(_nameParts[2]) + 1);
-        newChild.name = name;
-        newChild.value = "";
-        newInput.appendChild(newChild);
-    }
-    parent.parentNode.appendChild(newInput);
-}
-
-function addNewInput(element) {
-    var parent = element.parentNode; // div u okviru koga se nalazi
-    var hasValue = false;
-    for (var i = 0; i < parent.children.length; i++) {
-        if (parent.children[i].value) {
-            hasValue = true;
-            break;
-        }
-    }
-    if (!hasValue) {
-        if (parent.parentNode.children.length === 1) {
-            return;
-        } else {
-            parent.parentNode.removeChild(parent);
-            return;
-        }
-    } else if (parent.nextElementSibling) return;
-
-    var newInput = parent.cloneNode(); // novi div
-    var nameParts = newInput.id.split('_');
-    newInput.id = nameParts[0] + '_' + (parseInt(nameParts[1]) + 1);
-    for (var _i2 = 0; _i2 < parent.children.length; _i2++) {
-        var newChild = void 0;
-        if (parent.children[_i2].type === "select-one") {
-            newChild = parent.children[_i2].cloneNode(true); // cloneNode([deep])
-        } else {
-            newChild = parent.children[_i2].cloneNode();
-        }
-        var _nameParts2 = newChild.name.split('_');
-        var name = _nameParts2[0] + '_' + _nameParts2[1] + '_' + (parseInt(_nameParts2[2]) + 1);
-        newChild.name = name;
-        newChild.value = "";
-        newInput.appendChild(newChild);
-    }
-    parent.parentNode.appendChild(newInput);
-}
-
-function changeAction(element) {
-    var form = element.parentNode;
-    var method = form.children[0]; // prvi je hidden input za metodu
-    console.log(method);
-    if (element.value === "Update") {
-        method.value = "PUT";
-    } else {
-        method.value = "DELETE";
-    }
-}
-
-// Multiple inputs
-function addNewInput(element) {
-    var parent = element.parentNode; // div u okviru koga se nalazi
-    var hasValue = false;
-    for (var i = 0; i < parent.children.length; i++) {
-        if (parent.children[i].value) {
-            hasValue = true;
-            break;
-        }
-    }
-    if (!hasValue) {
-        if (parent.parentNode.children.length === 1) {
-            return;
-        } else {
-            parent.parentNode.removeChild(parent);
-            return;
-        }
-    } else if (parent.nextElementSibling) return;
-
-    var newInput = parent.cloneNode(); // novi div
-    var nameParts = newInput.id.split('_');
-    newInput.id = nameParts[0] + '_' + (parseInt(nameParts[1]) + 1);
-    for (var _i3 = 0; _i3 < parent.children.length; _i3++) {
-        var newChild = void 0;
-        if (parent.children[_i3].type === "select-one") {
-            newChild = parent.children[_i3].cloneNode(true); // cloneNode([deep])
-        } else {
-            newChild = parent.children[_i3].cloneNode();
-        }
-        var _nameParts3 = newChild.name.split('_');
-        var name = _nameParts3[0] + '_' + _nameParts3[1] + '_' + (parseInt(_nameParts3[2]) + 1);
-        newChild.name = name;
-        newChild.value = "";
-        newInput.appendChild(newChild);
-    }
-    parent.parentNode.appendChild(newInput);
-}
 
 var app = new Vue({
     el: '#app'
@@ -36648,61 +36524,6 @@ module.exports = function spread(callback) {
 
 /***/ }),
 /* 39 */
-/***/ (function(module, exports) {
-
-// function addNewInput(element){
-//     if(!element.value){
-//         element.parentNode.removeChild( element.nextElementSibling);
-//         return;
-//     }
-//     else if(element.nextElementSibling)
-//         return;
-//     let newInput = element.cloneNode();
-//     let inputType = newInput.id.split('_');
-//     newInput.id = inputType + '_' +( parseInt( element.id.substring(element.id.indexOf('_')+1)) + 1);
-//     newInput.value= '';
-//     element.parentNode.appendChild(newInput);
-// }
-
-function addNewInput(element) {
-    var parent = element.parentNode; // div u okviru koga se nalazi
-    var hasValue = false;
-    for (var i = 0; i < parent.children.length; i++) {
-        if (parent.children[i].value) {
-            hasValue = true;
-            break;
-        }
-    }
-    if (!hasValue) {
-        if (parent.parentNode.children.length === 1) {
-            return;
-        } else {
-            parent.parentNode.removeChild(parent);
-            return;
-        }
-    } else if (parent.nextElementSibling) return;
-
-    var newInput = parent.cloneNode(); // novi div
-    var nameParts = newInput.id.split('_');
-    newInput.id = nameParts[0] + '_' + (parseInt(nameParts[1]) + 1);
-    for (var _i = 0; _i < parent.children.length; _i++) {
-        var newChild = void 0;
-        if (parent.children[_i].type === "select-one") {
-            newChild = parent.children[_i].cloneNode(true); // cloneNode([deep])
-        } else {
-            newChild = parent.children[_i].cloneNode();
-        }
-        var _nameParts = newChild.name.split('_');
-        var name = _nameParts[0] + '_' + _nameParts[1] + '_' + (parseInt(_nameParts[2]) + 1);
-        newChild.name = name;
-        newChild.value = "";
-        newInput.appendChild(newChild);
-    }
-    parent.parentNode.appendChild(newInput);
-}
-
-/***/ }),
-/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47800,10 +47621,10 @@ Vue.compile = compileToFunctions;
 
 module.exports = Vue;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(41).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(40).setImmediate))
 
 /***/ }),
-/* 41 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
@@ -47859,7 +47680,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(42);
+__webpack_require__(41);
 // On some exotic environments, it's not clear which object `setimmediate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -47873,7 +47694,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -48066,15 +47887,15 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(7)))
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(3)
 /* script */
-var __vue_script__ = __webpack_require__(44)
+var __vue_script__ = __webpack_require__(43)
 /* template */
-var __vue_template__ = __webpack_require__(45)
+var __vue_template__ = __webpack_require__(44)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -48113,7 +47934,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -48142,7 +47963,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 45 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -48185,19 +48006,19 @@ if (false) {
 }
 
 /***/ }),
-/* 46 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(47)
+  __webpack_require__(46)
 }
 var normalizeComponent = __webpack_require__(3)
 /* script */
-var __vue_script__ = __webpack_require__(50)
+var __vue_script__ = __webpack_require__(49)
 /* template */
-var __vue_template__ = __webpack_require__(51)
+var __vue_template__ = __webpack_require__(50)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -48236,13 +48057,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 47 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(48);
+var content = __webpack_require__(47);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -48262,7 +48083,7 @@ if(false) {
 }
 
 /***/ }),
-/* 48 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -48276,7 +48097,7 @@ exports.push([module.i, "\n#club-logo[data-v-c5bd53da] {\r\n        max-width: 1
 
 
 /***/ }),
-/* 49 */
+/* 48 */
 /***/ (function(module, exports) {
 
 /**
@@ -48309,7 +48130,7 @@ module.exports = function listToStyles (parentId, list) {
 
 
 /***/ }),
-/* 50 */
+/* 49 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -48639,7 +48460,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 51 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -49144,19 +48965,19 @@ if (false) {
 }
 
 /***/ }),
-/* 52 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(53)
+  __webpack_require__(52)
 }
 var normalizeComponent = __webpack_require__(3)
 /* script */
-var __vue_script__ = __webpack_require__(55)
+var __vue_script__ = __webpack_require__(54)
 /* template */
-var __vue_template__ = __webpack_require__(56)
+var __vue_template__ = __webpack_require__(55)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -49195,13 +49016,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 53 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(54);
+var content = __webpack_require__(53);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -49221,7 +49042,7 @@ if(false) {
 }
 
 /***/ }),
-/* 54 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -49235,7 +49056,7 @@ exports.push([module.i, "\n*[data-v-288fcc4c]{\r\n        box-sizing: border-box
 
 
 /***/ }),
-/* 55 */
+/* 54 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -49327,7 +49148,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 56 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -49474,7 +49295,7 @@ if (false) {
 }
 
 /***/ }),
-/* 57 */
+/* 56 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
