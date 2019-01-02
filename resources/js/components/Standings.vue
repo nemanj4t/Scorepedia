@@ -1,36 +1,38 @@
 <template>
 
-    <div class="table-wrapper">
-        <table class="fl-table">
-            <thead>
-            <tr>
-                <th>Rank</th>
-                <th>Image</th>
-                <th>Team</th>
-                <th @click="show('points')">Points</th>
-                <th @click="show('wins')">Wins</th>
-                <th @click="show('losses')">Loses</th>
-                <th @click="show('percentage')">Percentage</th>
-                <th @click="show('home')">Home</th>
-                <th @click="show('road')">Road</th>
-                <th @click="show('streak')">Streak</th>
-            </tr>
-            </thead>
+    <div class="container">
+        <div class="table-wrapper">
+            <table class="fl-table">
+                <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Image</th>
+                    <th>Team</th>
+                    <th @click="show('points')">Points</th>
+                    <th @click="show('wins')">Wins</th>
+                    <th @click="show('losses')">Loses</th>
+                    <th @click="show('percentage')">Percentage</th>
+                    <th @click="show('home')">Home</th>
+                    <th @click="show('road')">Road</th>
+                    <th @click="show('streak')">Streak</th>
+                </tr>
+                </thead>
 
-            <tr v-for="(stand, index) in stands.array">
-                <td>{{index + 1}}</td>
-                <td><img :src="stand.image" id="img-pic"></td>
-                <td>{{stand.name}}</td>
-                <td>{{stand.points}}</td>
-                <td>{{stand.wins}}</td>
-                <td>{{stand.loses}}</td>
-                <td>{{stand.percentage}}</td>
-                <td>{{stand.home}}</td>
-                <td>{{stand.road}}</td>
-                <td>{{stand.streak}}</td>
-            </tr>
+                <tr v-for="(stand, index) in stands.array">
+                    <td>{{index + 1}}</td>
+                    <td><img :src="stand.image" id="img-pic"></td>
+                    <td>{{stand.name}}</td>
+                    <td>{{stand.points}}</td>
+                    <td>{{stand.wins}}</td>
+                    <td>{{stand.loses}}</td>
+                    <td>{{stand.percentage}}</td>
+                    <td>{{stand.home}}</td>
+                    <td>{{stand.road}}</td>
+                    <td>{{stand.streak}}</td>
+                </tr>
 
-        </table>
+            </table>
+        </div>
     </div>
 
 </template>

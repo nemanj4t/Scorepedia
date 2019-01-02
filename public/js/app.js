@@ -49154,6 +49154,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "standings",
@@ -49209,133 +49213,135 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "table-wrapper" }, [
-    _c(
-      "table",
-      { staticClass: "fl-table" },
-      [
-        _c("thead", [
-          _c("tr", [
-            _c("th", [_vm._v("Rank")]),
-            _vm._v(" "),
-            _c("th", [_vm._v("Image")]),
-            _vm._v(" "),
-            _c("th", [_vm._v("Team")]),
-            _vm._v(" "),
-            _c(
-              "th",
-              {
-                on: {
-                  click: function($event) {
-                    _vm.show("points")
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "table-wrapper" }, [
+      _c(
+        "table",
+        { staticClass: "fl-table" },
+        [
+          _c("thead", [
+            _c("tr", [
+              _c("th", [_vm._v("Rank")]),
+              _vm._v(" "),
+              _c("th", [_vm._v("Image")]),
+              _vm._v(" "),
+              _c("th", [_vm._v("Team")]),
+              _vm._v(" "),
+              _c(
+                "th",
+                {
+                  on: {
+                    click: function($event) {
+                      _vm.show("points")
+                    }
                   }
-                }
-              },
-              [_vm._v("Points")]
-            ),
-            _vm._v(" "),
-            _c(
-              "th",
-              {
-                on: {
-                  click: function($event) {
-                    _vm.show("wins")
+                },
+                [_vm._v("Points")]
+              ),
+              _vm._v(" "),
+              _c(
+                "th",
+                {
+                  on: {
+                    click: function($event) {
+                      _vm.show("wins")
+                    }
                   }
-                }
-              },
-              [_vm._v("Wins")]
-            ),
-            _vm._v(" "),
-            _c(
-              "th",
-              {
-                on: {
-                  click: function($event) {
-                    _vm.show("losses")
+                },
+                [_vm._v("Wins")]
+              ),
+              _vm._v(" "),
+              _c(
+                "th",
+                {
+                  on: {
+                    click: function($event) {
+                      _vm.show("losses")
+                    }
                   }
-                }
-              },
-              [_vm._v("Loses")]
-            ),
-            _vm._v(" "),
-            _c(
-              "th",
-              {
-                on: {
-                  click: function($event) {
-                    _vm.show("percentage")
+                },
+                [_vm._v("Loses")]
+              ),
+              _vm._v(" "),
+              _c(
+                "th",
+                {
+                  on: {
+                    click: function($event) {
+                      _vm.show("percentage")
+                    }
                   }
-                }
-              },
-              [_vm._v("Percentage")]
-            ),
-            _vm._v(" "),
-            _c(
-              "th",
-              {
-                on: {
-                  click: function($event) {
-                    _vm.show("home")
+                },
+                [_vm._v("Percentage")]
+              ),
+              _vm._v(" "),
+              _c(
+                "th",
+                {
+                  on: {
+                    click: function($event) {
+                      _vm.show("home")
+                    }
                   }
-                }
-              },
-              [_vm._v("Home")]
-            ),
-            _vm._v(" "),
-            _c(
-              "th",
-              {
-                on: {
-                  click: function($event) {
-                    _vm.show("road")
+                },
+                [_vm._v("Home")]
+              ),
+              _vm._v(" "),
+              _c(
+                "th",
+                {
+                  on: {
+                    click: function($event) {
+                      _vm.show("road")
+                    }
                   }
-                }
-              },
-              [_vm._v("Road")]
-            ),
-            _vm._v(" "),
-            _c(
-              "th",
-              {
-                on: {
-                  click: function($event) {
-                    _vm.show("streak")
+                },
+                [_vm._v("Road")]
+              ),
+              _vm._v(" "),
+              _c(
+                "th",
+                {
+                  on: {
+                    click: function($event) {
+                      _vm.show("streak")
+                    }
                   }
-                }
-              },
-              [_vm._v("Streak")]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _vm._l(_vm.stands.array, function(stand, index) {
-          return _c("tr", [
-            _c("td", [_vm._v(_vm._s(index + 1))]),
-            _vm._v(" "),
-            _c("td", [
-              _c("img", { attrs: { src: stand.image, id: "img-pic" } })
-            ]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(stand.name))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(stand.points))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(stand.wins))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(stand.loses))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(stand.percentage))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(stand.home))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(stand.road))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(stand.streak))])
-          ])
-        })
-      ],
-      2
-    )
+                },
+                [_vm._v("Streak")]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.stands.array, function(stand, index) {
+            return _c("tr", [
+              _c("td", [_vm._v(_vm._s(index + 1))]),
+              _vm._v(" "),
+              _c("td", [
+                _c("img", { attrs: { src: stand.image, id: "img-pic" } })
+              ]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(stand.name))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(stand.points))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(stand.wins))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(stand.loses))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(stand.percentage))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(stand.home))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(stand.road))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(stand.streak))])
+            ])
+          })
+        ],
+        2
+      )
+    ])
   ])
 }
 var staticRenderFns = []
