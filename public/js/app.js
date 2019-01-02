@@ -14477,6 +14477,80 @@ jQuery(function ($) {
     }
 });
 
+function addNewInput(element) {
+    var parent = element.parentNode; // div u okviru koga se nalazi
+    var hasValue = false;
+    for (var i = 0; i < parent.children.length; i++) {
+        if (parent.children[i].value) {
+            hasValue = true;
+            break;
+        }
+    }
+    if (!hasValue) {
+        if (parent.parentNode.children.length === 1) {
+            return;
+        } else {
+            parent.parentNode.removeChild(parent);
+            return;
+        }
+    } else if (parent.nextElementSibling) return;
+
+    var newInput = parent.cloneNode(); // novi div
+    var nameParts = newInput.id.split('_');
+    newInput.id = nameParts[0] + '_' + (parseInt(nameParts[1]) + 1);
+    for (var _i = 0; _i < parent.children.length; _i++) {
+        var newChild = void 0;
+        if (parent.children[_i].type === "select-one") {
+            newChild = parent.children[_i].cloneNode(true); // cloneNode([deep])
+        } else {
+            newChild = parent.children[_i].cloneNode();
+        }
+        var _nameParts = newChild.name.split('_');
+        var name = _nameParts[0] + '_' + _nameParts[1] + '_' + (parseInt(_nameParts[2]) + 1);
+        newChild.name = name;
+        newChild.value = "";
+        newInput.appendChild(newChild);
+    }
+    parent.parentNode.appendChild(newInput);
+}
+
+function addNewInput(element) {
+    var parent = element.parentNode; // div u okviru koga se nalazi
+    var hasValue = false;
+    for (var i = 0; i < parent.children.length; i++) {
+        if (parent.children[i].value) {
+            hasValue = true;
+            break;
+        }
+    }
+    if (!hasValue) {
+        if (parent.parentNode.children.length === 1) {
+            return;
+        } else {
+            parent.parentNode.removeChild(parent);
+            return;
+        }
+    } else if (parent.nextElementSibling) return;
+
+    var newInput = parent.cloneNode(); // novi div
+    var nameParts = newInput.id.split('_');
+    newInput.id = nameParts[0] + '_' + (parseInt(nameParts[1]) + 1);
+    for (var _i2 = 0; _i2 < parent.children.length; _i2++) {
+        var newChild = void 0;
+        if (parent.children[_i2].type === "select-one") {
+            newChild = parent.children[_i2].cloneNode(true); // cloneNode([deep])
+        } else {
+            newChild = parent.children[_i2].cloneNode();
+        }
+        var _nameParts2 = newChild.name.split('_');
+        var name = _nameParts2[0] + '_' + _nameParts2[1] + '_' + (parseInt(_nameParts2[2]) + 1);
+        newChild.name = name;
+        newChild.value = "";
+        newInput.appendChild(newChild);
+    }
+    parent.parentNode.appendChild(newInput);
+}
+
 var app = new Vue({
     el: '#app'
 });
@@ -48043,7 +48117,7 @@ var staticRenderFns = [
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
               _vm._v(
-                "\r\n                        I'm an example component.\r\n                    "
+                "\n                        I'm an example component.\n                    "
               )
             ])
           ])
@@ -49117,6 +49191,8 @@ exports.push([module.i, "\n*[data-v-288fcc4c]{\r\n        box-sizing: border-box
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
 //
 //
 //

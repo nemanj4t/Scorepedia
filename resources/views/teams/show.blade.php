@@ -132,9 +132,6 @@
     </div>
     <br>
     <br>
-    <center>
-        <strong>Powered by <a href="http://j.mp/metronictheme" target="_blank">KeenThemes</a></strong>
-    </center>
     <br>
     <br>
 
