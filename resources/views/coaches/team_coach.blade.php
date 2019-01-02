@@ -50,59 +50,57 @@
 
 @endsection
 
-@section('scripts')
-    <script>
+<script>
 
-        // Promena rute u zavisnosti od buttona
-        function changeAction(element) {
-            let form = element.parentNode;
-            let method = form.children[0]; // prvi je hidden input za metodu
-            console.log(method);
-            if(element.value === "Update") {
-                method.value = "PUT";
-            } else {
-                method.value = "DELETE";
+    // Promena rute u zavisnosti od buttona
+    function changeAction(element) {
+        let form = element.parentNode;
+        let method = form.children[0]; // prvi je hidden input za metodu
+        console.log(method);
+        if(element.value === "Update") {
+            method.value = "PUT";
+        } else {
+            method.value = "DELETE";
+        }
+    }
+
+    // Multiple inputs
+    function addNewInput(element) {
+        let parent = element.parentNode;    // div u okviru koga se nalazi
+        let hasValue = false;
+        for(let i = 0; i < parent.children.length; i++) {
+            if(parent.children[i].value) {
+                hasValue = true;
+                break;
             }
         }
-
-        // Multiple inputs
-        function addNewInput(element) {
-            let parent = element.parentNode;    // div u okviru koga se nalazi
-            let hasValue = false;
-            for(let i = 0; i < parent.children.length; i++) {
-                if(parent.children[i].value) {
-                    hasValue = true;
-                    break;
-                }
-            }
-            if (!hasValue) {
-                if(parent.parentNode.children.length === 1) {
-                    return;
-                } else {
-                    parent.parentNode.removeChild(parent);
-                    return;
-                }
-            } else if (parent.nextElementSibling)
+        if (!hasValue) {
+            if(parent.parentNode.children.length === 1) {
                 return;
-
-            let newInput = parent.cloneNode(); // novi div
-            let nameParts = newInput.id.split('_');
-            newInput.id = nameParts[0] + '_' + (parseInt(nameParts[1]) + 1);
-            for(let i = 0; i < parent.children.length; i++) {
-                let newChild;
-                if(parent.children[i].type === "select-one") {
-                    newChild = parent.children[i].cloneNode(true);  // cloneNode([deep])
-
-                } else {
-                    newChild = parent.children[i].cloneNode();
-                }
-                let nameParts = newChild.name.split('_');
-                let name = nameParts[0] + '_' + nameParts[1] + '_' + (parseInt(nameParts[2]) + 1);
-                newChild.name = name;
-                newChild.value = "";
-                newInput.appendChild(newChild);
+            } else {
+                parent.parentNode.removeChild(parent);
+                return;
             }
-            parent.parentNode.appendChild(newInput);
+        } else if (parent.nextElementSibling)
+            return;
+
+        let newInput = parent.cloneNode(); // novi div
+        let nameParts = newInput.id.split('_');
+        newInput.id = nameParts[0] + '_' + (parseInt(nameParts[1]) + 1);
+        for(let i = 0; i < parent.children.length; i++) {
+            let newChild;
+            if(parent.children[i].type === "select-one") {
+                newChild = parent.children[i].cloneNode(true);  // cloneNode([deep])
+
+            } else {
+                newChild = parent.children[i].cloneNode();
+            }
+            let nameParts = newChild.name.split('_');
+            let name = nameParts[0] + '_' + nameParts[1] + '_' + (parseInt(nameParts[2]) + 1);
+            newChild.name = name;
+            newChild.value = "";
+            newInput.appendChild(newChild);
         }
-    </script>
-@endsection
+        parent.parentNode.appendChild(newInput);
+    }
+</script>

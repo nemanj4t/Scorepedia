@@ -1,19 +1,5 @@
 @extends('layouts.app')
 
-<style>
-    .link
-    {
-        color:black;
-        text-decoration: none;
-    }
-
-    .link:hover
-    {
-        color:royalblue;
-        text-decoration: none;
-    }
-</style>
-
 @section('content')
     <div class="container">
         @foreach ($stats as $key => $stat)
@@ -22,12 +8,12 @@
                 <tr>
                     <th scope="col">
                         <h4>
-                            <a href="#"> {{ ucfirst($key) }} </a>
+                            <a href="/statistics?show=full"> {{ ucfirst($key) }} </a>
                         </h4>
                     </th>
                     <th scope="col">
                         <h4>
-                            <a href="#"> <i class="fas fa-long-arrow-alt-right fa 9x"></i> </a>
+                            <a href="/statistics?show=full"> <i class="fas fa-long-arrow-alt-right fa 9x"></i> </a>
                         </h4>
                     </th>
                 </tr>
