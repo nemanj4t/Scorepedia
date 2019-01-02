@@ -53,6 +53,6 @@ class StatisticController extends Controller
             array_push($players, $player);
         }
         
-        return json_encode($players)
+        return json_encode($players);
     }
 }
