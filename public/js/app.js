@@ -14551,6 +14551,55 @@ function addNewInput(element) {
     parent.parentNode.appendChild(newInput);
 }
 
+function changeAction(element) {
+    var form = element.parentNode;
+    var method = form.children[0]; // prvi je hidden input za metodu
+    console.log(method);
+    if (element.value === "Update") {
+        method.value = "PUT";
+    } else {
+        method.value = "DELETE";
+    }
+}
+
+// Multiple inputs
+function addNewInput(element) {
+    var parent = element.parentNode; // div u okviru koga se nalazi
+    var hasValue = false;
+    for (var i = 0; i < parent.children.length; i++) {
+        if (parent.children[i].value) {
+            hasValue = true;
+            break;
+        }
+    }
+    if (!hasValue) {
+        if (parent.parentNode.children.length === 1) {
+            return;
+        } else {
+            parent.parentNode.removeChild(parent);
+            return;
+        }
+    } else if (parent.nextElementSibling) return;
+
+    var newInput = parent.cloneNode(); // novi div
+    var nameParts = newInput.id.split('_');
+    newInput.id = nameParts[0] + '_' + (parseInt(nameParts[1]) + 1);
+    for (var _i3 = 0; _i3 < parent.children.length; _i3++) {
+        var newChild = void 0;
+        if (parent.children[_i3].type === "select-one") {
+            newChild = parent.children[_i3].cloneNode(true); // cloneNode([deep])
+        } else {
+            newChild = parent.children[_i3].cloneNode();
+        }
+        var _nameParts3 = newChild.name.split('_');
+        var name = _nameParts3[0] + '_' + _nameParts3[1] + '_' + (parseInt(_nameParts3[2]) + 1);
+        newChild.name = name;
+        newChild.value = "";
+        newInput.appendChild(newChild);
+    }
+    parent.parentNode.appendChild(newInput);
+}
+
 var app = new Vue({
     el: '#app'
 });

@@ -1,19 +1,5 @@
 @extends('layouts.app')
 
-<style>
-    .link
-    {
-        color:black;
-        text-decoration: none;
-    }
-
-    .link:hover
-    {
-        color:royalblue;
-        text-decoration: none;
-    }
-</style>
-
 @section('content')
     <div class="container">
         @foreach ($stats as $key => $stat)
