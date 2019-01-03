@@ -123,6 +123,7 @@ class AdminController extends Controller
     }
 
     public function postAddition($id, Request $request) {
+        Redis::zincrby("players:{$request->key}", $request->value, $request->playerId);
         Redis::hincrby("match:{$id}:team:{$request->teamId}", $request->key, $request->value);
         Redis::hincrby("match:{$id}:team:{$request->teamId}:player:{$request->playerId}", $request->key, $request->value);
     }

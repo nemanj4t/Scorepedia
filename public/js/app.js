@@ -47988,7 +47988,7 @@ var staticRenderFns = [
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
               _vm._v(
-                "\r\n                        I'm an example component.\r\n                    "
+                "\n                        I'm an example component.\n                    "
               )
             ])
           ])
@@ -49479,127 +49479,131 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "table-wrapper" }, [
-    _c(
-      "table",
-      { staticClass: "fl-table" },
-      [
-        _c("thead", [
-          _c("tr", [
-            _c("th", [_vm._v("Player")]),
-            _vm._v(" "),
-            _c(
-              "th",
-              {
-                class: _vm.select("points"),
-                on: {
-                  click: function($event) {
-                    _vm.sort("points")
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "table-wrapper" }, [
+      _c(
+        "table",
+        { staticClass: "fl-table" },
+        [
+          _c("thead", [
+            _c("tr", [
+              _c("th", [_vm._v("Player")]),
+              _vm._v(" "),
+              _c(
+                "th",
+                {
+                  class: _vm.select("points"),
+                  on: {
+                    click: function($event) {
+                      _vm.sort("points")
+                    }
                   }
-                }
-              },
-              [_vm._v("Points")]
-            ),
-            _vm._v(" "),
-            _c(
-              "th",
-              {
-                class: _vm.select("assists"),
-                on: {
-                  click: function($event) {
-                    _vm.sort("assists")
+                },
+                [_vm._v("Points")]
+              ),
+              _vm._v(" "),
+              _c(
+                "th",
+                {
+                  class: _vm.select("assists"),
+                  on: {
+                    click: function($event) {
+                      _vm.sort("assists")
+                    }
                   }
-                }
-              },
-              [_vm._v("Assists")]
-            ),
-            _vm._v(" "),
-            _c(
-              "th",
-              {
-                class: _vm.select("steals"),
-                on: {
-                  click: function($event) {
-                    _vm.sort("steals")
+                },
+                [_vm._v("Assists")]
+              ),
+              _vm._v(" "),
+              _c(
+                "th",
+                {
+                  class: _vm.select("steals"),
+                  on: {
+                    click: function($event) {
+                      _vm.sort("steals")
+                    }
                   }
-                }
-              },
-              [_vm._v("Steals")]
-            ),
-            _vm._v(" "),
-            _c(
-              "th",
-              {
-                class: _vm.select("rebounds"),
-                on: {
-                  click: function($event) {
-                    _vm.sort("rebounds")
+                },
+                [_vm._v("Steals")]
+              ),
+              _vm._v(" "),
+              _c(
+                "th",
+                {
+                  class: _vm.select("rebounds"),
+                  on: {
+                    click: function($event) {
+                      _vm.sort("rebounds")
+                    }
                   }
-                }
-              },
-              [_vm._v("Rebounds")]
-            ),
-            _vm._v(" "),
-            _c(
-              "th",
-              {
-                class: _vm.select("blocks"),
-                on: {
-                  click: function($event) {
-                    _vm.sort("blocks")
+                },
+                [_vm._v("Rebounds")]
+              ),
+              _vm._v(" "),
+              _c(
+                "th",
+                {
+                  class: _vm.select("blocks"),
+                  on: {
+                    click: function($event) {
+                      _vm.sort("blocks")
+                    }
                   }
-                }
-              },
-              [_vm._v("Blocks")]
-            ),
-            _vm._v(" "),
-            _c(
-              "th",
-              {
-                class: _vm.select("fouls"),
-                on: {
-                  click: function($event) {
-                    _vm.sort("fouls")
+                },
+                [_vm._v("Blocks")]
+              ),
+              _vm._v(" "),
+              _c(
+                "th",
+                {
+                  class: _vm.select("fouls"),
+                  on: {
+                    click: function($event) {
+                      _vm.sort("fouls")
+                    }
                   }
-                }
-              },
-              [_vm._v("Fouls")]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _vm._l(_vm.stats.players, function(player, index) {
-          return _c("tr", [
-            _c("td", [_vm._v(_vm._s(index + 1) + ". " + _vm._s(player.name))]),
-            _vm._v(" "),
-            _c("td", { class: _vm.select("points") }, [
-              _vm._v(_vm._s(player.points))
-            ]),
-            _vm._v(" "),
-            _c("td", { class: _vm.select("assists") }, [
-              _vm._v(_vm._s(player.assists))
-            ]),
-            _vm._v(" "),
-            _c("td", { class: _vm.select("steals") }, [
-              _vm._v(_vm._s(player.steals))
-            ]),
-            _vm._v(" "),
-            _c("td", { class: _vm.select("rebounds") }, [
-              _vm._v(_vm._s(player.rebounds))
-            ]),
-            _vm._v(" "),
-            _c("td", { class: _vm.select("blocks") }, [
-              _vm._v(_vm._s(player.blocks))
-            ]),
-            _vm._v(" "),
-            _c("td", { class: _vm.select("fouls") }, [
-              _vm._v(_vm._s(player.fouls))
+                },
+                [_vm._v("Fouls")]
+              )
             ])
-          ])
-        })
-      ],
-      2
-    )
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.stats.players, function(player, index) {
+            return _c("tr", [
+              _c("td", [
+                _vm._v(_vm._s(index + 1) + ". " + _vm._s(player.name))
+              ]),
+              _vm._v(" "),
+              _c("td", { class: _vm.select("points") }, [
+                _vm._v(_vm._s(player.points))
+              ]),
+              _vm._v(" "),
+              _c("td", { class: _vm.select("assists") }, [
+                _vm._v(_vm._s(player.assists))
+              ]),
+              _vm._v(" "),
+              _c("td", { class: _vm.select("steals") }, [
+                _vm._v(_vm._s(player.steals))
+              ]),
+              _vm._v(" "),
+              _c("td", { class: _vm.select("rebounds") }, [
+                _vm._v(_vm._s(player.rebounds))
+              ]),
+              _vm._v(" "),
+              _c("td", { class: _vm.select("blocks") }, [
+                _vm._v(_vm._s(player.blocks))
+              ]),
+              _vm._v(" "),
+              _c("td", { class: _vm.select("fouls") }, [
+                _vm._v(_vm._s(player.fouls))
+              ])
+            ])
+          })
+        ],
+        2
+      )
+    ])
   ])
 }
 var staticRenderFns = []

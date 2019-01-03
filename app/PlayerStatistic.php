@@ -35,12 +35,12 @@ class PlayerStatistic extends Model
 
     public static function getTopOfEach($number)
     {
-        $points = Redis::zrange("players:points", 0, $number - 1, "WITHSCORES");
-        $blocks = Redis::zrange("players:blocks", 0, $number - 1, "WITHSCORES");
-        $rebounds = Redis::zrange("players:rebounds", 0, $number - 1, "WITHSCORES");
-        $steals = Redis::zrange("players:steals", 0, $number - 1, "WITHSCORES");
-        $assists = Redis::zrange("players:assists", 0, $number - 1, "WITHSCORES");
-        $fouls = Redis::zrange("players:fouls", 0, $number - 1, "WITHSCORES");
+        $points = Redis::zrevrange("players:points", 0, $number - 1, "WITHSCORES");
+        $blocks = Redis::zrevrange("players:blocks", 0, $number - 1, "WITHSCORES");
+        $rebounds = Redis::zrevrange("players:rebounds", 0, $number - 1, "WITHSCORES");
+        $steals = Redis::zrevrange("players:steals", 0, $number - 1, "WITHSCORES");
+        $assists = Redis::zrevrange("players:assists", 0, $number - 1, "WITHSCORES");
+        $fouls = Redis::zrevrange("players:fouls", 0, $number - 1, "WITHSCORES");
 
         return [
             "points" => $points,

@@ -1,6 +1,7 @@
 <?php
 namespace App;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Redis;
 use Ahsan\Neo4j\Facade\Cypher;
 use Carbon\Carbon;
 class Team
