@@ -5,6 +5,7 @@
                 <thead>
                 <tr>
                     <th>Player</th>
+                    <th>Team</th>
                     <th @click="sort('points')" v-bind:class="select('points')">Points</th>
                     <th @click="sort('assists')" v-bind:class="select('assists')">Assists</th>
                     <th @click="sort('steals')" v-bind:class="select('steals')">Steals</th>
@@ -15,7 +16,21 @@
                 </thead>
 
                 <tr v-for="(player, index) in stats.players">
-                    <td>{{index + 1}}. {{player.name}}</td>
+                    <td>
+                        <label class="float-left">{{index + 1}}</label>
+                        <a class="playerLink" :href="'/players/' + player.id">
+                            {{ player.name }}
+                        </a>
+                    </td>
+                    <td>
+                        <a class="playerLink" 
+                        :href="(player.hasOwnProperty('team')) ? '/teams/' + player.team.id : '#'">
+                            {{ 
+                                (player.hasOwnProperty('team')) ? player.team.name 
+                                    : 'NONE'
+                            }}
+                        </a>
+                    </td>
                     <td v-bind:class="select('points')">{{player.points}}</td>
                     <td v-bind:class="select('assists')">{{player.assists}}</td>
                     <td v-bind:class="select('steals')">{{player.steals}}</td>
@@ -82,12 +97,7 @@
 
     .selectedColumn
     {
-        background-color: aqua;
-    }
-
-    .alnleft
-    {
-        text-align: left;
+        background: rgb(200, 237, 250);
     }
 
     *{
@@ -142,7 +152,6 @@
         background: #4FC3A1;
     }
 
-
     .fl-table thead th:nth-child(odd) {
         color: #ffffff;
         background: #324960;
@@ -150,6 +159,19 @@
 
     .fl-table tr:nth-child(even) {
         background: #F8F8F8;
+    }
+
+    .fl-table th:hover {
+        cursor: pointer;
+    }
+
+    .fl-table tr:hover {
+        background: rgb(178, 215, 228);
+    }
+
+    .fl-table tr td:nth-child(1)
+    {
+        text-align:center;
     }
 
     #img-pic {

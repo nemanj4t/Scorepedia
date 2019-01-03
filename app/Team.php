@@ -157,4 +157,5 @@ class Team
         Cypher::Run("MATCH (n:Team) WHERE ID(n) = $id DETACH DELETE n");
 
     }
+
 }

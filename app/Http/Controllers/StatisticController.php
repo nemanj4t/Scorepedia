@@ -33,6 +33,10 @@ class StatisticController extends Controller
                         "name" => $result['name'],
                         "score" => $item
                     ];
+                    $team = Player::getCurrentTeam($id);
+                    if($team != null) {
+                        $player += ['team' => $team['short_name']];
+                    }
                     array_push($statsSet, $player);
                 }
                 $stats += [$key => $statsSet];
@@ -62,9 +66,14 @@ class StatisticController extends Controller
             $id_array = ["id" =>  $id];
             $stats = PlayerStatistic::getById($id);
             $player = array_merge($properties_array, $id_array, $stats);
+            $team = Player::getCurrentTeam($id);
+            if($team != null) {
+                $player += ["team" => 
+                    ["id" => $team['id'], "name" => $team['short_name']]];
+            }
             array_push($players, $player);
         }
-        
+
         return $players;
     }
 }

@@ -58,4 +58,19 @@ class Player extends Model
         PlayerStatistic::saveGlobalStats($player_id);
     }
 
+    public static function getCurrentTeam($id)
+    {
+        // Vraca igracev trenutni tim
+        $response = Cypher::Run
+        ("MATCH (p:Player)-[:PLAYS]-(t:Team) WHERE ID(p) = {$id} return t")->getRecords();
+        if($response != null) {
+            $rec = $response[0];
+            $current_team = array_merge(["id" => $rec->getIdOfNode()], 
+                $rec->getPropertiesOfNode());
+            return $current_team;
+        }
+        else {
+            return null;
+        }
+    }
 }

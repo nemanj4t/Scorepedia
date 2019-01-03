@@ -24,10 +24,12 @@
                         @foreach ($stat as $i => $player)
                             <tr style="font-weight: bold; border-bottom-style: hidden">
                                 <th scope="row">
-                                    <h5 style="font-weight: bold">
-                                        <a href="/players/{{ $player['id'] }}" class="link">
-                                            {{ $i + 1 }}. {{ $player['name'] }}
+                                    <h5>
+                                        {{ $i + 1 }}.
+                                        <a style="font-weight: bold" href="/players/{{ $player['id'] }}" class="link">
+                                             {{ $player['name'] }}
                                         </a>
+                                        {{ (isset($player['team'])) ? $player['team'] : 'NONE'}}
                                     </h5>
                                 </th>
                                 @if ($i == 0)

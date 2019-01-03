@@ -10619,3 +10619,7 @@ a.text-dark:focus {
   text-decoration: none;
 }
 
+.playerLink:hover {
+  text-decoration: none;
+}
+

@@ -47988,7 +47988,7 @@ var staticRenderFns = [
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
               _vm._v(
-                "\n                        I'm an example component.\n                    "
+                "\r\n                        I'm an example component.\r\n                    "
               )
             ])
           ])
@@ -49381,7 +49381,7 @@ exports = module.exports = __webpack_require__(4)(false);
 
 
 // module
-exports.push([module.i, "\n.selectedColumn[data-v-56c7d5c4]\r\n    {\r\n        background-color: aqua;\n}\n.alnleft[data-v-56c7d5c4]\r\n    {\r\n        text-align: left;\n}\n*[data-v-56c7d5c4]{\r\n        box-sizing: border-box;\r\n        -webkit-box-sizing: border-box;\r\n        -moz-box-sizing: border-box;\n}\nbody[data-v-56c7d5c4]{\r\n        font-family: Helvetica;\r\n        -webkit-font-smoothing: antialiased;\n}\nh2[data-v-56c7d5c4]{\r\n        text-align: center;\r\n        font-size: 18px;\r\n        text-transform: uppercase;\r\n        letter-spacing: 1px;\r\n        color: white;\r\n        padding: 30px 0;\n}\r\n\r\n    /* Table Styles */\n.table-wrapper[data-v-56c7d5c4]{\r\n        margin: 10px 70px 70px;\r\n        -webkit-box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );\r\n                box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );\n}\n.fl-table[data-v-56c7d5c4] {\r\n        border-radius: 5px;\r\n        font-size: 12px;\r\n        font-weight: normal;\r\n        border: none;\r\n        border-collapse: collapse;\r\n        width: 100%;\r\n        max-width: 100%;\r\n        white-space: nowrap;\r\n        background-color: white;\n}\n.fl-table td[data-v-56c7d5c4], .fl-table th[data-v-56c7d5c4] {\r\n        text-align: center;\r\n        padding: 8px;\n}\n.fl-table td[data-v-56c7d5c4] {\r\n        border-right: 1px solid #f8f8f8;\r\n        font-size: 12px;\n}\n.fl-table thead th[data-v-56c7d5c4] {\r\n        color: #ffffff;\r\n        background: #4FC3A1;\n}\n.fl-table thead th[data-v-56c7d5c4]:nth-child(odd) {\r\n        color: #ffffff;\r\n        background: #324960;\n}\n.fl-table tr[data-v-56c7d5c4]:nth-child(even) {\r\n        background: #F8F8F8;\n}\n#img-pic[data-v-56c7d5c4] {\r\n        max-width: 50px;\n}\r\n\r\n    /* Responsive */\n@media (max-width: 767px) {\n.fl-table[data-v-56c7d5c4] {\r\n            display: block;\r\n            width: 100%;\n}\n.table-wrapper[data-v-56c7d5c4]:before{\r\n            content: \"Scroll horizontally >\";\r\n            display: block;\r\n            text-align: right;\r\n            font-size: 11px;\r\n            color: white;\r\n            padding: 0 0 10px;\n}\n.fl-table thead[data-v-56c7d5c4], .fl-table tbody[data-v-56c7d5c4], .fl-table thead th[data-v-56c7d5c4] {\r\n            display: block;\n}\n.fl-table thead th[data-v-56c7d5c4]:last-child{\r\n            border-bottom: none;\n}\n.fl-table thead[data-v-56c7d5c4] {\r\n            float: left;\n}\n.fl-table tbody[data-v-56c7d5c4] {\r\n            width: auto;\r\n            position: relative;\r\n            overflow-x: auto;\n}\n.fl-table td[data-v-56c7d5c4], .fl-table th[data-v-56c7d5c4] {\r\n            padding: 20px .625em .625em .625em;\r\n            height: 60px;\r\n            vertical-align: middle;\r\n            -webkit-box-sizing: border-box;\r\n                    box-sizing: border-box;\r\n            overflow-x: hidden;\r\n            overflow-y: auto;\r\n            width: 120px;\r\n            font-size: 13px;\r\n            text-overflow: ellipsis;\n}\n.fl-table thead th[data-v-56c7d5c4] {\r\n            text-align: left;\r\n            border-bottom: 1px solid #f7f7f9;\n}\n.fl-table tbody tr[data-v-56c7d5c4] {\r\n            display: table-cell;\n}\n.fl-table tbody tr[data-v-56c7d5c4]:nth-child(odd) {\r\n            background: none;\n}\n.fl-table tr[data-v-56c7d5c4]:nth-child(even) {\r\n            background: transparent;\n}\n.fl-table tr td[data-v-56c7d5c4]:nth-child(odd) {\r\n            background: #F8F8F8;\r\n            border-right: 1px solid #E6E4E4;\n}\n.fl-table tr td[data-v-56c7d5c4]:nth-child(even) {\r\n            border-right: 1px solid #E6E4E4;\n}\n.fl-table tbody td[data-v-56c7d5c4] {\r\n            display: block;\r\n            text-align: center;\n}\n}\r\n", ""]);
+exports.push([module.i, "\n.selectedColumn[data-v-56c7d5c4]\r\n    {\r\n        background: rgb(200, 237, 250);\n}\n*[data-v-56c7d5c4]{\r\n        box-sizing: border-box;\r\n        -webkit-box-sizing: border-box;\r\n        -moz-box-sizing: border-box;\n}\nbody[data-v-56c7d5c4]{\r\n        font-family: Helvetica;\r\n        -webkit-font-smoothing: antialiased;\n}\nh2[data-v-56c7d5c4]{\r\n        text-align: center;\r\n        font-size: 18px;\r\n        text-transform: uppercase;\r\n        letter-spacing: 1px;\r\n        color: white;\r\n        padding: 30px 0;\n}\r\n\r\n    /* Table Styles */\n.table-wrapper[data-v-56c7d5c4]{\r\n        margin: 10px 70px 70px;\r\n        -webkit-box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );\r\n                box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );\n}\n.fl-table[data-v-56c7d5c4] {\r\n        border-radius: 5px;\r\n        font-size: 12px;\r\n        font-weight: normal;\r\n        border: none;\r\n        border-collapse: collapse;\r\n        width: 100%;\r\n        max-width: 100%;\r\n        white-space: nowrap;\r\n        background-color: white;\n}\n.fl-table td[data-v-56c7d5c4], .fl-table th[data-v-56c7d5c4] {\r\n        text-align: center;\r\n        padding: 8px;\n}\n.fl-table td[data-v-56c7d5c4] {\r\n        border-right: 1px solid #f8f8f8;\r\n        font-size: 12px;\n}\n.fl-table thead th[data-v-56c7d5c4] {\r\n        color: #ffffff;\r\n        background: #4FC3A1;\n}\n.fl-table thead th[data-v-56c7d5c4]:nth-child(odd) {\r\n        color: #ffffff;\r\n        background: #324960;\n}\n.fl-table tr[data-v-56c7d5c4]:nth-child(even) {\r\n        background: #F8F8F8;\n}\n.fl-table th[data-v-56c7d5c4]:hover {\r\n        cursor: pointer;\n}\n.fl-table tr[data-v-56c7d5c4]:hover {\r\n        background: rgb(178, 215, 228);\n}\n.fl-table tr td[data-v-56c7d5c4]:nth-child(1)\r\n    {\r\n        text-align:center;\n}\n#img-pic[data-v-56c7d5c4] {\r\n        max-width: 50px;\n}\r\n\r\n    /* Responsive */\n@media (max-width: 767px) {\n.fl-table[data-v-56c7d5c4] {\r\n            display: block;\r\n            width: 100%;\n}\n.table-wrapper[data-v-56c7d5c4]:before{\r\n            content: \"Scroll horizontally >\";\r\n            display: block;\r\n            text-align: right;\r\n            font-size: 11px;\r\n            color: white;\r\n            padding: 0 0 10px;\n}\n.fl-table thead[data-v-56c7d5c4], .fl-table tbody[data-v-56c7d5c4], .fl-table thead th[data-v-56c7d5c4] {\r\n            display: block;\n}\n.fl-table thead th[data-v-56c7d5c4]:last-child{\r\n            border-bottom: none;\n}\n.fl-table thead[data-v-56c7d5c4] {\r\n            float: left;\n}\n.fl-table tbody[data-v-56c7d5c4] {\r\n            width: auto;\r\n            position: relative;\r\n            overflow-x: auto;\n}\n.fl-table td[data-v-56c7d5c4], .fl-table th[data-v-56c7d5c4] {\r\n            padding: 20px .625em .625em .625em;\r\n            height: 60px;\r\n            vertical-align: middle;\r\n            -webkit-box-sizing: border-box;\r\n                    box-sizing: border-box;\r\n            overflow-x: hidden;\r\n            overflow-y: auto;\r\n            width: 120px;\r\n            font-size: 13px;\r\n            text-overflow: ellipsis;\n}\n.fl-table thead th[data-v-56c7d5c4] {\r\n            text-align: left;\r\n            border-bottom: 1px solid #f7f7f9;\n}\n.fl-table tbody tr[data-v-56c7d5c4] {\r\n            display: table-cell;\n}\n.fl-table tbody tr[data-v-56c7d5c4]:nth-child(odd) {\r\n            background: none;\n}\n.fl-table tr[data-v-56c7d5c4]:nth-child(even) {\r\n            background: transparent;\n}\n.fl-table tr td[data-v-56c7d5c4]:nth-child(odd) {\r\n            background: #F8F8F8;\r\n            border-right: 1px solid #E6E4E4;\n}\n.fl-table tr td[data-v-56c7d5c4]:nth-child(even) {\r\n            border-right: 1px solid #E6E4E4;\n}\n.fl-table tbody td[data-v-56c7d5c4] {\r\n            display: block;\r\n            text-align: center;\n}\n}\r\n", ""]);
 
 // exports
 
@@ -49392,6 +49392,21 @@ exports.push([module.i, "\n.selectedColumn[data-v-56c7d5c4]\r\n    {\r\n        
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -49489,6 +49504,8 @@ var render = function() {
             _c("tr", [
               _c("th", [_vm._v("Player")]),
               _vm._v(" "),
+              _c("th", [_vm._v("Team")]),
+              _vm._v(" "),
               _c(
                 "th",
                 {
@@ -49572,7 +49589,49 @@ var render = function() {
           _vm._l(_vm.stats.players, function(player, index) {
             return _c("tr", [
               _c("td", [
-                _vm._v(_vm._s(index + 1) + ". " + _vm._s(player.name))
+                _c("label", { staticClass: "float-left" }, [
+                  _vm._v(_vm._s(index + 1))
+                ]),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    staticClass: "playerLink",
+                    attrs: { href: "/players/" + player.id }
+                  },
+                  [
+                    _vm._v(
+                      "\r\n                            " +
+                        _vm._s(player.name) +
+                        "\r\n                        "
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("td", [
+                _c(
+                  "a",
+                  {
+                    staticClass: "playerLink",
+                    attrs: {
+                      href: player.hasOwnProperty("team")
+                        ? "/teams/" + player.team.id
+                        : "#"
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\r\n                            " +
+                        _vm._s(
+                          player.hasOwnProperty("team")
+                            ? player.team.name
+                            : "NONE"
+                        ) +
+                        "\r\n                        "
+                    )
+                  ]
+                )
               ]),
               _vm._v(" "),
               _c("td", { class: _vm.select("points") }, [
