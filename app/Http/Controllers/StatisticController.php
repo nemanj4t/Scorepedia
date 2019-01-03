@@ -21,27 +21,28 @@ class StatisticController extends Controller
         if($show == 'short') {
             // Top 5 stats
             $records = PlayerStatistic::getTopOfEach(5);
+            $ids = [];
+            foreach($records as $set) {
+                $ids += array_keys($set);
+            }
+            $players = Player::getSomeWithCurrentTeam($ids);
+
             $stats = [];
-            foreach($records as $key => $set)
+            foreach($records as $key => $set) 
             {
                 $statsSet = [];
                 foreach($set as $id => $item)
                 {
-                    $result = Player::getById($id);
-                    $player = [
-                        "id" => $id,
-                        "name" => $result['name'],
-                        "score" => $item
-                    ];
-                    $team = Player::getCurrentTeam($id);
-                    if($team != null) {
-                        $player += ['team' => $team['short_name']];
+                    $player = ["id" => $id, "score" => $item];
+                    $player += ['name' => $players[$id]['player']['name']];
+                    if(isset($players[$id]['team'])) {
+                        $player += ['team' => $players[$id]['team']['short_name']];
                     }
                     array_push($statsSet, $player);
                 }
                 $stats += [$key => $statsSet];
             }
-    
+            
             return view('stats.index', compact('stats'));
         }
         else {
@@ -51,26 +52,19 @@ class StatisticController extends Controller
 
     public function full()
     {
-        $result = Cypher::run("MATCH (n:Player) RETURN n");
+        $records = Player::getAllWithCurrentTeam();
         $players = [];
 
-        foreach($result->getRecords() as $record)
+        foreach($records as $record)
         {
-            $properties_array = $record->getPropertiesOfNode();
-            unset($properties_array['image'], 
-            $properties_array['city'],
-            $properties_array['bio'],
-            $properties_array['height'],
-            $properties_array['weight']);
-            $id = $record->getIdOfNode();
-            $id_array = ["id" =>  $id];
-            $stats = PlayerStatistic::getById($id);
-            $player = array_merge($properties_array, $id_array, $stats);
-            $team = Player::getCurrentTeam($id);
-            if($team != null) {
-                $player += ["team" => 
-                    ["id" => $team['id'], "name" => $team['short_name']]];
+            $player = ['id' => $record['player']['id'], 'name' => $record['player']['name']];
+            if(isset($record['team'])) {
+                $player += ['team' => 
+                    ['id' => $record['team']['id'], 
+                    'name' => $record['team']['short_name']]];
             }
+            $stats = PlayerStatistic::getById($record['player']['id']);
+            $player = array_merge($player, $stats);
             array_push($players, $player);
         }
 
