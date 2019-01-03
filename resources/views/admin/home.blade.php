@@ -58,7 +58,6 @@
                 </div>
                 @if(isSet($_GET['active']) && ($_GET['route'] == "players" || $_GET['route'] == "coaches" || $_GET['route'] == "teams"))
                 <br>
-                <h2>{{$active}}</h2>
                 <div class="table-responsive">
                     <table class="table table-striped mb-5">
                         <thead>
