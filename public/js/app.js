@@ -49051,7 +49051,7 @@ exports = module.exports = __webpack_require__(4)(false);
 
 
 // module
-exports.push([module.i, "\n*[data-v-288fcc4c]{\r\n        box-sizing: border-box;\r\n        -webkit-box-sizing: border-box;\r\n        -moz-box-sizing: border-box;\n}\nbody[data-v-288fcc4c]{\r\n        font-family: Helvetica;\r\n        -webkit-font-smoothing: antialiased;\n}\nh2[data-v-288fcc4c]{\r\n        text-align: center;\r\n        font-size: 18px;\r\n        text-transform: uppercase;\r\n        letter-spacing: 1px;\r\n        color: white;\r\n        padding: 30px 0;\n}\r\n\r\n    /* Table Styles */\n.table-wrapper[data-v-288fcc4c]{\r\n        margin: 10px 70px 70px;\r\n        -webkit-box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );\r\n                box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );\n}\n.fl-table[data-v-288fcc4c] {\r\n        border-radius: 5px;\r\n        font-size: 12px;\r\n        font-weight: normal;\r\n        border: none;\r\n        border-collapse: collapse;\r\n        width: 100%;\r\n        max-width: 100%;\r\n        white-space: nowrap;\r\n        background-color: white;\n}\n.fl-table td[data-v-288fcc4c], .fl-table th[data-v-288fcc4c] {\r\n        text-align: center;\r\n        padding: 8px;\n}\n.fl-table td[data-v-288fcc4c] {\r\n        border-right: 1px solid #f8f8f8;\r\n        font-size: 12px;\n}\n.fl-table thead th[data-v-288fcc4c] {\r\n        color: #ffffff;\r\n        background: #4FC3A1;\n}\n.fl-table thead th[data-v-288fcc4c]:nth-child(odd) {\r\n        color: #ffffff;\r\n        background: #324960;\n}\n.fl-table tr[data-v-288fcc4c]:nth-child(even) {\r\n        background: #F8F8F8;\n}\n#img-pic[data-v-288fcc4c] {\r\n        max-width: 50px;\n}\r\n\r\n    /* Responsive */\n@media (max-width: 767px) {\n.fl-table[data-v-288fcc4c] {\r\n            display: block;\r\n            width: 100%;\n}\n.table-wrapper[data-v-288fcc4c]:before{\r\n            content: \"Scroll horizontally >\";\r\n            display: block;\r\n            text-align: right;\r\n            font-size: 11px;\r\n            color: white;\r\n            padding: 0 0 10px;\n}\n.fl-table thead[data-v-288fcc4c], .fl-table tbody[data-v-288fcc4c], .fl-table thead th[data-v-288fcc4c] {\r\n            display: block;\n}\n.fl-table thead th[data-v-288fcc4c]:last-child{\r\n            border-bottom: none;\n}\n.fl-table thead[data-v-288fcc4c] {\r\n            float: left;\n}\n.fl-table tbody[data-v-288fcc4c] {\r\n            width: auto;\r\n            position: relative;\r\n            overflow-x: auto;\n}\n.fl-table td[data-v-288fcc4c], .fl-table th[data-v-288fcc4c] {\r\n            padding: 20px .625em .625em .625em;\r\n            height: 60px;\r\n            vertical-align: middle;\r\n            -webkit-box-sizing: border-box;\r\n                    box-sizing: border-box;\r\n            overflow-x: hidden;\r\n            overflow-y: auto;\r\n            width: 120px;\r\n            font-size: 13px;\r\n            text-overflow: ellipsis;\n}\n.fl-table thead th[data-v-288fcc4c] {\r\n            text-align: left;\r\n            border-bottom: 1px solid #f7f7f9;\n}\n.fl-table tbody tr[data-v-288fcc4c] {\r\n            display: table-cell;\n}\n.fl-table tbody tr[data-v-288fcc4c]:nth-child(odd) {\r\n            background: none;\n}\n.fl-table tr[data-v-288fcc4c]:nth-child(even) {\r\n            background: transparent;\n}\n.fl-table tr td[data-v-288fcc4c]:nth-child(odd) {\r\n            background: #F8F8F8;\r\n            border-right: 1px solid #E6E4E4;\n}\n.fl-table tr td[data-v-288fcc4c]:nth-child(even) {\r\n            border-right: 1px solid #E6E4E4;\n}\n.fl-table tbody td[data-v-288fcc4c] {\r\n            display: block;\r\n            text-align: center;\n}\n}\r\n", ""]);
+exports.push([module.i, "\n.selectedColumn[data-v-288fcc4c] {\r\n        background: rgba(0, 0, 0, 0.2);\r\n        -webkit-filter: brightness(85%);\r\n                filter: brightness(85%);\n}\n*[data-v-288fcc4c]{\r\n        box-sizing: border-box;\r\n        -webkit-box-sizing: border-box;\r\n        -moz-box-sizing: border-box;\n}\nbody[data-v-288fcc4c]{\r\n        font-family: Helvetica;\r\n        -webkit-font-smoothing: antialiased;\n}\nh2[data-v-288fcc4c]{\r\n        text-align: center;\r\n        font-size: 18px;\r\n        text-transform: uppercase;\r\n        letter-spacing: 1px;\r\n        color: white;\r\n        padding: 30px 0;\n}\r\n\r\n    /* Table Styles */\n.table-wrapper[data-v-288fcc4c]{\r\n        margin: 10px 70px 70px;\r\n        -webkit-box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );\r\n                box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );\n}\n.fl-table[data-v-288fcc4c] {\r\n        border-radius: 5px;\r\n        font-size: 12px;\r\n        font-weight: normal;\r\n        border: none;\r\n        border-collapse: collapse;\r\n        width: 100%;\r\n        max-width: 100%;\r\n        white-space: nowrap;\r\n        background-color: white;\n}\n.fl-table td[data-v-288fcc4c], .fl-table th[data-v-288fcc4c] {\r\n        text-align: center;\r\n        padding: 8px;\n}\n.fl-table td[data-v-288fcc4c] {\r\n        border-right: 1px solid #f8f8f8;\r\n        font-size: 12px;\n}\n.fl-table thead th[data-v-288fcc4c] {\r\n        color: #ffffff;\r\n        background: #4FC3A1;\n}\n.fl-table thead th[data-v-288fcc4c]:nth-child(odd) {\r\n        color: #ffffff;\r\n        background: #324960;\n}\n.fl-table tr[data-v-288fcc4c]:nth-child(even) {\r\n        background: #F8F8F8;\n}\n#img-pic[data-v-288fcc4c] {\r\n        max-width: 50px;\n}\r\n\r\n    /* Responsive */\n@media (max-width: 767px) {\n.fl-table[data-v-288fcc4c] {\r\n            display: block;\r\n            width: 100%;\n}\n.table-wrapper[data-v-288fcc4c]:before{\r\n            content: \"Scroll horizontally >\";\r\n            display: block;\r\n            text-align: right;\r\n            font-size: 11px;\r\n            color: white;\r\n            padding: 0 0 10px;\n}\n.fl-table thead[data-v-288fcc4c], .fl-table tbody[data-v-288fcc4c], .fl-table thead th[data-v-288fcc4c] {\r\n            display: block;\n}\n.fl-table thead th[data-v-288fcc4c]:last-child{\r\n            border-bottom: none;\n}\n.fl-table thead[data-v-288fcc4c] {\r\n            float: left;\n}\n.fl-table tbody[data-v-288fcc4c] {\r\n            width: auto;\r\n            position: relative;\r\n            overflow-x: auto;\n}\n.fl-table td[data-v-288fcc4c], .fl-table th[data-v-288fcc4c] {\r\n            padding: 20px .625em .625em .625em;\r\n            height: 60px;\r\n            vertical-align: middle;\r\n            -webkit-box-sizing: border-box;\r\n                    box-sizing: border-box;\r\n            overflow-x: hidden;\r\n            overflow-y: auto;\r\n            width: 120px;\r\n            font-size: 13px;\r\n            text-overflow: ellipsis;\n}\n.fl-table thead th[data-v-288fcc4c] {\r\n            text-align: left;\r\n            border-bottom: 1px solid #f7f7f9;\n}\n.fl-table tbody tr[data-v-288fcc4c] {\r\n            display: table-cell;\n}\n.fl-table tbody tr[data-v-288fcc4c]:nth-child(odd) {\r\n            background: none;\n}\n.fl-table tr[data-v-288fcc4c]:nth-child(even) {\r\n            background: transparent;\n}\n.fl-table tr td[data-v-288fcc4c]:nth-child(odd) {\r\n            background: #F8F8F8;\r\n            border-right: 1px solid #E6E4E4;\n}\n.fl-table tr td[data-v-288fcc4c]:nth-child(even) {\r\n            border-right: 1px solid #E6E4E4;\n}\n.fl-table tbody td[data-v-288fcc4c] {\r\n            display: block;\r\n            text-align: center;\n}\n}\r\n", ""]);
 
 // exports
 
@@ -49101,11 +49101,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-<<<<<<< HEAD
 //
 //
-=======
->>>>>>> 6c9f73eb0cdbda354182a95fbefe273f22eee96e
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "standings",
@@ -49138,6 +49135,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 });
 
                 if (this.dir === 'asc') this.stands.array = this.stands.array.reverse();
+            }
+        },
+        select: function select(category) {
+            if (category === this.stands.sort) {
+                return 'selectedColumn';
             }
         }
     },
@@ -49178,6 +49180,7 @@ var render = function() {
               _c(
                 "th",
                 {
+                  class: _vm.select("points"),
                   on: {
                     click: function($event) {
                       _vm.show("points")
@@ -49190,6 +49193,7 @@ var render = function() {
               _c(
                 "th",
                 {
+                  class: _vm.select("wins"),
                   on: {
                     click: function($event) {
                       _vm.show("wins")
@@ -49202,18 +49206,20 @@ var render = function() {
               _c(
                 "th",
                 {
+                  class: _vm.select("losses"),
                   on: {
                     click: function($event) {
                       _vm.show("losses")
                     }
                   }
                 },
-                [_vm._v("Loses")]
+                [_vm._v("Losses")]
               ),
               _vm._v(" "),
               _c(
                 "th",
                 {
+                  class: _vm.select("percentage"),
                   on: {
                     click: function($event) {
                       _vm.show("percentage")
@@ -49226,6 +49232,7 @@ var render = function() {
               _c(
                 "th",
                 {
+                  class: _vm.select("home"),
                   on: {
                     click: function($event) {
                       _vm.show("home")
@@ -49238,6 +49245,7 @@ var render = function() {
               _c(
                 "th",
                 {
+                  class: _vm.select("road"),
                   on: {
                     click: function($event) {
                       _vm.show("road")
@@ -49250,6 +49258,7 @@ var render = function() {
               _c(
                 "th",
                 {
+                  class: _vm.select("streak"),
                   on: {
                     click: function($event) {
                       _vm.show("streak")
@@ -49271,19 +49280,33 @@ var render = function() {
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(stand.name))]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(stand.points))]),
+              _c("td", { class: _vm.select("points") }, [
+                _vm._v(_vm._s(stand.points))
+              ]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(stand.wins))]),
+              _c("td", { class: _vm.select("wins") }, [
+                _vm._v(_vm._s(stand.wins))
+              ]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(stand.loses))]),
+              _c("td", { class: _vm.select("losses") }, [
+                _vm._v(_vm._s(stand.loses))
+              ]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(stand.percentage))]),
+              _c("td", { class: _vm.select("percentage") }, [
+                _vm._v(_vm._s(stand.percentage))
+              ]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(stand.home))]),
+              _c("td", { class: _vm.select("home") }, [
+                _vm._v(_vm._s(stand.home))
+              ]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(stand.road))]),
+              _c("td", { class: _vm.select("road") }, [
+                _vm._v(_vm._s(stand.road))
+              ]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(stand.streak))])
+              _c("td", { class: _vm.select("streak") }, [
+                _vm._v(_vm._s(stand.streak))
+              ])
             ])
           })
         ],
