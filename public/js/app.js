@@ -47988,7 +47988,7 @@ var staticRenderFns = [
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
               _vm._v(
-                "\r\n                        I'm an example component.\r\n                    "
+                "\n                        I'm an example component.\n                    "
               )
             ])
           ])
@@ -48356,13 +48356,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "MatchManager",
     props: ['id'],
     data: function data() {
         return {
+            finishClass: "btn btn-danger",
+            finishText: "Finish",
             match: {
+                isFinished: true,
                 home: {
                     image: 'https://www.voya.ie/Interface/Icons/LoadingBasketContents.gif'
                 },
@@ -48443,6 +48461,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 value: value,
                 key: key
             });
+        },
+        finishMatch: function finishMatch() {
+            this.match.isFinished = !this.match.isFinished;
+
+            if (this.match.isFinished) {
+                this.finishClass = "btn btn-secondary";
+                this.finishText = "Unfinish";
+            } else {
+                this.finishClass = "btn btn-danger";
+                this.finishText = "Finish";
+            }
+
+            axios.put('/matches', {
+                matchId: this.match.id,
+                finished: this.match.isFinished
+            });
         }
     },
 
@@ -48455,6 +48489,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             _this.guest = response.data.guest;
             _this.homePlayers = response.data.homePlayers;
             _this.guestPlayers = response.data.guestPlayers;
+            _this.finishText = _this.match.isFinished ? "Unfinish" : "Finish";
+            _this.finishClass = _this.match.isFinished ? "btn btn-secondary" : "btn btn-danger";
             console.log(response.data);
         });
     }
@@ -48499,7 +48535,10 @@ var render = function() {
                           "button",
                           {
                             staticClass: "btn btn-sm btn-secondary",
-                            attrs: { type: "button" },
+                            attrs: {
+                              type: "button",
+                              disabled: _vm.match.isFinished ? true : false
+                            },
                             on: {
                               click: function($event) {
                                 _vm.score("home", player.id)
@@ -48517,7 +48556,10 @@ var render = function() {
                           "button",
                           {
                             staticClass: "btn btn-sm btn-secondary",
-                            attrs: { type: "button" },
+                            attrs: {
+                              type: "button",
+                              disabled: _vm.match.isFinished ? true : false
+                            },
                             on: {
                               click: function($event) {
                                 _vm.addition("blocks", "home", player.id)
@@ -48535,7 +48577,10 @@ var render = function() {
                           "button",
                           {
                             staticClass: "btn btn-sm btn-secondary",
-                            attrs: { type: "button" },
+                            attrs: {
+                              type: "button",
+                              disabled: _vm.match.isFinished ? true : false
+                            },
                             on: {
                               click: function($event) {
                                 _vm.addition("rebounds", "home", player.id)
@@ -48553,7 +48598,10 @@ var render = function() {
                           "button",
                           {
                             staticClass: "btn btn-sm btn-secondary",
-                            attrs: { type: "button" },
+                            attrs: {
+                              type: "button",
+                              disabled: _vm.match.isFinished ? true : false
+                            },
                             on: {
                               click: function($event) {
                                 _vm.addition("fouls", "home", player.id)
@@ -48571,7 +48619,10 @@ var render = function() {
                           "button",
                           {
                             staticClass: "btn btn-sm btn-secondary",
-                            attrs: { type: "button" },
+                            attrs: {
+                              type: "button",
+                              disabled: _vm.match.isFinished ? true : false
+                            },
                             on: {
                               click: function($event) {
                                 _vm.addition("assists", "home", player.id)
@@ -48589,7 +48640,10 @@ var render = function() {
                           "button",
                           {
                             staticClass: "btn btn-sm btn-secondary",
-                            attrs: { type: "button" },
+                            attrs: {
+                              type: "button",
+                              disabled: _vm.match.isFinished ? true : false
+                            },
                             on: {
                               click: function($event) {
                                 _vm.addition("steals", "home", player.id)
@@ -48625,9 +48679,23 @@ var render = function() {
             "div",
             { staticClass: "col-md-4 text-center", attrs: { id: "result" } },
             [
-              _vm._v(
-                _vm._s(this.home.points) + " - " + _vm._s(this.guest.points)
-              )
+              _c("div", { staticClass: "col-md-12" }, [
+                _vm._v(
+                  _vm._s(this.home.points) + " - " + _vm._s(this.guest.points)
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-12" }, [
+                _c(
+                  "button",
+                  {
+                    class: this.finishClass,
+                    attrs: { id: "finish" },
+                    on: { click: _vm.finishMatch }
+                  },
+                  [_vm._v(_vm._s(this.finishText))]
+                )
+              ])
             ]
           ),
           _vm._v(" "),
@@ -48725,7 +48793,10 @@ var render = function() {
                           "button",
                           {
                             staticClass: "btn btn-sm btn-secondary",
-                            attrs: { type: "button" },
+                            attrs: {
+                              type: "button",
+                              disabled: _vm.match.isFinished ? true : false
+                            },
                             on: {
                               click: function($event) {
                                 _vm.score("guest", player.id)
@@ -48743,7 +48814,10 @@ var render = function() {
                           "button",
                           {
                             staticClass: "btn btn-sm btn-secondary",
-                            attrs: { type: "button" },
+                            attrs: {
+                              type: "button",
+                              disabled: _vm.match.isFinished ? true : false
+                            },
                             on: {
                               click: function($event) {
                                 _vm.addition("blocks", "guest", player.id)
@@ -48761,7 +48835,10 @@ var render = function() {
                           "button",
                           {
                             staticClass: "btn btn-sm btn-secondary",
-                            attrs: { type: "button" },
+                            attrs: {
+                              type: "button",
+                              disabled: _vm.match.isFinished ? true : false
+                            },
                             on: {
                               click: function($event) {
                                 _vm.addition("rebounds", "guest", player.id)
@@ -48779,7 +48856,10 @@ var render = function() {
                           "button",
                           {
                             staticClass: "btn btn-sm btn-secondary",
-                            attrs: { type: "button" },
+                            attrs: {
+                              type: "button",
+                              disabled: _vm.match.isFinished ? true : false
+                            },
                             on: {
                               click: function($event) {
                                 _vm.addition("fouls", "guest", player.id)
@@ -48797,7 +48877,10 @@ var render = function() {
                           "button",
                           {
                             staticClass: "btn btn-sm btn-secondary",
-                            attrs: { type: "button" },
+                            attrs: {
+                              type: "button",
+                              disabled: _vm.match.isFinished ? true : false
+                            },
                             on: {
                               click: function($event) {
                                 _vm.addition("assists", "guest", player.id)
@@ -48815,7 +48898,10 @@ var render = function() {
                           "button",
                           {
                             staticClass: "btn btn-sm btn-secondary",
-                            attrs: { type: "button" },
+                            attrs: {
+                              type: "button",
+                              disabled: _vm.match.isFinished ? true : false
+                            },
                             on: {
                               click: function($event) {
                                 _vm.addition("steals", "guest", player.id)

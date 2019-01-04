@@ -39,6 +39,7 @@
                                         type="button"
                                         @click="score('home', player.id)"
                                         class="btn btn-sm btn-secondary"
+                                        :disabled="match.isFinished ? true: false"
                                     >
                                         P
                                     </button>
@@ -46,6 +47,7 @@
                                         type="button"
                                         @click="addition('blocks', 'home', player.id)"
                                         class="btn btn-sm btn-secondary"
+                                        :disabled="match.isFinished ? true: false"
                                     >
                                         B
                                     </button>
@@ -53,6 +55,7 @@
                                         type="button"
                                         @click="addition('rebounds', 'home', player.id)"
                                         class="btn btn-sm btn-secondary"
+                                        :disabled="match.isFinished ? true: false"
                                     >
                                         R
                                     </button>
@@ -60,6 +63,7 @@
                                         type="button"
                                         @click="addition('fouls', 'home', player.id)"
                                         class="btn btn-sm btn-secondary"
+                                        :disabled="match.isFinished ? true: false"
                                     >
                                         F
                                     </button>
@@ -67,6 +71,7 @@
                                         type="button"
                                         @click="addition('assists', 'home', player.id)"
                                         class="btn btn-sm btn-secondary"
+                                        :disabled="match.isFinished ? true: false"
                                     >
                                         A
                                     </button>
@@ -74,6 +79,7 @@
                                         type="button"
                                         @click="addition('steals', 'home', player.id)"
                                         class="btn btn-sm btn-secondary"
+                                        :disabled="match.isFinished ? true: false"
                                     >
                                         S
                                     </button>
@@ -89,7 +95,10 @@
                     <div class="col-md-4">
                         <img class="float-left" id="club-logo" :src="this.match.home.image">
                     </div>
-                    <div id="result" class="col-md-4 text-center">{{this.home.points}} - {{this.guest.points}}</div>
+                    <div id="result" class="col-md-4 text-center">
+                        <div class="col-md-12">{{this.home.points}} - {{this.guest.points}}</div>
+                        <div class="col-md-12"><button id="finish" @click="finishMatch" :class="this.finishClass">{{this.finishText}}</button></div>
+                    </div>
                     <div class="col-md-4">
                         <img class="float-right" id="club-logo" :src="this.match.guest.image">
                     </div>
@@ -169,6 +178,7 @@
                                         type="button"
                                         @click="score('guest', player.id)"
                                         class="btn btn-sm btn-secondary"
+                                        :disabled="match.isFinished ? true: false"
                                     >
                                         P
                                     </button>
@@ -176,6 +186,7 @@
                                         type="button"
                                         @click="addition('blocks', 'guest', player.id)"
                                         class="btn btn-sm btn-secondary"
+                                        :disabled="match.isFinished ? true: false"
                                     >
                                         B
                                     </button>
@@ -183,6 +194,7 @@
                                         type="button"
                                         @click="addition('rebounds', 'guest', player.id)"
                                         class="btn btn-sm btn-secondary"
+                                        :disabled="match.isFinished ? true: false"
                                     >
                                         R
                                     </button>
@@ -190,6 +202,7 @@
                                         type="button"
                                         @click="addition('fouls', 'guest', player.id)"
                                         class="btn btn-sm btn-secondary"
+                                        :disabled="match.isFinished ? true: false"
                                     >
                                         F
                                     </button>
@@ -197,6 +210,7 @@
                                         type="button"
                                         @click="addition('assists', 'guest', player.id)"
                                         class="btn btn-sm btn-secondary"
+                                        :disabled="match.isFinished ? true: false"
                                     >
                                         A
                                     </button>
@@ -204,6 +218,7 @@
                                         type="button"
                                         @click="addition('steals', 'guest', player.id)"
                                         class="btn btn-sm btn-secondary"
+                                        :disabled="match.isFinished ? true: false"
                                     >
                                         S
                                     </button>
@@ -224,7 +239,10 @@
         props: ['id'],
         data() {
             return {
+                finishClass: "btn btn-danger",
+                finishText: "Finish",
                 match: {
+                    isFinished: true,
                     home: {
                         image: 'https://www.voya.ie/Interface/Icons/LoadingBasketContents.gif'
                     },
@@ -308,6 +326,23 @@
                     value: value,
                     key: key
                 })
+            },
+
+            finishMatch() {
+                this.match.isFinished = !this.match.isFinished;
+
+                if(this.match.isFinished) {
+                    this.finishClass = "btn btn-secondary";
+                    this.finishText = "Unfinish";
+                } else {
+                    this.finishClass = "btn btn-danger";
+                    this.finishText = "Finish";
+                }
+
+                axios.put('/matches', {
+                    matchId: this.match.id,
+                    finished: this.match.isFinished
+                });
             }
         },
 
@@ -319,6 +354,8 @@
                     this.guest = response.data.guest;
                     this.homePlayers = response.data.homePlayers;
                     this.guestPlayers = response.data.guestPlayers;
+                    this.finishText = this.match.isFinished ? "Unfinish" : "Finish";
+                    this.finishClass = this.match.isFinished ? "btn btn-secondary" : "btn btn-danger";
                     console.log(response.data)
                 });
         }

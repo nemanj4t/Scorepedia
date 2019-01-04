@@ -83,6 +83,11 @@
                                     <button class="btn btn-sm btn-danger float-right ml-2">Delete</button>
                                 </form>
                                 <a href="{{$_GET['route']}}/edit/{{$single_data->id}}" class="btn btn-sm btn-primary float-right">Edit</a>
+                                @if($_GET['route'] == 'players')
+                                    <a href="/coaches/edit/{{$single_data->id}}/team_coach" class="btn btn-sm btn-primary mr-2 float-right">Edit Career</a>
+                                @elseif($_GET['route'] == 'coaches')
+                                    <a href="/players/edit/{{$single_data->id}}/plays_for_teams" class="btn btn-sm btn-primary mr-2 float-right">Edit Career</a>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
@@ -103,8 +108,78 @@
                             </tr>
                             </thead>
                         </table>
+
+                        @if(!empty($data['live']))
+                        <h3>Live</h3>
                         <div class="row justify-content-between">
-                            @foreach($data as $match)
+                            @foreach($data['live'] as $match)
+                                <div class="col-md-5 m-4 card" style="border: solid 1px; padding: 0">
+                                    <div class="card-header">
+                                        <label class="float-left" for="">{{(new \Carbon\Carbon($match['date']." ".$match['time']))->diffForHumans()}}</label>
+                                        <form action="matches/{{$match['id']}}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="_method" value="delete" />
+                                            <button class="btn btn-sm btn-danger float-right ml-2">Delete</button>
+                                        </form>
+                                        <a href="/admin/matches/{{$match['id']}}" class="btn btn-primary btn-sm float-right">Manage</a>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <img class="float-left" style="max-width: 100%;" src={{$match['home']['image']}}>
+                                            </div>
+                                            <div class="col-md-4" style="font-size: 20px;">
+                                                <div class="col-md-12 text-center">{{$match['home']['points']}} - {{$match['guest']['points']}}</div>
+                                                <div class="col-md-12 text-center"><a href="/matches/{{$match['id']}}" class="btn btn-sm btn-dark">Details</a></div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <img class="float-right" style="max-width: 100%;" src={{$match['guest']['image']}}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        @endif
+
+                        @if(!empty($data['upcoming']))
+                        <hr>
+                        <h3>Upcoming</h3>
+                        <div class="row justify-content-between">
+                            @foreach($data['upcoming'] as $match)
+                                <div class="col-md-5 m-4 card" style="border: solid 1px; padding: 0">
+                                    <div class="card-header">
+                                        <label class="float-left" for="">{{(new \Carbon\Carbon($match['date']." ".$match['time']))->diffForHumans()}}</label>
+                                        <form action="matches/{{$match['id']}}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="_method" value="delete" />
+                                            <button class="btn btn-sm btn-danger float-right ml-2">Delete</button>
+                                        </form>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <img class="float-left" style="max-width: 100%;" src={{$match['home']['image']}}>
+                                            </div>
+                                            <div class="col-md-4" style="font-size: 20px;">
+                                                <div class="col-md-12 text-center">{{$match['home']['points']}} - {{$match['guest']['points']}}</div>
+                                                <div class="col-md-12 text-center"><a href="/matches/{{$match['id']}}" class="btn btn-sm btn-dark">Details</a></div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <img class="float-right" style="max-width: 100%;" src={{$match['guest']['image']}}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        @endif
+
+                        @if(!empty($data['finished']))
+                        <hr>
+                        <h3>Finished</h3>
+                        <div class="row justify-content-between">
+                            @foreach($data['finished'] as $match)
                                 <div class="col-md-5 m-4 card" style="border: solid 1px; padding: 0">
                                     <div class="card-header">
                                         <label class="float-left" for="">{{$match['date']}}</label>
@@ -132,6 +207,7 @@
                                 </div>
                             @endforeach
                         </div>
+                        @endif
                     </div>
                 @else
                     <div class="container mt-4">

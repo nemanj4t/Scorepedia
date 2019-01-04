@@ -8,6 +8,7 @@ use Ahsan\Neo4j\Facade\Cypher;
 use App\Team;
 use App\Match;
 use App\Player;
+use Carbon\Carbon;
 
 class MatchController extends Controller
 {
@@ -19,8 +20,26 @@ class MatchController extends Controller
     public function index()
     {
         $matches = Match::getAll();
+        $liveMatches = [];
+        $finishedMatches = [];
+        $upcomingMatches = [];
+        foreach ($matches as $match)
+        {
+            if ($match['isFinished'])
+            {
+                array_push($finishedMatches, $match);
+            }
+            elseif (Match::isLive($match))
+            {
+                array_push($liveMatches, $match);
+            }
+            else
+            {
+                array_push($upcomingMatches, $match);
+            }
+        }
 
-        return view('matches.index', compact('matches'));
+        return view('matches.index', compact('liveMatches', 'finishedMatches', 'upcomingMatches'));
     }
 
     /**
@@ -43,6 +62,12 @@ class MatchController extends Controller
      */
     public function store(Request $request)
     {
+        //can't pick a past date
+        if(Carbon::now() > (new Carbon($request->date." ".$request->time)))
+        {
+            return redirect('/matches/create');
+        }
+
         Match::saveMatch($request);
 
         return redirect('/apanel?active=Match&route=matches');
@@ -91,9 +116,9 @@ class MatchController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        Match::finishMatch($request->matchId, $request->finished);
     }
 
     /**
