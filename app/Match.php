@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Ahsan\Neo4j\Facade\Cypher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
+use Carbon\Carbon;
 use App\Team;
 
 class Match extends Model
@@ -46,7 +47,7 @@ class Match extends Model
 
     public static function getAll()
     {
-        $query = Cypher::Run("MATCH (m:Match) RETURN m");
+        $query = Cypher::Run("MATCH (m:Match) RETURN m ORDER BY m.date");
         $matches = [];
 
         foreach($query->getRecords() as $record) {
@@ -57,7 +58,7 @@ class Match extends Model
             $homeTeamQuery = Cypher::Run(
                 "MATCH (m:Match)-[:TEAM_MATCH {status: \"home\"}]-(t:Team) 
                  WHERE ID(m) = {$id} RETURN t");
-            
+
             $homeTeamProps = $homeTeamQuery->getRecords()[0]->values()[0]->values();
             $homeTeamId = $homeTeamQuery->getRecords()[0]->values()[0]->identity();
             $homeTeamScore = Redis::hget("match:{$id}:team:{$homeTeamId}", "points");
@@ -92,11 +93,12 @@ class Match extends Model
             'hometeam' => 'required',
             'guestteam' => 'required'
         ]);
+
         //neo match
         $query = Cypher::Run(
             "MATCH (t1:Team) WHERE ID(t1) = $request->hometeam
              MATCH (t2:Team) WHERE ID(t2) = $request->guestteam
-             CREATE (m:Match {date: '$request->date', time: '$request->time'}),
+             CREATE (m:Match {date: '$request->date', time: '$request->time', isFinished: false}),
              (t1)-[:TEAM_MATCH {status: 'home'}]->(m), (t2)-[:TEAM_MATCH {status: 'guest'}]->(m) RETURN m");
 
         $matchId = $query->firstRecord()->getIdOfNode();
@@ -145,5 +147,26 @@ class Match extends Model
                     "assists", 0);
             }
         }
+    }
+
+    public static function finishMatch($id, $finished)
+    {
+        if($finished)
+        {
+            Cypher::Run(
+                "MATCH (m:Match) WHERE ID(m) = $id
+                 SET m.isFinished = true");
+        }
+        else
+        {
+            Cypher::Run(
+                "MATCH (m:Match) WHERE ID(m) = $id
+                 SET m.isFinished = false");
+        }
+    }
+
+    public static function isLive($match)
+    {
+        return Carbon::now('Europe/Belgrade') > (new Carbon($match['date']." ".$match['time']));
     }
 }

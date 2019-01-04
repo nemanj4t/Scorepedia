@@ -37,11 +37,11 @@
             </div>
             <div id="match-view" class="col-md-4">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <img class="float-left" id="club-logo" src="{{$match['home']['image']}}">
                     </div>
-                    <div id="result" class="col-md-4 text-center">{{$home['points']}} - {{$guest['points']}}</div>
-                    <div class="col-md-4">
+                    <div id="result" class="col-md-6 text-center">{{$home['points']}} - {{$guest['points']}}</div>
+                    <div class="col-md-3">
                         <img class="float-right" id="club-logo" src="{{$match['guest']['image']}}">
                     </div>
                 </div>

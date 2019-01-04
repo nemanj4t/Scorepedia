@@ -69,7 +69,34 @@ class AdminController extends Controller
                 }
                 break;
             case "Match":
-                $data = Match::getAll();
+                {
+                    $allMatches = Match::getAll();
+                    $liveMatches = [];
+                    $finishedMatches = [];
+                    $upcomingMatches = [];
+                    foreach ($allMatches as $match)
+                    {
+                        if ($match['isFinished'])
+                        {
+                            array_push($finishedMatches, $match);
+                        }
+                        elseif (Match::isLive($match))
+                        {
+                            array_push($liveMatches, $match);
+                        }
+                        else
+                        {
+                            array_push($upcomingMatches, $match);
+                        }
+                    }
+
+                    $data = array_merge(
+                        $data,
+                        ['live' => $liveMatches],
+                        ['upcoming' => $upcomingMatches],
+                        ['finished' => $finishedMatches]
+                    );
+                }
                 break;
             case "Overview":
                 break;
@@ -122,9 +149,11 @@ class AdminController extends Controller
         return $data;
     }
 
-    public function postAddition($id, Request $request) {
+    public function postAddition($id, Request $request)
+    {
         Redis::zincrby("players:{$request->key}", $request->value, $request->playerId);
         Redis::hincrby("match:{$id}:team:{$request->teamId}", $request->key, $request->value);
         Redis::hincrby("match:{$id}:team:{$request->teamId}:player:{$request->playerId}", $request->key, $request->value);
     }
+
 }

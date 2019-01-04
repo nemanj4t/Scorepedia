@@ -71,7 +71,7 @@ Route::post('/coaches/edit/{coach}/team_coach', "TeamCoachController@store");
 Route::get('/matches', "MatchController@index");            // prikaz liste meceva (kesirani ???) // prikaz konkretnog meca
 Route::get('/matches/create', "MatchController@create");    // pogled za kreiranje meca
 Route::post('/matches', "MatchController@store");           // usnimanje kreiranog meca
-Route::put('/matches/{match}', "MatchController@update");
+Route::put('/matches', "MatchController@update");
 Route::get('/matches/{match}', "MatchController@show");
 Route::delete('/matches/{match}', "MatchController@destroy");
 
