@@ -161,7 +161,7 @@ class Team
 
         Redis::zrem("points", $id);
         Redis::zrem("wins", $id);
-        Redis::zrem("loses", $id);
+        Redis::zrem("losses", $id);
         Redis::zrem("percentage", $id);
         Redis::zrem("home", $id);
         Redis::zrem("road", $id);
