@@ -1,36 +1,38 @@
 <template>
 
-    <div class="table-wrapper">
-        <table class="fl-table">
-            <thead>
-            <tr>
-                <th>Rank</th>
-                <th>Image</th>
-                <th>Team</th>
-                <th @click="show('points')">Points</th>
-                <th @click="show('wins')">Wins</th>
-                <th @click="show('losses')">Loses</th>
-                <th @click="show('percentage')">Percentage</th>
-                <th @click="show('home')">Home</th>
-                <th @click="show('road')">Road</th>
-                <th @click="show('streak')">Streak</th>
-            </tr>
-            </thead>
+    <div class="container">
+        <div class="table-wrapper">
+            <table class="fl-table">
+                <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Image</th>
+                    <th>Team</th>
+                    <th @click="show('points')" v-bind:class="select('points')">Points</th>
+                    <th @click="show('wins')" v-bind:class="select('wins')">Wins</th>
+                    <th @click="show('losses')" v-bind:class="select('losses')">Losses</th>
+                    <th @click="show('percentage')" v-bind:class="select('percentage')">Percentage</th>
+                    <th @click="show('home')" v-bind:class="select('home')">Home</th>
+                    <th @click="show('road')" v-bind:class="select('road')">Road</th>
+                    <th @click="show('streak')" v-bind:class="select('streak')">Streak</th>
+                </tr>
+                </thead>
 
-            <tr v-for="(stand, index) in stands.array">
-                <td>{{index + 1}}</td>
-                <td><img :src="stand.image" id="img-pic"></td>
-                <td>{{stand.name}}</td>
-                <td>{{stand.points}}</td>
-                <td>{{stand.wins}}</td>
-                <td>{{stand.loses}}</td>
-                <td>{{stand.percentage}}</td>
-                <td>{{stand.home}}</td>
-                <td>{{stand.road}}</td>
-                <td>{{stand.streak}}</td>
-            </tr>
+                <tr v-for="(stand, index) in stands.array">
+                    <td>{{index + 1}}</td>
+                    <td><img :src="stand.image" id="img-pic"></td>
+                    <td>{{stand.name}}</td>
+                    <td v-bind:class="select('points')">{{stand.points}}</td>
+                    <td v-bind:class="select('wins')">{{stand.wins}}</td>
+                    <td v-bind:class="select('losses')">{{stand.losses}}</td>
+                    <td v-bind:class="select('percentage')">{{stand.percentage}}</td>
+                    <td v-bind:class="select('home')">{{stand.home}}</td>
+                    <td v-bind:class="select('road')">{{stand.road}}</td>
+                    <td v-bind:class="select('streak')">{{stand.streak}}</td>
+                </tr>
 
-        </table>
+            </table>
+        </div>
     </div>
 
 </template>
@@ -73,6 +75,12 @@
                         this.stands.array = this.stands.array.reverse();
                 }
 
+            },
+
+            select(category) {
+                if(category === this.stands.sort) {
+                    return 'selectedColumn';
+                }
             }
 
         },
@@ -94,6 +102,10 @@
 
 <style scoped>
 
+    .selectedColumn {
+        background: rgba(0, 0, 0, 0.2);
+        filter: brightness(85%);
+    }
 
     *{
         box-sizing: border-box;

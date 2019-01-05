@@ -109,7 +109,7 @@ class Team
 
         Redis::zadd("points", 0, $t->getRecords()[0]->getIdOfNode());
         Redis::zadd("wins", 0, $t->getRecords()[0]->getIdOfNode());
-        Redis::zadd("loses", 0, $t->getRecords()[0]->getIdOfNode());
+        Redis::zadd("losses", 0, $t->getRecords()[0]->getIdOfNode());
         Redis::zadd("percentage", 0, $t->getRecords()[0]->getIdOfNode());
         Redis::zadd("home", 0, $t->getRecords()[0]->getIdOfNode());
         Redis::zadd("road", 0, $t->getRecords()[0]->getIdOfNode());
@@ -119,7 +119,7 @@ class Team
             "team:standings:{$t->getRecords()[0]->getIdOfNode()}",
             "points", 0,
             "wins", 0,
-            "loses", 0,
+            "losses", 0,
             "percentage", 0,
             "home", 0,
             "road", 0,
