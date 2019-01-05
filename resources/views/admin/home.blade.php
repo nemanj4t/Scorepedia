@@ -29,28 +29,29 @@
                     <div class="row text-center">
                         <div class="col">
                             <div class="counter">
-                                <i class="fa fa-code fa-2x"></i>
-                                <h2 class="timer count-title count-number" data-to="{{$count}}" data-speed="1500"></h2>
+                                <i class="fa fa-user fa-2x"></i>
+                                <h2 class="timer count-title count-number" data-to="{{$count_visits}}" data-speed="1500"></h2>
                                 <p class="count-text ">Count Visitors</p>
                             </div>
                         </div>
                         <div class="col">
                             <div class="counter">
-                                <i class="fa fa-coffee fa-2x"></i>
-                                <h2 class="timer count-title count-number" data-to="1700" data-speed="1500"></h2>
+                                <i class="fas fa-users fa-2x"></i>
+                                <h2 class="timer count-title count-number" data-to="{{$count_teams}}" data-speed="1500"></h2>
                                 <p class="count-text ">Registred Teams</p>
                             </div>
                         </div>
                         <div class="col">
                             <div class="counter">
-                                <i class="fa fa-lightbulb-o fa-2x"></i>
-                                <h2 class="timer count-title count-number" data-to="11900" data-speed="1500"></h2>
+                                <i class="fas fa-basketball-ball fa-2x"></i>
+                                <h2 class="timer count-title count-number" data-to="{{$count_players}}" data-speed="1500"></h2>
                                 <p class="count-text ">Registred Players</p>
-                            </div></div>
+                            </div>
+                        </div>
                         <div class="col">
                             <div class="counter">
-                                <i class="fa fa-bug fa-2x"></i>
-                                <h2 class="timer count-title count-number" data-to="157" data-speed="1500"></h2>
+                                <i class="fas fa-chalkboard-teacher fa-2x"></i>
+                                <h2 class="timer count-title count-number" data-to="{{$count_coaches}}" data-speed="1500"></h2>
                                 <p class="count-text ">Registred Coaches</p>
                             </div>
                         </div>
@@ -220,29 +221,30 @@
                         <div class="row text-center">
                             <div class="col">
                                 <div class="counter">
-                                    <i class="fa fa-code fa-2x"></i>
-                                    <h2 class="timer count-title count-number" data-to="100" data-speed="1500"></h2>
-                                    <p class="count-text ">Our Visitors</p>
+                                    <i class="fab fa-medium-m fa-2x"></i>
+                                    <h2 class="timer count-title count-number" data-to="{{$count_matches}}" data-speed="1500"></h2>
+                                    <p class="count-text ">Count Matches</p>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="counter">
-                                    <i class="fa fa-coffee fa-2x"></i>
+                                    <i class="far fa-newspaper fa-2x"></i>
                                     <h2 class="timer count-title count-number" data-to="1700" data-speed="1500"></h2>
-                                    <p class="count-text ">Registred Teams</p>
+                                    <p class="count-text ">Count Articles</p>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="counter">
-                                    <i class="fa fa-lightbulb-o fa-2x"></i>
+                                    <i class="fas fa-comments fa-2x"></i>
                                     <h2 class="timer count-title count-number" data-to="11900" data-speed="1500"></h2>
-                                    <p class="count-text ">Registred Players</p>
-                                </div></div>
+                                    <p class="count-text ">Count Comments</p>
+                                </div>
+                            </div>
                             <div class="col">
                                 <div class="counter">
-                                    <i class="fa fa-bug fa-2x"></i>
-                                    <h2 class="timer count-title count-number" data-to="157" data-speed="1500"></h2>
-                                    <p class="count-text ">Registred Coaches</p>
+                                    <i class="fa fa-sign-in fa-2x"></i>
+                                    <h2 class="timer count-title count-number" data-to="{{$count_logins}}" data-speed="1500"></h2>
+                                    <p class="count-text ">Count Logins</p>
                                 </div>
                             </div>
                         </div>

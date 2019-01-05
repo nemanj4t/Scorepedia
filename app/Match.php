@@ -59,29 +59,25 @@ class Match extends Model
                 "MATCH (m:Match)-[:TEAM_MATCH {status: \"home\"}]-(t:Team) 
                  WHERE ID(m) = {$id} RETURN t");
 
-            $homeTeamProps = $homeTeamQuery->getRecords()[0]->values()[0]->values();
+            $homeTeam = $homeTeamQuery->getRecords()[0]->values()[0]->values();
             $homeTeamId = $homeTeamQuery->getRecords()[0]->values()[0]->identity();
             $homeTeamScore = Redis::hget("match:{$id}:team:{$homeTeamId}", "points");
-            $homeTeam = array_merge($homeTeamProps, ['id' => $homeTeamId]);
             $homeTeam = array_merge($homeTeam, ['points' => $homeTeamScore]);
 
             $guestTeamQuery = Cypher::Run(
                 "MATCH (m:Match)-[:TEAM_MATCH {status: \"guest\"}]-(t:Team) 
                  WHERE ID(m) = {$id} RETURN t");
 
-            $guestTeamProps = $guestTeamQuery->getRecords()[0]->values()[0]->values();
+            $guestTeam = $guestTeamQuery->getRecords()[0]->values()[0]->values();
             $guestTeamId = $guestTeamQuery->getRecords()[0]->values()[0]->identity();
             $guestTeamScore = Redis::hget("match:{$id}:team:{$guestTeamId}", "points");
-            $guestTeam = array_merge($guestTeamProps, ['id' => $guestTeamId]);
             $guestTeam = array_merge($guestTeam, ['points' => $guestTeamScore]);
-
 
             $match = array_merge($match, ['home' => $homeTeam]);
             $match = array_merge($match, ['guest' => $guestTeam]);
 
             array_push($matches, $match);
         }
-
         return $matches;
     }
 
@@ -121,32 +117,31 @@ class Match extends Model
             "steals", 0,
             "assists", 0);
 
-        //player statistic - test
-        $query = Cypher::Run("MATCH (n:Player) return n");
-        for($i = 0; $i < 10; $i++) {
-            if ($i > 4) {
-                $id = $query->getRecords()[$i]->getIdOfNode();
-                Redis::hmset(
-                    "match:{$matchId}:team:{$request->hometeam}:player:{$id}",
-                    "points", 0,
-                    "blocks", 0,
-                    "rebounds", 0,
-                    "fouls", 0,
-                    "steals", 0,
-                    "assists", 0);
-            }
-            else {
-                $id = $query->getRecords()[$i]->getIdOfNode();
-                Redis::hmset(
-                    "match:{$matchId}:team:{$request->guestteam}:player:{$id}",
-                    "points", 0,
-                    "blocks", 0,
-                    "rebounds", 0,
-                    "fouls", 0,
-                    "steals", 0,
-                    "assists", 0);
-            }
+        foreach (Player_Team::getCurrentPlayers($request->hometeam) as $player)
+        {
+            Redis::hmset(
+                "match:{$matchId}:team:{$request->hometeam}:player:{$player['player']['id']}",
+                "points", 0,
+                "blocks", 0,
+                "rebounds", 0,
+                "fouls", 0,
+                "steals", 0,
+                "assists", 0);
         }
+
+        foreach (Player_Team::getCurrentPlayers($request->guestteam) as $player)
+        {
+            Redis::hmset(
+                "match:{$matchId}:team:{$request->guestteam}:player:{$player['player']['id']}",
+                "points", 0,
+                "blocks", 0,
+                "rebounds", 0,
+                "fouls", 0,
+                "steals", 0,
+                "assists", 0);
+        }
+
+        Redis::incr("count:matches");
     }
 
     public static function finishMatch($id, $finished)

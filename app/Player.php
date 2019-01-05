@@ -4,6 +4,7 @@ namespace App;
 use Ahsan\Neo4j\Facade\Cypher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 use App\Player_Team;
 use App\PlayerStatistic;
 
@@ -53,7 +54,8 @@ class Player extends Model
 
             $count++;
         }
-
+        //counter players
+        Redis::incr("count:players");
         // Dodavanje globalne statistike za ovog igraca u redis
         PlayerStatistic::saveGlobalStats($player_id);
     }
@@ -65,7 +67,7 @@ class Player extends Model
         ("MATCH (p:Player)-[:PLAYS]-(t:Team) WHERE ID(p) = {$id} return t")->getRecords();
         if($response != null) {
             $rec = $response[0];
-            $current_team = array_merge(["id" => $rec->getIdOfNode()], 
+            $current_team = array_merge(["id" => $rec->getIdOfNode()],
                 $rec->getPropertiesOfNode());
             return $current_team;
         }

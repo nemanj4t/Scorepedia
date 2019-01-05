@@ -102,9 +102,14 @@ class AdminController extends Controller
                 break;
         }
 
-        $count = Redis::get('user:count');
+        $count_visits = Redis::get('user:count');
+        $count_matches = Redis::get('count:matches');
+        $count_players = Redis::get('count:players');
+        $count_coaches = Redis::get('count:coaches');
+        $count_teams = Redis::get('count:teams');
+        $count_logins = Redis::get('count:logins');
 
-        return view('admin.home', compact('active', 'data', 'count'));
+        return view('admin.home', compact('active', 'data', 'count_visits', 'count_coaches', 'count_matches', 'count_players', 'count_teams', 'count_logins'));
     }
 
     public function matchManager($id)
