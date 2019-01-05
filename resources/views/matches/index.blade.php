@@ -23,7 +23,7 @@
                                 <strong>{{$match['home']['short_name']}}</strong>
                             </div>
                             <div class="col-md-4 text-center">
-                                <small><i>started {{(new \Carbon\Carbon($match['date']." ".$match['time']))->diffForHumans()}}</i></small>
+                                <small><i>started {{(new \Carbon\Carbon($match['date']." ".$match['time'], 'Europe/Belgrade'))->diffForHumans()}}</i></small>
                             </div>
                             <div class="col-md-4 text-center">
                                 <strong>{{$match['guest']['short_name']}}</strong>
@@ -58,7 +58,7 @@
                                 <strong>{{$match['home']['short_name']}}</strong>
                             </div>
                             <div class="col-md-4 text-center">
-                                <small><i>starts {{(new \Carbon\Carbon($match['date']." ".$match['time']))->diffForHumans()}}</i></small>
+                                <small><i>starts {{(new \Carbon\Carbon($match['date']." ".$match['time'], 'Europe/Belgrade'))->diffForHumans()}}</i></small>
                             </div>
                             <div class="col-md-4 text-center">
                                 <strong>{{$match['guest']['short_name']}}</strong>
