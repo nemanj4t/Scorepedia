@@ -125,6 +125,8 @@ class Team
             "road", 0,
             "streak", 0);
 
+        Redis::incr("count:teams");
+
     }
 
     public static function update($id, $request) {
