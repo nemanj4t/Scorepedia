@@ -64,13 +64,12 @@ class Coach
 
     public static function saveCoach($request) {
 
+        Redis::incr("count:coaches");
         if($request['team'] != null)
             return Cypher::run("MATCH (t:Team) WHERE ID(t) = $request[team]
                         CREATE (t)-[:TEAM_COACH{coached_since: '$request[coached_since]', coached_until: '$request[coached_until]'}]->(c:Coach {name: '$request[name]', bio: '$request[bio]', city: '$request[city]', image: '$request[image]'}) RETURN c");
         else
             return Cypher::run("CREATE (c:Coach {name: '$request[name]', bio: '$request[bio]', city: '$request[city]', image: '$request[image]'}) RETURN c");
-
-        Redis::incr("count:coaches");
     }
 
 
@@ -102,5 +101,6 @@ class Coach
 
         Cypher::Run("MATCH (n:Coach) WHERE ID(n) = $id DETACH DELETE n");
 
+        Redis::decr("count:coaches");
     }
 }

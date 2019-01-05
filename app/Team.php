@@ -86,6 +86,7 @@ class Team
 
         $current_coach = '';
         $team_coach = Team_Coach::getByTeamId($id);
+
         foreach ($team_coach as $rel) {
             if (Carbon::parse($rel['coached']['coached_until'])->gt(Carbon::now()))
                 $current_coach = $rel;
