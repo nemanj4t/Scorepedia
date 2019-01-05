@@ -18,7 +18,7 @@ class TeamController extends Controller
     public function index()
     {
 
-        $teams = Team::getAll();
+        $teams = Team::getTeams();
 
         return view('teams.index', compact('teams', $teams));
     }
@@ -68,8 +68,7 @@ class TeamController extends Controller
     public function show($id)
     {
 
-        $Team = new Team();
-        $team = $Team->getById($id);
+        $team = Team::getTeamById($id);
 
 
         return view('teams.show', compact('team', $team));

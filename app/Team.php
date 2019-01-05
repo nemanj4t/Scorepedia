@@ -86,6 +86,7 @@ class Team
 
         $current_coach = '';
         $team_coach = Team_Coach::getByTeamId($id);
+
         foreach ($team_coach as $rel) {
             if (Carbon::parse($rel['coached']['coached_until'])->gt(Carbon::now()))
                 $current_coach = $rel;
@@ -109,7 +110,7 @@ class Team
 
         Redis::zadd("points", 0, $t->getRecords()[0]->getIdOfNode());
         Redis::zadd("wins", 0, $t->getRecords()[0]->getIdOfNode());
-        Redis::zadd("loses", 0, $t->getRecords()[0]->getIdOfNode());
+        Redis::zadd("losses", 0, $t->getRecords()[0]->getIdOfNode());
         Redis::zadd("percentage", 0, $t->getRecords()[0]->getIdOfNode());
         Redis::zadd("home", 0, $t->getRecords()[0]->getIdOfNode());
         Redis::zadd("road", 0, $t->getRecords()[0]->getIdOfNode());
@@ -119,7 +120,7 @@ class Team
             "team:standings:{$t->getRecords()[0]->getIdOfNode()}",
             "points", 0,
             "wins", 0,
-            "loses", 0,
+            "losses", 0,
             "percentage", 0,
             "home", 0,
             "road", 0,
@@ -158,6 +159,22 @@ class Team
 
         Cypher::Run("MATCH (n:Team) WHERE ID(n) = $id DETACH DELETE n");
 
+        Redis::zrem("points", $id);
+        Redis::zrem("wins", $id);
+        Redis::zrem("losses", $id);
+        Redis::zrem("percentage", $id);
+        Redis::zrem("home", $id);
+        Redis::zrem("road", $id);
+        Redis::zrem("streak", $id);
+
+        Redis::del("team:standings:{$id}");
+
+        foreach(Redis::keys("match:*:team:{$id}") as $key) {
+            $matchIndex = intval(explode(":", $key)[1]);
+            Match::deleteMatch($matchIndex);
+        };
+
+        Redis::decr("count:teams");
     }
 
 }

@@ -49,14 +49,9 @@ class CoachController extends Controller
     {
         //
 
-        Coach::saveCoach($request);
-
-        $coach_id = null;
-        $allCoaches = Coach::getAll();
-
-        foreach ($allCoaches as $coach)
-            if ($coach['name'] == $request['name'])
-                $coach_id = $coach['id'];
+        $result = Coach::saveCoach($request);
+        $record = $result->getRecords()[0];
+        $coach_id = $record->getIdOfNode();
 
 
         $keys_array = ["team_name", "coached_since", "coached_until"];
@@ -94,8 +89,7 @@ class CoachController extends Controller
     {
         //
 
-        $Coach = new Coach();
-        $coach = $Coach->getById($id);
+        $coach = Coach::getById($id);
 
         $recPlayers = [];
         if (!empty($coach['all_teams'])) {

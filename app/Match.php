@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Carbon\Carbon;
 use App\Team;
+use App\Player_Match;
 
 class Match extends Model
 {
@@ -163,5 +164,24 @@ class Match extends Model
     public static function isLive($match)
     {
         return Carbon::now('Europe/Belgrade') > (new Carbon($match['date']." ".$match['time'], 'Europe/Belgrade'));
+    }
+
+    public static function deleteMatch($id)
+    {
+        // Mozda treba da se izmeni
+        $match = getById($id);
+        Cypher::Run("MATCH (m:Match) WHERE ID(m) = $id DETACH DELETE m");
+        Redis::del("match:{$id}:team:{$match['home']['id']}");
+        Redis::del("match:{$id}:team:{$match['guest']['id']}");
+
+        foreach (Player_Team::getCurrentPlayers($match['home']['id']) as $player) {
+            Redis::del("match:{$id}:team:{$match['home']['id']}:player:{$player['player']['id']}");
+        }
+
+        foreach (Player_Team::getCurrentPlayers($match['guest']['id']) as $player) {
+            Redis::del("match:{$id}:team:{$match['guest']['id']}:player:{$player['player']['id']}");
+        }
+
+        Redis::decr("count:matches");
     }
 }

@@ -126,4 +126,17 @@ class Player extends Model
 
         return $players;
     }
+
+    public static function deletePlayer($id)
+    {
+        // Brise cvor i sve njegove veze
+        Cypher::Run("MATCH (n:Player) WHERE ID(n) = $id DETACH DELETE n");
+        PlayerStatistic::deleteStats($id);
+
+        foreach(Redis::keys("match:*:team:*:{$id}") as $key) {
+            Redis::del($key);
+        };
+
+        Redis::decr("count:players");
+    }
 }

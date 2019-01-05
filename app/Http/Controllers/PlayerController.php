@@ -136,10 +136,7 @@ class PlayerController extends Controller
      */
     public function destroy($id)
     {
-        // Brise cvor i sve njegove veze
-        Cypher::Run("MATCH (n:Player) WHERE ID(n) = $id DETACH DELETE n");
-
-        // Fali brisanje tog cvora iz redisa
+        Player::deletePlayer($id);
 
         return redirect('/apanel?active=Player&route=players');
     }
