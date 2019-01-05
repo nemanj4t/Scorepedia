@@ -162,6 +162,6 @@ class Match extends Model
 
     public static function isLive($match)
     {
-        return Carbon::now('Europe/Belgrade') > (new Carbon($match['date']." ".$match['time']));
+        return Carbon::now('Europe/Belgrade') > (new Carbon($match['date']." ".$match['time'], 'Europe/Belgrade'));
     }
 }
