@@ -84,9 +84,9 @@
                                     <button class="btn btn-sm btn-danger float-right ml-2">Delete</button>
                                 </form>
                                 <a href="{{$_GET['route']}}/edit/{{$single_data->id}}" class="btn btn-sm btn-primary float-right">Edit</a>
-                                @if($_GET['route'] == 'players')
+                                @if($_GET['route'] == 'coaches')
                                     <a href="/coaches/edit/{{$single_data->id}}/team_coach" class="btn btn-sm btn-primary mr-2 float-right">Edit Career</a>
-                                @elseif($_GET['route'] == 'coaches')
+                                @elseif($_GET['route'] == 'players')
                                     <a href="/players/edit/{{$single_data->id}}/plays_for_teams" class="btn btn-sm btn-primary mr-2 float-right">Edit Career</a>
                                 @endif
                             </td>

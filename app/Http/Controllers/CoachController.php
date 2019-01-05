@@ -61,6 +61,9 @@ class CoachController extends Controller
 
         $keys_array = ["team_name", "coached_since", "coached_until"];
 
+
+        // <input type="text" name="team_name[0][5]">
+
         $count = 0;
         // Dok ne nadje prvi input za vezu tim_igrac koji je prazan
         while($request[$keys_array[0] . '_' . $count] != null)
