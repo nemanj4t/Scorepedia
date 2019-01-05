@@ -89,4 +89,14 @@ class PlayerStatistic extends Model
             $id
         );
     }
+
+    public static function deleteStats($id)
+    {
+        Redis::zrem("players:points", $id);
+        Redis::zrem("players:blocks", $id);
+        Redis::zrem("players:rebounds", $id);
+        Redis::zrem("players:steals", $id);
+        Redis::zrem("players:assists", $id);
+        Redis::zrem("players:fouls", $id);
+    }
 }

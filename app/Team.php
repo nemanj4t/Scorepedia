@@ -158,6 +158,22 @@ class Team
 
         Cypher::Run("MATCH (n:Team) WHERE ID(n) = $id DETACH DELETE n");
 
+        Redis::zrem("points", $id);
+        Redis::zrem("wins", $id);
+        Redis::zrem("loses", $id);
+        Redis::zrem("percentage", $id);
+        Redis::zrem("home", $id);
+        Redis::zrem("road", $id);
+        Redis::zrem("streak", $id);
+
+        Redis::del("team:standings:{$id}");
+
+        foreach(Redis::keys("match:*:team:{$id}") as $key) {
+            $matchIndex = intval(explode(":", $key)[1]);
+            Match::deleteMatch($matchIndex);
+        };
+
+        Redis::decr("count:teams");
     }
 
 }

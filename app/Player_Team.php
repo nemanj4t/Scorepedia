@@ -218,5 +218,9 @@ class Player_Team
         Cypher::run("MATCH (n:Player)-[r:PLAYS|PLAYED]-(t:Team)
             WHERE ID(n) = ".$player_id." AND ID(t) = ".$team_id.
             " DELETE r");
+
+        foreach(Redis::keys("match:*:team:{$team_id}:player:{$player_id}") as $key) {
+            Redis::del($key);
+        };
     }
 }

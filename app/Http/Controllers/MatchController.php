@@ -129,10 +129,7 @@ class MatchController extends Controller
      */
     public function destroy($id)
     {
-        // Brise cvor i sve njegove veze
-        Cypher::Run("MATCH (m:Match) WHERE ID(m) = $id DETACH DELETE m");
-
-        // Fali brisanje tog cvora iz redisa
+        Match::deleteMatch($id);
 
         return redirect('/apanel?active=Match&route=matches');
     }
