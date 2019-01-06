@@ -160,7 +160,6 @@ class Team
         return $team;
     }
 
-
     // TODO: refaktorisati po ugledu na current team for coach
     public static function getCurrentCoach($id)
     {
@@ -235,5 +234,22 @@ class Team
     public static function delete($id)
     {
         Cypher::Run("MATCH (n:Team) WHERE ID(n) = $id DETACH DELETE n");
+
+        Redis::zrem("points", $id);
+        Redis::zrem("wins", $id);
+        Redis::zrem("losses", $id);
+        Redis::zrem("percentage", $id);
+        Redis::zrem("home", $id);
+        Redis::zrem("road", $id);
+        Redis::zrem("streak", $id);
+
+        Redis::del("team:standings:{$id}");
+
+        foreach(Redis::keys("match:*:team:{$id}") as $key) {
+            $matchIndex = intval(explode(":", $key)[1]);
+            Match::deleteMatch($matchIndex);
+        };
+
+        Redis::decr("count:teams");
     }
 }

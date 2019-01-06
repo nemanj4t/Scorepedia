@@ -109,7 +109,6 @@ class Coach
            return;
         }
 
-
         Cypher::run("MATCH (c:Coach) WHERE ID(c) = $id SET c.name = '$request->name', c.bio = '$request->bio', c.city = '$request->city', c.image = '$request->city'");
 
         $team_coach = new Team_Coach();
@@ -143,5 +142,7 @@ class Coach
     public static function delete($id)
     {
         Cypher::Run("MATCH (n:Coach) WHERE ID(n) = $id DETACH DELETE n");
+
+        Redis::decr("count:coaches");
     }
 }

@@ -163,4 +163,23 @@ class Match
     {
         return Carbon::now('Europe/Belgrade') > (new Carbon($match['date']." ".$match['time'], 'Europe/Belgrade'));
     }
+
+    public static function deleteMatch($id)
+    {
+        // Mozda treba da se izmeni
+        $match = Match::getById($id);
+        Cypher::Run("MATCH (m:Match) WHERE ID(m) = $id DETACH DELETE m");
+        Redis::del("match:{$id}:team:{$match['home']['id']}");
+        Redis::del("match:{$id}:team:{$match['guest']['id']}");
+
+        foreach (Player_Team::getCurrentPlayers($match['home']['id']) as $player) {
+            Redis::del("match:{$id}:team:{$match['home']['id']}:player:{$player['player']['id']}");
+        }
+
+        foreach (Player_Team::getCurrentPlayers($match['guest']['id']) as $player) {
+            Redis::del("match:{$id}:team:{$match['guest']['id']}:player:{$player['player']['id']}");
+        }
+
+        Redis::decr("count:matches");
+    }
 }
