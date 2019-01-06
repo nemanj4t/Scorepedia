@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Coach;
 use App\Team;
 use App\Team_Coach;
-use Carbon\Carbon;
-use function GuzzleHttp\Psr7\str;
+use GraphAware\Neo4j\Client\Formatter\Result;
 use Illuminate\Http\Request;
 use Ahsan\Neo4j\Facade\Cypher;
 
@@ -19,8 +18,8 @@ class CoachController extends Controller
      */
     public function index()
     {
-        $coach = new Coach();
-        $coaches = $coach->getAll();
+        $coaches = Coach::getAll();
+
         return view('coaches.index', compact('coaches'));
     }
 
@@ -31,9 +30,6 @@ class CoachController extends Controller
      */
     public function create()
     {
-        //
-
-
         $teams = Team::getAll();
 
         return view('coaches.create', compact('teams'));
@@ -47,12 +43,8 @@ class CoachController extends Controller
      */
     public function store(Request $request)
     {
-        //
-
         $result = Coach::saveCoach($request);
-        $record = $result->getRecords()[0];
-        $coach_id = $record->getIdOfNode();
-
+        $coach_id = $result->firstRecord()->getByIndex(0)->identity();
 
         $keys_array = ["team_name", "coached_since", "coached_until"];
 
@@ -87,32 +79,28 @@ class CoachController extends Controller
      */
     public function show($id)
     {
-        //
-
         $coach = Coach::getById($id);
+        $coached_teams = Team_Coach::getByCoachId($id);
 
         $recPlayers = [];
-        if (!empty($coach['all_teams'])) {
-            // Vraca trenere koji su nekada trenirali taj tim
-            if ($coach['current_team'] != '') {
-                $current_team_id = $coach['current_team']['team']['id'];
+        // Vraca trenere koji su nekada trenirali taj tim
+        $current_team = Team_Coach::getCurrentForCoachId($coach->id);
 
-                $recommendedResult = Cypher::Run("MATCH (t:Team)-[r:TEAM_COACH]-(c:Coach) 
+        if ($current_team) {
+            $current_team_id = $current_team->team_id;
+
+            /** @var Result $recommendedResult */
+            $recommendedResult = Cypher::run("MATCH (t:Team)-[r:TEAM_COACH]-(c:Coach) 
                 WHERE ID(t) =". $current_team_id . " AND ID(c) <>" . (int)$id . " return distinct c LIMIT 5");
 
-                foreach ($recommendedResult->getRecords() as $record) {
-                    $props_array = $record->getPropertiesOfNode();
-                    $id_array = ["id" => $record->getIdOfNode()];
-                    $recPlayer = array_merge($props_array, $id_array);
-
-                    array_push($recPlayers, $recPlayer);
-                }
+            foreach ($recommendedResult->getRecords() as $record) {
+                $node = $record->value('c');
+                $recCoach = Coach::buildFromNode($node);
+                array_push($recPlayers, $recCoach);
             }
-
-
         }
 
-        return view('coaches.show', compact('coach', 'recPlayers'));
+        return view('coaches.show', compact('coach', 'recPlayers', 'coached_teams'));
     }
 
 
@@ -126,7 +114,7 @@ class CoachController extends Controller
 
     public function edit($id) {
         $coach = Coach::getById($id);
-        $teams = Team::getAll();
+        $teams = Team::getTeams();
         return view("coaches.edit", compact('coach', 'teams'));
     }
 

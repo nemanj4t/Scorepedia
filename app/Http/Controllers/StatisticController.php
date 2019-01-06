@@ -34,9 +34,9 @@ class StatisticController extends Controller
                 foreach($set as $id => $item)
                 {
                     $player = ["id" => $id, "score" => $item];
-                    $player += ['name' => $players[$id]['player']['name']];
-                    if(isset($players[$id]['team'])) {
-                        $player += ['team' => $players[$id]['team']['short_name']];
+                    $player += ['name' => $players[$id]->name];
+                    if($players[$id]->current_team) {
+                        $player += ['team' => $players[$id]->current_team->short_name];
                     }
                     array_push($statsSet, $player);
                 }
@@ -52,22 +52,30 @@ class StatisticController extends Controller
 
     public function full()
     {
-        $records = Player::getAllWithCurrentTeam();
-        $players = [];
+        $players = Player::getAllWithCurrentTeam();
+        $data = [];
 
-        foreach($records as $record)
+        foreach($players as $player)
         {
-            $player = ['id' => $record['player']['id'], 'name' => $record['player']['name']];
-            if(isset($record['team'])) {
-                $player += ['team' => 
-                    ['id' => $record['team']['id'], 
-                    'name' => $record['team']['short_name']]];
+            $row = [
+                'id' => $player->id,
+                'name' => $player->name
+            ];
+
+            if($player->current_team) {
+                $row += [
+                    'team' => [
+                        'id' => $player->current_team->id,
+                        'name' => $player->current_team->short_name
+                    ]
+                ];
             }
-            $stats = PlayerStatistic::getById($record['player']['id']);
-            $player = array_merge($player, $stats);
-            array_push($players, $player);
+
+            $stats = PlayerStatistic::getById($player->id);
+            $row = array_merge($row, $stats);
+            array_push($data, $row);
         }
 
-        return $players;
+        return $data;
     }
 }

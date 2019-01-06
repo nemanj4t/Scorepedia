@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+
+    @php
+        /** @var \App\Team[] $teams */
+    @endphp
+
     <div class="container" class="col-xs-1 center-block">
         <div class="col-sm-7">
             <div class="card">
@@ -37,7 +42,7 @@
                                 <select name="team_name_0" onchange="addNewInput(this)">
                                     <option value=""></option>
                                     @foreach($teams as $team)
-                                        <option value="{{$team['id'] }}">{{ $team['name'] }}</option>
+                                        <option value="{{$team->id }}">{{ $team->name }}</option>
                                     @endforeach
                                 </select>
                                 <input type="number" min="0" name="player_number_0" placeholder="Number" onchange="addNewInput(this)"/>

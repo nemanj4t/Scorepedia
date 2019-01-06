@@ -1,31 +1,46 @@
 <?php
 
 namespace App;
+
 use Ahsan\Neo4j\Facade\Cypher;
-use Illuminate\Database\Eloquent\Model;
+use GraphAware\Neo4j\Client\Formatter\Result;
+use GraphAware\Neo4j\Client\Formatter\Type\Node;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
-use App\Player_Team;
-use App\PlayerStatistic;
 
-class Player extends Model
+class Player
 {
     public $id;
     public $name;
     public $city;
-    public $current_team;
-    public $past_teams;
-    public $number;
-    public $statistics;
     public $image;
     public $bio;
     public $height;
     public $weight;
 
+    /** @var Team */
+    public $current_team;
+    public $past_teams;
+    public $statistics = [];
+
+    public static function buildFromNode(Node $node)
+    {
+        $player = new Player();
+        $player->id = $node->identity();
+        $player->name = $node->value('name');
+        $player->city = $node->value('city', null);
+        $player->image = $node->value('image', null);
+        $player->bio = $node->value('bio', null);
+        $player->height = $node->value('height', null);
+        $player->weight = $node->value('weight', null);
+
+        return $player;
+    }
+
     public static function getById($id){
         $query = Cypher::run("MATCH (p:Player) WHERE ID(p) = {$id} RETURN p");
-        $playerProps = $query->firstRecord()->values()[0]->values();
-        $player = array_merge($playerProps, ['id' => $id]);
+        $node = $query->firstRecord()->nodeValue('p');
+        $player = self::buildFromNode($node);
 
         return $player;
     }
@@ -60,47 +75,59 @@ class Player extends Model
         PlayerStatistic::saveGlobalStats($player_id);
     }
 
+    /**
+     * @param $id
+     * @return Team|null
+     */
     public static function getCurrentTeam($id)
     {
-        // Vraca igracev trenutni tim
-        $response = Cypher::Run
-        ("MATCH (p:Player)-[:PLAYS]-(t:Team) WHERE ID(p) = {$id} return t")->getRecords();
-        if($response != null) {
-            $rec = $response[0];
-            $current_team = array_merge(["id" => $rec->getIdOfNode()],
-                $rec->getPropertiesOfNode());
-            return $current_team;
-        }
-        else {
+        /** @var Result $result */
+        $result = Cypher::run("MATCH (p:Player)-[:PLAYS]-(t:Team) WHERE ID(p) = {$id} return t");
+
+        try {
+            $record = $result->getRecord();
+        } catch (\RuntimeException $exception) {
             return null;
         }
+
+        $node = $record->value('t');
+
+        $team = Team::buildFromNode($node);
+
+        return $team;
     }
 
+    /**
+     * @return Player[]
+     */
     public static function getAllWithCurrentTeam()
     {
+        /** @var Result $result */
         $result = Cypher::run("MATCH (p:Player) OPTIONAL MATCH (p)-[:PLAYS]-(t:Team) return p, t");
         $players = [];
 
         foreach ($result->getRecords() as $record) {
-            $player = $record->nodeValue('p');
-            $player_props = $player->values();
-            $player_id = ["id" => $player->identity()];
-            $player = array_merge($player_id, $player_props);
-            $player_team = ['player' => $player];
+            $playerNode = $record->value('p');
+            $player = self::buildFromNode($playerNode);
+            $player->current_team = null;
 
-            if($record->value('t') != null) {
-                $team = $record->nodeValue('t');
-                $team_props = $team->values();
-                $team_id = ["id" => $team->identity()];
-                $team = array_merge($team_id, $team_props);
-                $player_team += ['team' => $team];
+            if ($record->value('t')) {
+                $teamNode = $record->value('t');
+                $team = Team::buildFromNode($teamNode);
+
+                $player->current_team = $team;
             }
-            array_push($players, $player_team);
+
+            $players[] = $player;
         }
 
         return $players;
     }
 
+    /**
+     * @param array $ids
+     * @return Player[]
+     */
     public static function getSomeWithCurrentTeam(array $ids)
     {
         $id_array = implode(', ', $ids);
@@ -108,20 +135,17 @@ class Player extends Model
         $players = [];
 
         foreach ($result->getRecords() as $record) {
-            $player = $record->nodeValue('p');
-            $player_props = $player->values();
-            $player_id = ["id" => $player->identity()];
-            $player = array_merge($player_id, $player_props);
-            $player_team = ['player' => $player];
+            $playerNode = $record->nodeValue('p');
+
+            $player = Player::buildFromNode($playerNode);
 
             if($record->value('t') != null) {
-                $team = $record->nodeValue('t');
-                $team_props = $team->values();
-                $team_id = ["id" => $team->identity()];
-                $team = array_merge($team_id, $team_props);
-                $player_team += ['team' => $team];
+                $teamNode = $record->nodeValue('t');
+                $team = Team::buildFromNode($teamNode);
+                $player->current_team = $team;
             }
-            $players += [$player['id'] => $player_team];
+
+            $players[$player->id] = $player;
         }
 
         return $players;

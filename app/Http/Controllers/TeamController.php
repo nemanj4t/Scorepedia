@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Coach;
+use App\Player_Team;
 use App\Team;
+use App\Team_Coach;
 use Illuminate\Http\Request;
 use Ahsan\Neo4j\Facade\Cypher;
 use Carbon\Carbon;
@@ -17,10 +19,9 @@ class TeamController extends Controller
      */
     public function index()
     {
-
         $teams = Team::getTeams();
 
-        return view('teams.index', compact('teams', $teams));
+        return view('teams.index', compact('teams'));
     }
 
     /**
@@ -30,15 +31,14 @@ class TeamController extends Controller
      */
     public function create()
     {
-        //
-
         $coaches = [];
 
         $allCoaches = Coach::getAll();
 
         foreach ($allCoaches as $coach) {
-            if ($coach['current_team'] == "")
+            if ($coach->current_team === null) {
                 array_push($coaches, $coach);
+            }
         }
 
         return view('teams.create', compact('coaches'));
@@ -53,7 +53,17 @@ class TeamController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required',
+            'short_name' => 'required',
+            'coached_since' => 'required',
+            'coached_until' => 'required',
+            'city' => 'required',
+            'description' => 'required',
+            'image' => 'required',
+            'background_image' => 'required',
+        ]);
+
         Team::save($request);
 
         return redirect('/apanel?active=Team&route=teams');
@@ -67,11 +77,11 @@ class TeamController extends Controller
      */
     public function show($id)
     {
-
         $team = Team::getTeamById($id);
+        $teamCoach = Team_Coach::getCurrentForTeamId($id);
+        $currentPlayers = Player_Team::getCurrentPlayers($id);
 
-
-        return view('teams.show', compact('team', $team));
+        return view('teams.show', compact('team', 'teamCoach', 'currentPlayers'));
     }
 
     /**

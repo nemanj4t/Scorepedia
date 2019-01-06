@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+
+    @php
+        /** @var \App\Player $player */
+        /** @var \App\Team $team */
+        /** @var \App\Coach $coach */
+    @endphp
     <div class="row">
         <div class="col-md-3 text-center m-4">
             <h3>Feautured</h3>
@@ -9,12 +15,12 @@
                     <h4 class="my-0 font-weight-normal">Player</h4>
                 </div>
                 <div class="card-body">
-                    <h1 class="card-title pricing-card-title">{{$player['name']}}</h1>
-                    <img style="width:100%;" src="{{$player['image']}}">
+                    <h1 class="card-title pricing-card-title">{{$player->name}}</h1>
+                    <img style="width:100%;" src="{{$player->image}}">
                     <ul class="list-unstyled mt-3 mb-4">
-                        <li>{{$player['city']}}</li>
+                        <li>{{$player->city}}</li>
                     </ul>
-                    <a href="/players/{{$player['id']}}" class="btn btn-lg btn-block btn-primary">Show More</a>
+                    <a href="/players/{{$player->id}}" class="btn btn-lg btn-block btn-primary">Show More</a>
                 </div>
             </div>
             <div class="card mb-4 shadow-sm">
@@ -22,12 +28,12 @@
                     <h4 class="my-0 font-weight-normal">Team</h4>
                 </div>
                 <div class="card-body">
-                    <h1 class="card-title pricing-card-title">{{$team['name']}}</h1>
-                    <img style="width:100%;" src="{{$team['image']}}">
+                    <h1 class="card-title pricing-card-title">{{$team->name}}</h1>
+                    <img style="width:100%;" src="{{$team->image}}">
                     <ul class="list-unstyled mt-3 mb-4">
-                        <li>{{$team['city']}}</li>
+                        <li>{{$team->city}}</li>
                     </ul>
-                    <a href="/teams/{{$team['id']}}" class="btn btn-lg btn-block btn-primary">Show More</a>
+                    <a href="/teams/{{$team->id}}" class="btn btn-lg btn-block btn-primary">Show More</a>
                 </div>
             </div>
             <div class="card mb-4 shadow-sm">
@@ -35,12 +41,12 @@
                     <h4 class="my-0 font-weight-normal">Coach</h4>
                 </div>
                 <div class="card-body">
-                    <h1 class="card-title pricing-card-title">{{$coach['name']}}</h1>
-                    <img style="width:100%;" src="{{$coach['image']}}">
+                    <h1 class="card-title pricing-card-title">{{$coach->name}}</h1>
+                    <img style="width:100%;" src="{{$coach->image}}">
                     <ul class="list-unstyled mt-3 mb-4">
-                        <li>{{$coach['city']}}</li>
+                        <li>{{$coach->city}}</li>
                     </ul>
-                    <a href="/coaches/{{$coach['id']}}" class="btn btn-lg btn-block btn-primary">Show More</a>
+                    <a href="/coaches/{{$coach->id}}" class="btn btn-lg btn-block btn-primary">Show More</a>
                 </div>
             </div>
         </div>

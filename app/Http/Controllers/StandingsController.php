@@ -23,9 +23,15 @@ class StandingsController extends Controller
 
         foreach ($team_ids as $id) {
             $team = Team::getTeamById(intval($id));
-            $stands = Redis::hgetall('team:standings:'. $team['id']);
-            $team = array_merge($team, $stands);
-            array_push($data, $team);
+            $stands = Redis::hgetall('team:standings:'. $team->id);
+
+            $row = [
+                'id' => $team->id,
+                'image' => $team->image,
+                'name' => $team->name
+            ];
+            $row = array_merge($row, $stands);
+            array_push($data, $row);
         }
 
         return $data;
@@ -38,9 +44,14 @@ class StandingsController extends Controller
 
         foreach ($team_ids as $id) {
             $team = Team::getTeamById(intval($id));
-            $stands = Redis::hgetall('team:standings:'. $team['id']);
-            $team = array_merge($team, $stands);
-            array_push($data, $team);
+            $stands = Redis::hgetall('team:standings:'. $team->id);
+            $row = [
+                'id' => $team->id,
+                'image' => $team->image,
+                'name' => $team->name
+            ];
+            $row = array_merge($row, $stands);
+            array_push($data, $row);
         }
 
         return $data;
@@ -53,9 +64,14 @@ class StandingsController extends Controller
 
         foreach ($team_ids as $id) {
             $team = Team::getTeamById(intval($id));
-            $stands = Redis::hgetall('team:standings:'. $team['id']);
-            $team = array_merge($team, $stands);
-            array_push($data, $team);
+            $stands = Redis::hgetall('team:standings:'. $team->id);
+            $row = [
+                'id' => $team->id,
+                'image' => $team->image,
+                'name' => $team->name
+            ];
+            $row = array_merge($row, $stands);
+            array_push($data, $row);
         }
 
         return $data;
@@ -68,9 +84,14 @@ class StandingsController extends Controller
 
         foreach ($team_ids as $id) {
             $team = Team::getTeamById(intval($id));
-            $stands = Redis::hgetall('team:standings:'. $team['id']);
-            $team = array_merge($team, $stands);
-            array_push($data, $team);
+            $stands = Redis::hgetall('team:standings:'. $team->id);
+            $row = [
+                'id' => $team->id,
+                'image' => $team->image,
+                'name' => $team->name
+            ];
+            $row = array_merge($row, $stands);
+            array_push($data, $row);
         }
 
         return $data;
@@ -83,9 +104,14 @@ class StandingsController extends Controller
 
         foreach ($team_ids as $id) {
             $team = Team::getTeamById(intval($id));
-            $stands = Redis::hgetall('team:standings:'. $team['id']);
-            $team = array_merge($team, $stands);
-            array_push($data, $team);
+            $stands = Redis::hgetall('team:standings:'. $team->id);
+            $row = [
+                'id' => $team->id,
+                'image' => $team->image,
+                'name' => $team->name
+            ];
+            $row = array_merge($row, $stands);
+            array_push($data, $row);
         }
 
         return $data;
@@ -98,9 +124,14 @@ class StandingsController extends Controller
 
         foreach ($team_ids as $id) {
             $team = Team::getTeamById(intval($id));
-            $stands = Redis::hgetall('team:standings:'. $team['id']);
-            $team = array_merge($team, $stands);
-            array_push($data, $team);
+            $stands = Redis::hgetall('team:standings:'. $team->id);
+            $row = [
+                'id' => $team->id,
+                'image' => $team->image,
+                'name' => $team->name
+            ];
+            $row = array_merge($row, $stands);
+            array_push($data, $row);
         }
 
         return $data;
@@ -113,9 +144,14 @@ class StandingsController extends Controller
 
         foreach ($team_ids as $id) {
             $team = Team::getTeamById(intval($id));
-            $stands = Redis::hgetall('team:standings:'. $team['id']);
-            $team = array_merge($team, $stands);
-            array_push($data, $team);
+            $stands = Redis::hgetall('team:standings:'. $team->id);
+            $row = [
+                'id' => $team->id,
+                'image' => $team->image,
+                'name' => $team->name
+            ];
+            $row = array_merge($row, $stands);
+            array_push($data, $row);
         }
 
         return $data;

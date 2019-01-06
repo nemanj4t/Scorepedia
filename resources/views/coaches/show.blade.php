@@ -2,7 +2,12 @@
 
 @section('content')
 
-    <div class="container">
+    @php
+        /** @var \App\Coach $coach */
+        /** @var \App\Team_Coach[] $coached_teams */
+    @endphp
+
+    <div class="container mt-4">
         <div class="row">
             <div class="col-9">
                 <div class="card">
@@ -10,12 +15,12 @@
                         <div class="card-title mb-4">
                             <div class="d-flex justify-content-start">
                                 <div class="image-container">
-                                    <img src="{{ $coach['image'] }}" id="image" style="width: 150px; height: 150px" class="img-thumbnail" />
+                                    <img src="{{ $coach->image }}" id="image" style="width: 150px; height: 150px" class="img-thumbnail" />
                                 </div>
                                 <div class="userData ml-3">
-                                    <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold"><a href="javascript:void(0);">{{ $coach['name'] }}</a></h2>
+                                    <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold"><a href="javascript:void(0);">{{ $coach->name }}</a></h2>
                                     <label style="font-weight:bold;">Bio</label>
-                                    <p>{{ $coach['bio'] }}</p>
+                                    <p>{{ $coach->bio }}</p>
                                 </div>
                             </div>
                         </div>
@@ -24,10 +29,10 @@
                             <div class="col-12">
                                 <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Basic Info</a>
+                                        <a class="nav-link active btn btn-outline-secondary" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Basic Info</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="teams-tab" data-toggle="tab" href="#teams" role="tab" aria-controls="teams" aria-selected="false">Teams</a>
+                                        <a class="nav-link btn btn-outline-secondary" id="teams-tab" data-toggle="tab" href="#teams" role="tab" aria-controls="teams" aria-selected="false">Teams</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content ml-1" id="myTabContent">
@@ -37,7 +42,7 @@
                                                 <label style="font-weight:bold;">Name</label>
                                             </div>
                                             <div class="col-md-8 col-6">
-                                                {{ $coach['name'] }}
+                                                {{ $coach->name }}
                                             </div>
                                         </div>
                                         <hr />
@@ -47,10 +52,10 @@
                                                 <label style="font-weight:bold;">Team</label>
                                             </div>
                                             <div class="col-md-8 col-6">
-                                                @if($coach['current_team'] == '')
+                                                @if($coach->current_team == '')
                                                     <p>No proffessional engagement currently</p>
                                                     @else
-                                                    <p><a href="/teams/{{$coach['current_team']['team']['id']}}">{{$coach['current_team']['team']['name']}}</a></p>
+                                                    <p><a href="/teams/{{$coach->current_team->team_id}}">{{$coach->current_team->team->name}}</a></p>
                                                 @endif
                                             </div>
                                         </div>
@@ -61,7 +66,7 @@
                                                 <label style="font-weight:bold;">City</label>
                                             </div>
                                             <div class="col-md-8 col-6">
-                                                {{ $coach['city'] }}
+                                                {{ $coach->city }}
                                             </div>
                                         </div>
 
@@ -86,12 +91,12 @@
                                                                         </tr>
                                                                         </thead>
                                                                         <tbody>
-                                                                        @foreach ($coach['all_teams'] as $team)
+                                                                        @foreach ($coached_teams as $team)
                                                                             <tr class="ok">
-                                                                                <td class="avatar"><img id="img" src={{$team['team']['image']}}></td>
-                                                                                <td><a href="/teams/{{$team['team']['id']}}">{{$team['team']['name']}}</a></td>
-                                                                                <td>{{$team['coached']['coached_since']}}</td>
-                                                                                <td>{{$team['coached']['coached_until']}}</td>
+                                                                                <td class="avatar"><img id="img" src={{$team->team->image}}></td>
+                                                                                <td><a href="/teams/{{$team->team_id}}">{{$team->team->name}}</a></td>
+                                                                                <td>{{$team->coached_since}}</td>
+                                                                                <td>{{$team->coached_until}}</td>
                                                                             </tr>
                                                                         @endforeach
                                                                         </tbody>

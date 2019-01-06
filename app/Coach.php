@@ -2,87 +2,129 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+use GraphAware\Neo4j\Client\Formatter\Result;
+use GraphAware\Neo4j\Client\Formatter\Type\Node;
 use Illuminate\Support\Facades\Redis;
 use Ahsan\Neo4j\Facade\Cypher;
-use Carbon\Carbon;
 
 class Coach
 {
     public $id;
     public $name;
     public $city;
-    public $current_team;
     public $bio;
     public $image;
 
+    /** @var Team_Coach */
+    public $current_team;
 
-    public static function getAll() {
 
-        $resultCoaches = Cypher::run("MATCH (c:Coach) RETURN c");
-        $coaches = [];
-        foreach ($resultCoaches->getRecords() as $record) {
-            $coach = $record->getPropertiesOfNode();
-            $coach = array_merge($coach, ['id' => $record->getIdOfNode()]);
-            $current_team = self::getCurrentTeam($record->getIdOfNode());
-            $team_coach = Team_Coach::getByCoachId($record->getIdOfNode());
-            $coach = array_merge($coach, ['all_teams' => $team_coach]);
-            $coach = array_merge($coach, ['current_team' => $current_team]);
-            array_push($coaches, $coach);
-
-        }
-
-        return $coaches;
-    }
-
-    public static function getById($id) {
-
-        $coach = null;
-        $result = Cypher::run("MATCH (c:Coach) WHERE ID(c) = $id RETURN c")->getRecords();
-        $record = $result[0];
-        $coach = $record->getPropertiesOfNode();
-        $coach = array_merge($coach, ['id' => $record->getIdOfNode()]);
-        $current_team = self::getCurrentTeam($record->getIdOfNode());
-        $team_coach = Team_Coach::getByCoachId($record->getIdOfNode());
-        $coach = array_merge($coach, ['all_teams' => $team_coach]);
-        $coach = array_merge($coach, ['current_team' => $current_team]);
+    /**
+     * @param Node $node
+     * @return Coach
+     */
+    public static function buildFromNode(Node $node)
+    {
+        $coach = new Coach();
+        $coach->id = $node->identity();
+        $coach->name = $node->value('name');
+        $coach->city = $node->value('city');
+        $coach->bio = $node->value('bio');
+        $coach->image = $node->value('image');
 
         return $coach;
     }
 
-    public static function getCurrentTeam($id) {
+    /**
+     * @return Coach[]
+     */
+    public static function getAll()
+    {
+        $now = Carbon::now()->format('Y-m-d');
 
-        $current_team = '';
-        $team_coach = Team_Coach::getByCoachId($id);
-        foreach ($team_coach as $rel) {
-            if (Carbon::parse($rel['coached']['coached_until'])->gt(Carbon::now()))
-                $current_team = $rel;
+        /** @var Result $result */
+        $result = Cypher::run("MATCH (c:Coach) OPTIONAL MATCH (t:Team)-[r:TEAM_COACH]-(c:Coach) WHERE r.coached_since <= '$now' AND r.coached_until >= '$now' RETURN c, t, r");
+
+        $coaches = [];
+        foreach ($result->getRecords() as $record) {
+            $coachNode = $record->value('c');
+            $teamNode = $record->value('t');
+            $relationshop = $record->value('r');
+            $coach = Coach::buildFromNode($coachNode);
+
+            if ($record->value('t')) {
+                $coach->current_team = Team_Coach::buildFromNodesAndRelationship($teamNode, $coachNode, $relationshop);
+            }
+
+            array_push($coaches, $coach);
         }
 
-        return $current_team;
+
+        return $coaches;
     }
 
-    public static function saveCoach($request) {
+    /**
+     * @param $id
+     * @return Coach|null
+     */
+    public static function getById($id)
+    {
+        /** @var Result $result */
+        $result = Cypher::run("MATCH (c:Coach) WHERE ID(c) = $id RETURN c");
+
+        try {
+            $record = $result->getRecord();
+        } catch (\RuntimeException $exception) {
+            return null;
+        }
+
+        /** @var Node $node */
+        $node = $record->getByIndex(0);
+
+        $coach = self::buildFromNode($node);
+
+        return $coach;
+    }
+
+    public static function saveCoach($request)
+    {
+        if ($request['team'] != null) {
+            $coach = Cypher::run("MATCH (t:Team) WHERE ID(t) = {$request['team']}
+                        CREATE (t)-[:TEAM_COACH{coached_since: '{$request['coached_since']}', coached_until: '{$request['coached_until']}'}]->(c:Coach {name: '{$request['name']}', bio: '{$request['bio']}', city: '{$request['city']}', image: '{$request['image']}'}) RETURN c");
+        } else {
+            $coach = Cypher::run("CREATE (c:Coach {name: '{$request['name']}', bio: '{$request['bio']}', city: '{$request['city']}', image: '{$request['image']}'}) RETURN c");
+        }
 
         Redis::incr("count:coaches");
-        if($request['team'] != null)
-            return Cypher::run("MATCH (t:Team) WHERE ID(t) = $request[team]
-                        CREATE (t)-[:TEAM_COACH{coached_since: '$request[coached_since]', coached_until: '$request[coached_until]'}]->(c:Coach {name: '$request[name]', bio: '$request[bio]', city: '$request[city]', image: '$request[image]'}) RETURN c");
-        else
-            return Cypher::run("CREATE (c:Coach {name: '$request[name]', bio: '$request[bio]', city: '$request[city]', image: '$request[image]'}) RETURN c");
+
+        return $coach;
     }
 
-
-    public static function update($id, $request) {
+    public static function update($id, $request)
+    {
         $coach = Coach::getById($id);
-        Cypher::run("MATCH (c:Coach) WHERE ID(c) = $id SET c.name = '$request[name]', c.bio = '$request[bio]', c.city = '$request[city]', c.image = '$request[image]'");
-        $team_coach = new Team_Coach(["coach_id" => $id, "team_name" => $request['team'], "coached_since" => $request['coached_since'], "coached_until" => $request['coached_until']]);
+
+        if ($coach === null) {
+           return;
+        }
+
+        Cypher::run("MATCH (c:Coach) WHERE ID(c) = $id SET c.name = '$request->name', c.bio = '$request->bio', c.city = '$request->city', c.image = '$request->city'");
+
+        $team_coach = new Team_Coach();
+        $team_coach->coach_id = $id;
+        $team_coach->team_id = $request['team'];
+        $team_coach->coached_since = $request['coached_since'];
+        $team_coach->coached_until = $request['coached_until'];
+
+
+        // TODO: ne brisati trenutni tim ukoliko se promenio.
         if ($request['team'] != '') {
-            if ($coach['current_team'] != '') {
-                if ($coach['current_team']['team']['id'] == $request['team']) {
+            if ($coach->current_team) {
+                if ($coach->current_team->team->id == $request['team']) {
                     $team_coach->update();
                 } else {
-                    Team_Coach::delete($coach['current_team']['team']['id'], $id);
+                    Team_Coach::delete($coach->current_team->team_id, $id);
                     $team_coach->save();
                 }
             }
@@ -91,14 +133,14 @@ class Coach
             }
         }
         else {
-            if ($coach['current_team'] != '')
-                Team_Coach::delete($coach['current_team']['team']['id'], $id);
+            if ($coach->current_team != '')
+                Team_Coach::delete($coach->current_team->team_id, $id);
         }
 
     }
 
-    public static function delete($id) {
-
+    public static function delete($id)
+    {
         Cypher::Run("MATCH (n:Coach) WHERE ID(n) = $id DETACH DELETE n");
 
         Redis::decr("count:coaches");
