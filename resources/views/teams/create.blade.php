@@ -10,6 +10,9 @@
                         <div class="form-group">
                             <label>Team name</label>
                             <input type="text" class="form-control" name="name"  placeholder="Enter name">
+                            @if ($errors->has('name'))
+                                {{$errors->first('name')}}
+                            @endif
                         </div>
                         <div class="form-group">
                             <label>Abbreviation</label>
@@ -20,7 +23,7 @@
                             <select class="form-control" name="coach">
                                 <option value="" selected>No current coach</option>
                                 @foreach($coaches as $coach)
-                                    <option value={{$coach['id']}}>{{$coach['name']}}</option>
+                                    <option value={{$coach->id}}>{{$coach->name}}</option>
                                 @endforeach
                             </select>
                         </div>

@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-
+@php
+    /** @var App\Team[] $teams */
+@endphp
     <div class="container" style="margin-top:20px;">
         <div class="row">
             <div id="user" class="col-md-12" >
@@ -22,11 +24,11 @@
                                     <tbody>
                                     @foreach ($teams as $team )
                                         <tr class="ok">
-                                            <td class="avatar"><img id="img" src={{$team['image']}}></td>
-                                            <td><a href="/teams/{{$team['id']}}">{{$team['name']}}</a></td>
-                                            <td>{{$team['short_name']}}</td>
-                                            <td>{{$team['city']}}</td>
-                                            <td>{{$team['description']}}</td>
+                                            <td class="avatar"><img id="img" src={{$team->image}}></td>
+                                            <td><a href="/teams/{{$team->id}}">{{$team->name}}</a></td>
+                                            <td>{{$team->short_name}}</td>
+                                            <td>{{$team->city}}</td>
+                                            <td>{{$team->description}}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>

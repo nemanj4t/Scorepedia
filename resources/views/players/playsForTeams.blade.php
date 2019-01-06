@@ -2,6 +2,9 @@
 
 @section('content')
 
+    @php
+        /** @var \App\Player_Team[] $plays_for_team */
+    @endphp
 
     <div class="container" class="col-xs-1 center-block">
                     @foreach($plays_for_teams as $plays)

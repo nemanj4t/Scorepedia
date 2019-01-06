@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+
+    @php
+        /** @var \App\Team[] $teams */
+    @endphp
+
     <div class="container" class="col-xs-1 center-block">
         <div class="row" style="justify-content: center; margin: 50px;">
             <div class="col-sm-7">
@@ -17,8 +22,8 @@
                                 <select class="form-control" name="team" >
                                     <option value="" selected>No current team</option>
                                     @foreach ($teams as $team)
-                                        @if ($team['current_coach'] == '')
-                                            <option value="{{$team['id']}}">{{$team['name']}}</option>
+                                        @if ($team->current_coach == '')
+                                            <option value="{{$team->id}}">{{$team->name}}</option>
                                         @endif
                                     @endforeach
                                 </select>
@@ -52,7 +57,7 @@
                                     <select name="team_name_0" class="form-control" onkeyup="addNewInput(this)" placeholder="Team">
                                         <option value=""></option>
                                         @foreach($teams as $team)
-                                            <option value="{{$team['id'] }}">{{ $team['name'] }}</option>
+                                            <option value="{{$team->id}}">{{ $team->name }}</option>
                                         @endforeach
                                     </select>
                                     <input type="date" name="coached_since_0" class="form-control" onkeyup="addNewInput(this)"/>

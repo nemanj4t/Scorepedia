@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        /** @var \App\Player[] $homePlayers */
+        /** @var \App\Player[] $guestPlayers */
+    @endphp
     <div class="container mt-4">
         <div class="row">
             <div id="home" class="col-md-4 p-4">
@@ -21,14 +25,14 @@
                         <tbody>
                         @foreach($homePlayers as $player)
                             <tr>
-                                <th scope="row">{{$player['id']}}</th>
-                                <td>{{$player['name']}}</td>
-                                <td>{{$player['points']}}</td>
-                                <td>{{$player['blocks']}}</td>
-                                <td>{{$player['rebounds']}}</td>
-                                <td>{{$player['fouls']}}</td>
-                                <td>{{$player['assists']}}</td>
-                                <td>{{$player['steals']}}</td>
+                                <th scope="row">{{$player->id}}</th>
+                                <td>{{$player->name}}</td>
+                                <td>{{$player->statistics['points']}}</td>
+                                <td>{{$player->statistics['blocks']}}</td>
+                                <td>{{$player->statistics['rebounds']}}</td>
+                                <td>{{$player->statistics['fouls']}}</td>
+                                <td>{{$player->statistics['assists']}}</td>
+                                <td>{{$player->statistics['steals']}}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -100,14 +104,14 @@
                         <tbody>
                         @foreach($guestPlayers as $player)
                             <tr>
-                                <th scope="row">{{$player['id']}}</th>
-                                <td>{{$player['name']}}</td>
-                                <td>{{$player['points']}}</td>
-                                <td>{{$player['blocks']}}</td>
-                                <td>{{$player['rebounds']}}</td>
-                                <td>{{$player['fouls']}}</td>
-                                <td>{{$player['assists']}}</td>
-                                <td>{{$player['steals']}}</td>
+                                <th scope="row">{{$player->id}}</th>
+                                <td>{{$player->name}}</td>
+                                <td>{{$player->statistics['points']}}</td>
+                                <td>{{$player->statistics['blocks']}}</td>
+                                <td>{{$player->statistics['rebounds']}}</td>
+                                <td>{{$player->statistics['fouls']}}</td>
+                                <td>{{$player->statistics['assists']}}</td>
+                                <td>{{$player->statistics['steals']}}</td>
                             </tr>
                         @endforeach
                         </tbody>

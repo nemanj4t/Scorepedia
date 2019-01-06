@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use GraphAware\Neo4j\Client\Formatter\Result;
 use Ahsan\Neo4j\Facade\Cypher;
 use Carbon\Facade;
 
@@ -10,20 +10,26 @@ class Player_Team
 {
     public $position;
     public $number;
-    public $team_id;
-    public $player_id;
     public $plays_since;
     public $plays_until;
 
+    /** @var Team */
+    public $team;
+    /** @var Player */
+    public $player;
 
-    public function __construct($props)
+
+    public static function buildFromRelationshipAndNode($relationship, $node)
     {
-        $this->player_id = $props["player_id"];
-        $this->team_id = $props['team_id'];
-        $this->position = $props['player_position'];
-        $this->number = $props['player_number'];
-        $this->plays_since = $props['player_since'];
-        $this->plays_until = $props['player_until'];
+        $player_team = new Player_Team();
+        $player_team->number = $relationship->value('number');
+        $player_team->position = $relationship->value('position');
+        $player_team->plays_since = $relationship->value('played_since');
+        $player_team->plays_until = $relationship->value('played_until');
+
+        $player_team->team = Team::buildFromNode($node);
+
+        return $player_team;
     }
 
     public function save()
@@ -122,6 +128,7 @@ class Player_Team
     // Vraca timove u kojima je igrac sa datim '$id' igrao
     public static function getByPlayerId($id)
     {
+        /** @var Result $teamsResult */
         $teamsResult = Cypher::Run("MATCH (n:Player)-[r:PLAYS|PLAYED]-(t:Team) WHERE ID(n) = $id return r, t
                       ORDER BY r.until DESC");
 
@@ -129,23 +136,11 @@ class Player_Team
 
         foreach ($teamsResult->getRecords() as $record) {
             // Vraca vrednosti za tim za koji igrac igra
-            $team = $record->nodeValue('t');
-            $team_props = $team->values();
-            $team_id = ["id" => $team->identity()];
+            $relationship = $record->relationshipValue('r');
+            $node = $record->nodeValue('t');
+            $team_player = self::buildFromRelationshipAndNode($relationship, $node);
 
-            // Vraca vrednosti za relaciju PLAYS_FOR_TEAM
-            $relationship = $record->relationShipValue('r');
-            $relationship_props = $relationship->values();
-            $relationship_id = ["id" => $relationship->identity()];
-
-            // Spaja kljuceve i propertije
-            $team = array_merge($team_props, $team_id);
-            $plays_for_team = array_merge($relationship_props, $relationship_id);
-
-            // Niz koji sadrzi relaciju i tim
-            $plays = ['plays_for' => $plays_for_team, 'team' => $team];
-
-            array_push($plays_for_teams, $plays);
+            $plays_for_teams[] = $team_player;
         }
         return $plays_for_teams;
     }
@@ -181,34 +176,32 @@ class Player_Team
     }
 
 
-    public static function getCurrentPlayers($id)
+    /**
+     * @param $teamId
+     * @return Player_Team[]
+     */
+    public static function getCurrentPlayers($teamId)
     {
-        $playerResult = Cypher::Run("MATCH (p:Player)-[r:PLAYS]-(t:Team) WHERE ID(t) = $id return r, p
+        /** @var Result $result */
+        $result = Cypher::Run("MATCH (p:Player)-[r:PLAYS]-(t:Team) WHERE ID(t) = $teamId return r, p
                       ORDER BY r.until DESC");
 
-        $plays_for_teams = [];
+        $plays_for_team = [];
+        foreach ($result->getRecords() as $record) {
+            $playerNode = $record->nodeValue('p');
+            $relationship = $record->relationshipValue('r');
 
-        foreach ($playerResult->getRecords() as $record) {
-            // Vraca vrednosti za tim za koji igrac igra
-            $player = $record->nodeValue('p');
-            $player_props = $player->values();
-            $player_id = ["id" => $player->identity()];
+            $player_team = new Player_Team();
+            $player_team->position = $relationship->value('position');
+            $player_team->number = $relationship->value('number');
+            $player_team->plays_since = $relationship->value('played_since');
+            $player_team->plays_until = $relationship->value('played_until');
+            $player_team->player = Player::buildFromNode($playerNode);
 
-            // Vraca vrednosti za relaciju PLAYS_FOR_TEAM
-            $relationship = $record->relationShipValue('r');
-            $relationship_props = $relationship->values();
-            $relationship_id = ["id" => $relationship->identity()];
-
-            // Spaja kljuceve i propertije
-            $player = array_merge($player_props, $player_id);
-            $plays_for_team = array_merge($relationship_props, $relationship_id);
-
-            // Niz koji sadrzi relaciju i tim
-            $plays = ['plays_for' => $plays_for_team, 'player' => $player];
-
-            array_push($plays_for_teams, $plays);
+            $plays_for_team[] = $player_team;
         }
-        return $plays_for_teams;
+
+        return $plays_for_team;
     }
 
 

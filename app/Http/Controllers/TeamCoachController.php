@@ -11,7 +11,7 @@ class TeamCoachController extends Controller
     //
     public function edit($id)
     {
-        $teams = Team::getAll();
+        $teams = Team::getTeams();
         $team_coach = Team_Coach::getByCoachId($id);
         $coach_id = $id;
 

@@ -2,12 +2,9 @@
 
 @section('content')
 
-
-    <!------ Include the above in your HEAD tag ---------->
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href="https://daneden.github.io/animate.css/animate.min.css">
+    @php
+        /** @var \App\Player[] $players */
+    @endphp
 
     <div class="container" style="margin-top:20px;">
         <div class="row">
@@ -30,16 +27,16 @@
                                     <tbody>
                                     @foreach ($players as $player)
                                         <tr class="ok">
-                                            @if (isset($player['image']))
-                                                <td class="avatar"><img id="img" class="avatar" src={{$player['image']}}></td>
+                                            @if (isset($player->image))
+                                                <td class="avatar"><img id="img" class="avatar" src={{$player->image}}></td>
                                             @else
                                                 <td class="avatar"><img id="img" class="avatar"></td>
                                             @endif
-                                            <td><a href="/players/{{$player['id']}}">{{$player['name']}}</a></td>
-                                            <td>{{$player['bio']}}</td>
-                                            <td>{{$player['height']}} cm</td>
-                                            <td>{{$player['weight']}} kg</td>
-                                            <td>{{$player['city']}}</td>
+                                            <td><a href="/players/{{$player->id}}">{{$player->name}}</a></td>
+                                            <td>{{$player->bio}}</td>
+                                            <td>{{$player->height}} cm</td>
+                                            <td>{{$player->weight}} kg</td>
+                                            <td>{{$player->city}}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>
@@ -47,15 +44,6 @@
                             </div><!-- END id="list" -->
 
                         </div><!-- END tab-content -->
-                    </div>
-                    <div class="panel-footer text-center">
-                        <ul class="pagination">
-                            <li ><a>«</a></li>
-                            <li class="active"><a href="#">1</a></li>
-                            <li ><a href="#">2</a></li>
-                            <li ><a href="#">3</a></li>
-                            <li ><a>»</a></li>
-                        </ul>
                     </div>
                 </div><!--END panel-table-->
             </div>

@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-
+@php
+    /** @var \App\Coach[] $coaches */
+@endphp
     <div class="container" style="margin-top:20px;">
         <div class="row">
             <div id="user" class="col-md-12" >
@@ -22,15 +24,15 @@
                                     <tbody>
                                     @foreach ($coaches as $coach)
                                         <tr class="ok">
-                                            <td class="avatar"><img id="img" class="avatar" src={{$coach['image']}}></td>
-                                            <td><a href="/coaches/{{$coach['id']}}">{{$coach['name']}}</a></td>
-                                            <td>{{$coach['bio']}}</td>
-                                            @if($coach['current_team']== '')
+                                            <td class="avatar"><img id="img" class="avatar" src={{$coach->image}}></td>
+                                            <td><a href="/coaches/{{$coach->id}}">{{$coach->name}}</a></td>
+                                            <td>{{$coach->bio}}</td>
+                                            @if($coach->current_team != null)
+                                                <td><a href="/teams/{{$coach->current_team->team_id}}">{{$coach->current_team->team->name}}</a></td>
+                                            @else
                                                 <td>No professional engagement currently</td>
-                                                @else
-                                                    <td><a href="/teams/{{$coach['current_team']['team']['id']}}">{{$coach['current_team']['team']['name']}}</a></td>
                                             @endif
-                                            <td>{{$coach['city']}}</td>
+                                            <td>{{$coach->city}}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>

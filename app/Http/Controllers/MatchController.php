@@ -92,16 +92,14 @@ class MatchController extends Controller
         foreach(Redis::keys("*match:{$id}:team:{$match['home']['id']}:*") as $key) {
             $playerIndex = intval(explode(":", $key)[5]);
             $player = Player::getById($playerIndex);
-            $stats = Redis::hgetall($key);
-            $player = array_merge($player, $stats);
+            $player->statistics = Redis::hgetall($key);
             array_push($homePlayers, $player);
         };
 
         foreach(Redis::keys("*match:{$id}:team:{$match['guest']['id']}:*") as $key) {
             $playerIndex = intval(explode(":", $key)[5]);
             $player = Player::getById($playerIndex);
-            $stats = Redis::hgetall($key);
-            $player = array_merge($player, $stats);
+            $player->statistics = Redis::hgetall($key);
             array_push($guestPlayers, $player);
         };
 

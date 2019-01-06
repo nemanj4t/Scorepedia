@@ -13,15 +13,21 @@
         }
     </style>
 
+    @php
+        /** @var \App\Team $team */
+        /** @var \App\Team_Coach $teamCoach */
+        /** @var \App\Player_Team[] $currentPlayers */
+    @endphp
+
     <div class="container content">
-            <div class="row container-fluid" style=" background-position: center; background-size:100%; background:url({{$team['background_image']}});">
+            <div class="row container-fluid" style=" background-position: center; background-size:100%; background:url({{$team->background_image}});">
                 <div class="col-md-4">
-                    <img class="img-thumbnail rounded-circle" style="max-width: 200px; margin: 50px;" src={{$team['image']}}>
+                    <img class="img-thumbnail rounded-circle" style="max-width: 200px; margin: 50px;" src={{$team->image}}>
                 </div>
                 <div class="col-md-4">
                     <div class="heading">
-                        <h2 style="padding-top: 50px; color:white;"><strong>{{$team['name']}}</strong></h2>
-                        <h3 style="color: white;">{{$team['short_name']}}</h3>
+                        <h2 style="padding-top: 50px; color:white;"><strong>{{$team->name}}</strong></h2>
+                        <h3 style="color: white;">{{$team->short_name}}</h3>
                     </div><!-- //end heading -->
                 </div>
             </div>
@@ -29,14 +35,15 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="row">
+                    @if ($teamCoach)
                     <div class="col-md-6">
                         <div class="team-members">
                             <div class="team-avatar">
-                                <img class="img-thumbnail" id="coach-img" src={{$team['current_coach']['coach']['image']}} alt="">
+                                <img class="img-thumbnail" id="coach-img" src={{$teamCoach->coach->image}} alt="">
                             </div>
-                            <a href="/coaches/{{$team['current_coach']['coach']['id']}}">
+                            <a href="/coaches/{{$teamCoach->coach_id}}">
                             <div class="team-desc">
-                                <h3>{{$team['current_coach']['coach']['name']}}</h3>
+                                <h3>{{$teamCoach->coach->name}}</h3>
                                 <span>Coach</span>
                             </div>
                             </a>
@@ -44,6 +51,7 @@
                         <div class="team-title">
                         </div>
                     </div>
+                    @endif
                 </div>
                 <div class="row">
                     <div class="col-md-12">
@@ -63,13 +71,13 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                @foreach ($team['current_players'] as $player)
+                                                @foreach ($currentPlayers as $player)
                                                     <tr class="ok">
-                                                        <td class="avatar"><img id="img" src={{$player['player']['image']}}></td>
-                                                        <td>number</td>
-                                                        <td><a href="/players/{{$player['player']['id']}}">{{$player['player']['name']}}</a></td>
-                                                        <td>pos</td>
-                                                        <td>{{$player['player']['height']}} cm</td>
+                                                        <td class="avatar"><img id="img" src={{$player->player->image}}></td>
+                                                        <td>{{$player->number}}</td>
+                                                        <td><a href="/players/{{$player->player->id}}">{{$player->player->name}}</a></td>
+                                                        <td>{{$player->position}}</td>
+                                                        <td>{{$player->player->height}} cm</td>
                                                     </tr>
                                                 @endforeach
                                                 </tbody>
@@ -85,19 +93,19 @@
             </div>
             <div class="col-md-6">
                 <div class="row">
-                    @foreach($team['current_players'] as $key => $player)
+                    @foreach($currentPlayers as $key => $player)
                         @if($key == 3)
                             @break
                         @endif
                         <div class="col-md-4">
                             <div class="team-members">
                                 <div class="team-avatar">
-                                    <img class="img-responsive img-thumbnail" style="max-height: 250px;" src={{$player['player']['image']}} alt="">
+                                    <img class="img-responsive img-thumbnail" style="max-height: 250px;" src={{$player->player->image}} alt="">
                                 </div>
-                                <a href="/players/{{$player['player']['id']}}">
+                                <a href="/players/{{$player->player->id}}">
                                     <div class="team-desc">
-                                        <h4>{{$player['player']['name']}}</h4>
-                                        <span>Height: {{$player['player']['height']}} cm</span>
+                                        <h4>{{$player->player->name}}</h4>
+                                        <span>Height: {{$player->player->height}} cm</span>
                                     </div>
                                 </a>
                             </div>
@@ -108,18 +116,18 @@
                         </div>
                     @endforeach
                 </div>
-                @if(count($team['current_players']) > 3)
+                @if(count($currentPlayers) > 3)
                 <div class="row" style="justify-content: center">
                     @for($i=3; $i < 5; $i++)
                     <div class="col-sm-4">
                         <div class="team-members">
                             <div class="team-avatar">
-                                <img class="img-responsive img-thumbnail" style="max-height: 250px;" src={{$team['current_players'][$i]['player']['image']}} alt="">
+                                <img class="img-responsive img-thumbnail" style="max-height: 250px;" src={{$currentPlayers[$i]->player->image}} alt="">
                             </div>
-                            <a href="/players/{{$team['current_players'][$i]['player']['id']}}">
+                            <a href="/players/{{$currentPlayers[$i]->player->id}}">
                                 <div class="team-desc">
-                                    <h4>{{$team['current_players'][$i]['player']['name']}}</h4>
-                                    <span>Height: {{$team['current_players'][$i]['player']['height']}} cm</span>
+                                    <h4>{{$currentPlayers[$i]->player->name}}</h4>
+                                    <span>Height: {{$currentPlayers[$i]->player->height}} cm</span>
                                 </div>
                             </a>
                         </div>

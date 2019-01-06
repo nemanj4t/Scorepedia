@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Player;
 use App\Player_Team;
+use GraphAware\Neo4j\Client\Formatter\Result;
 use Illuminate\Http\Request;
 use Ahsan\Neo4j\Facade\Cypher;
 use Carbon\Facade;
@@ -18,17 +19,7 @@ class PlayerController extends Controller
      */
     public function index()
     {
-        $result = Cypher::run("MATCH (n:Player) RETURN n");
-        $players = [];
-
-        foreach($result->getRecords() as $record)
-        {
-            $properties_array = $record->getPropertiesOfNode();
-            $id_array = ["id" =>  $record->getIdOfNode()];
-            $player = array_merge($properties_array, $id_array);
-            array_push($players, $player);
-        }
-
+        $players = Player::getAllWithCurrentTeam();
         return view('players.index', compact('players'));
     }
 
@@ -64,10 +55,10 @@ class PlayerController extends Controller
      */
     public function show($id)
     {
-        $result = Cypher::Run("MATCH (n:Player) WHERE ID(n) = $id return n")->getRecords()[0];
-        $properties = $result->getPropertiesOfNode();
-        $player = array_merge(["id" => $result->getIdOfNode()], $properties);
+        /** @var Player $player */
+        $player = Player::getById($id);
 
+        /** @var Player_Team[] $plays_for_teams */
         $plays_for_teams = Player_Team::getByPlayerId($id);
 
         // Ovo je bolje kao poseban servis za recommendation da se napravi
@@ -75,14 +66,15 @@ class PlayerController extends Controller
         $recPlayers = [];
         if (!empty($plays_for_teams)) {
             // Vraca igrace koji su igrali na toj poziciji
-            $recommendedResult = Cypher::Run("MATCH (n:Player)-[r:PLAYS|PLAYED]-() 
-                WHERE r.position = '" . $plays_for_teams[0]['plays_for']['position'] .
-                "' AND ID(n) <> " . $player['id'] . " return distinct n LIMIT 5");
+
+            /** @var Result $recommendedResult */
+            $recommendedResult = Cypher::run("MATCH (n:Player)-[r:PLAYS|PLAYED]-() 
+                WHERE r.position = '" . $plays_for_teams[0]->position .
+                "' AND ID(n) <> " . $player->id . " return distinct n LIMIT 5");
 
             foreach ($recommendedResult->getRecords() as $record) {
-                $props_array = $record->getPropertiesOfNode();
-                $id_array = ["id" => $record->getIdOfNode()];
-                $recPlayer = array_merge($props_array, $id_array);
+                $node = $record->value('n');
+                $recPlayer = Player::buildFromNode($node);
 
                 array_push($recPlayers, $recPlayer);
             }
@@ -98,9 +90,10 @@ class PlayerController extends Controller
      */
     public function edit($id)
     {
-        $result = Cypher::Run("MATCH (n:Player) WHERE ID(n) = $id return n")->getRecords()[0];
-        $properties = $result->getPropertiesOfNode();
-        $player = array_merge(["id" => $result->getIdOfNode()], $properties);
+        $player = Player::getById($id);
+        if ($player === null) {
+            abort(404);
+        }
 
         return view('players.edit', compact('player'));
     }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Coach;
+use App\Team;
 use Illuminate\Http\Request;
 use Ahsan\Neo4j\Facade\Cypher;
 use Illuminate\Support\Facades\Redis;
@@ -29,44 +31,16 @@ class AdminController extends Controller
             $active = "Overview";
         }
 
-        $result = Cypher::run("MATCH (n:$active) RETURN n");
-        $data = [];
+       $data = [];
         switch ($active) {
             case "Team":
-                foreach($result->getRecords() as $record) {
-                    $id = $record->getIdOfNode();
-                    $properties = $record->getPropertiesOfNode();
-                    $team = new \App\Team;
-                    $team->id = $id;
-                    $team->name = $properties['name'];
-                    $team->city = $properties['city'];
-                    $team->image = $properties['image'];
-                    array_push($data, $team);
-                }
+                $data = Team::getTeams();
                 break;
             case "Player":
-                foreach($result->getRecords() as $record) {
-                    $id = $record->getIdOfNode();
-                    $properties = $record->getPropertiesOfNode();
-                    $player = new \App\Player;
-                    $player->id = $id;
-                    $player->name = $properties['name'];
-                    $player->city = $properties['city'];
-                    $player->image = $properties['image'];
-                    array_push($data, $player);
-                }
+                $data = Player::getAllWithCurrentTeam();
                 break;
             case "Coach":
-                foreach($result->getRecords() as $record) {
-                    $id = $record->getIdOfNode();
-                    $properties = $record->getPropertiesOfNode();
-                    $coach = new \App\Coach;
-                    $coach->id = $id;
-                    $coach->name = $properties['name'];
-                    $coach->city = $properties['city'];
-                    $coach->image = $properties['image'];
-                    array_push($data, $coach);
-                }
+                $data = Coach::getAll();
                 break;
             case "Match":
                 {

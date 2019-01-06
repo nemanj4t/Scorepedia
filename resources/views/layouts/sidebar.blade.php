@@ -3,7 +3,7 @@
     {{-- Odeljak za slicne igrace sidebaru --}}
     <div>
         <div class="container" style="margin-top:20px;">
-            <h4 class="font-italic">Simmilar players</h4>
+            <h4 class="font-italic">Recommended</h4>
             <div class="row">
                 <div id="user" class="col-md-12" >
                     <div class="panel panel-primary panel-table animated slideInDown">
@@ -14,8 +14,8 @@
                                         <tbody>
                                         @foreach ($recPlayers as $player)
                                             <tr class="ok" class="col-md-12">
-                                                <td class="avatar"><img id="img" class="avatar" src={{$player['image']}}></td>
-                                                <td><a href="/players/{{$player['id']}}">{{$player['name']}}</a></td>
+                                                <td class="avatar"><img id="img" class="avatar" src={{$player->image}}></td>
+                                                <td><a href="/players/{{$player->id}}">{{$player->name}}</a></td>
                                             </tr>
                                         @endforeach
                                         </tbody>

@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="container">
+    <div class="container mt-4">
         <div class="row">
             <div class="col-9">
                 <div class="card">
@@ -10,12 +10,12 @@
                         <div class="card-title mb-4">
                             <div class="d-flex justify-content-start">
                                 <div class="image-container">
-                                    <img src="{{ $player['image'] }}" id="image" style="width: 150px; height: 150px" class="img-thumbnail" />
+                                    <img src="{{ $player->image }}" id="image" style="width: 150px; height: 150px" class="img-thumbnail" />
                                 </div>
                                 <div class="userData ml-3">
-                                    <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold"><a href="javascript:void(0);">{{ $player['name'] }}</a></h2>
+                                    <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold"><a href="javascript:void(0);">{{ $player->name }}</a></h2>
                                     <label style="font-weight:bold;">Bio</label>
-                                    <p>{{ $player['bio'] }}</p>
+                                    <p>{{ $player->bio }}</p>
                                 </div>
                             </div>
                         </div>
@@ -24,10 +24,10 @@
                             <div class="col-12">
                                 <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Basic Info</a>
+                                        <a class="nav-link active btn btn-outline-secondary" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Basic Info</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="teams-tab" data-toggle="tab" href="#teams" role="tab" aria-controls="teams" aria-selected="false">Teams</a>
+                                        <a class="nav-link btn btn-outline-secondary" id="teams-tab" data-toggle="tab" href="#teams" role="tab" aria-controls="teams" aria-selected="false">Teams</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content ml-1" id="myTabContent">
@@ -37,7 +37,7 @@
                                                 <label style="font-weight:bold;">Name</label>
                                             </div>
                                             <div class="col-md-8 col-6">
-                                                {{ $player['name'] }}
+                                                {{ $player->name }}
                                             </div>
                                         </div>
                                         <hr />
@@ -47,7 +47,7 @@
                                                 <label style="font-weight:bold;">Height</label>
                                             </div>
                                             <div class="col-md-8 col-6">
-                                                {{ $player['height'] }} cm
+                                                {{ $player->height }} cm
                                             </div>
                                         </div>
                                         <hr />
@@ -58,7 +58,7 @@
                                                 <label style="font-weight:bold;">Weight</label>
                                             </div>
                                             <div class="col-md-8 col-6">
-                                                {{ $player['weight'] }} kg
+                                                {{ $player->weight }} kg
                                             </div>
                                         </div>
                                         <hr />
@@ -67,7 +67,7 @@
                                                 <label style="font-weight:bold;">City</label>
                                             </div>
                                             <div class="col-md-8 col-6">
-                                                {{ $player['city'] }}
+                                                {{ $player->city }}
                                             </div>
                                         </div>
                                         <hr />
@@ -93,15 +93,15 @@
                                                                         </tr>
                                                                         </thead>
                                                                         <tbody>
-                                                                        @foreach ($plays_for_teams as $team)
+                                                                        @foreach ($plays_for_teams as $player_team)
                                                                             <tr class="ok">
-                                                                                <td class="avatar"><img id="img" src={{$team['team']['image']}}></td>
-                                                                                <td><a href="/teams/{{$team['team']['id']}}">{{$team['team']['name']}}</a></td>
-                                                                                <td>{{$team['plays_for']['position']}}</td>
-                                                                                <td>{{$team['plays_for']['number']}}</td>
-                                                                                <td>{{ \Carbon\Carbon::parse($team['plays_for']['since'])->format('d-m-Y')}}</td>
-                                                                                @if (isset($team['plays_for']['until']))
-                                                                                    <td>{{ \Carbon\Carbon::parse($team['plays_for']['until'])->format('d-m-Y')}}</td>
+                                                                                <td class="avatar"><img id="img" src={{$player_team->team->image}}></td>
+                                                                                <td><a href="/teams/{{$player_team->team->id}}">{{$player_team->team->name}}</a></td>
+                                                                                <td>{{$player_team->position}}</td>
+                                                                                <td>{{$player_team->number}}</td>
+                                                                                <td>{{ \Carbon\Carbon::parse($player_team->plays_since)->format('d-m-Y')}}</td>
+                                                                                @if (isset($player_team->plays_until))
+                                                                                    <td>{{ \Carbon\Carbon::parse($player_team->plays_until)->format('d-m-Y')}}</td>
                                                                                 @else
                                                                                     <td> ??? </td>
                                                                                 @endif
@@ -112,15 +112,6 @@
                                                                 </div><!-- END id="list" -->
 
                                                             </div><!-- END tab-content -->
-                                                        </div>
-                                                        <div class="panel-footer text-center">
-                                                            <ul class="pagination">
-                                                                <li ><a>«</a></li>
-                                                                <li class="active"><a href="#">1</a></li>
-                                                                <li ><a href="#">2</a></li>
-                                                                <li ><a href="#">3</a></li>
-                                                                <li ><a>»</a></li>
-                                                            </ul>
                                                         </div>
                                                     </div><!--END panel-table-->
                                                 </div>
