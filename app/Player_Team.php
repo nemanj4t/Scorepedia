@@ -24,8 +24,8 @@ class Player_Team
         $player_team = new Player_Team();
         $player_team->number = $relationship->value('number');
         $player_team->position = $relationship->value('position');
-        $player_team->plays_since = $relationship->value('played_since');
-        $player_team->plays_until = $relationship->value('played_until');
+        $player_team->plays_since = $relationship->value('since');
+        $player_team->plays_until = $relationship->value('until', null);
 
         $player_team->team = Team::buildFromNode($node);
 
@@ -42,7 +42,7 @@ class Player_Team
             $plays_until = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_until)->format("Ymd");
 
             // umesto TEAM_PLAYER je PLAYED ili PLAYS
-            Cypher::Run ("MATCH (n:Player), (t:Team) WHERE ID(n) = " . $this->player_id . " AND ID(t) = " . $this->team_id .
+            Cypher::Run ("MATCH (n:Player), (t:Team) WHERE ID(n) = " . $this->player->id . " AND ID(t) = " . $this->team->id .
                 " CREATE (n)-[:PLAYED {
             position: '" . $this->position . "', 
             number: " . $this->number . ", 
@@ -52,11 +52,11 @@ class Player_Team
         }
         else
         {
-            Cypher::Run ("MATCH (n:Player), (t:Team) WHERE ID(n) = " . $this->player_id . " AND ID(t) = " . $this->team_id .
+            Cypher::Run ("MATCH (n:Player), (t:Team) WHERE ID(n) = " . $this->player->id . " AND ID(t) = " . $this->team->id.
                 " CREATE (n)-[:PLAYS {
             position: '" . $this->position . "', 
             number: " . $this->number . ", 
-            since: " . $plays_since . "  
+            since: " . $this->plays_since . "  
             }]->(t)");
         }
     }
@@ -194,8 +194,8 @@ class Player_Team
             $player_team = new Player_Team();
             $player_team->position = $relationship->value('position');
             $player_team->number = $relationship->value('number');
-            $player_team->plays_since = $relationship->value('played_since');
-            $player_team->plays_until = $relationship->value('played_until');
+            $player_team->plays_since = $relationship->value('since');
+            $player_team->plays_until = $relationship->value('until', null);
             $player_team->player = Player::buildFromNode($playerNode);
 
             $plays_for_team[] = $player_team;
@@ -204,7 +204,24 @@ class Player_Team
         return $plays_for_team;
     }
 
+    /**
+     * @param $rel
+     * @param $playerId
+     * @return Player_Team
+     */
+    public static function buildFromRequest($rel, $playerId, $teamId)
+    {
+        $player_team = new Player_Team();
+        $player_team->position = $rel['player_position'];
+        $player_team->number = $rel['player_number'];
+        $player_team->plays_since = $rel['player_since'];
+        $player_team->plays_until = $rel['player_until'];
 
+        $player_team->player = Player::getById($playerId);
+        $player_team->team = Team::getById($teamId);
+
+        return $player_team;
+    }
     // Brisanje veze
     public static function delete($player_id, $team_id)
     {

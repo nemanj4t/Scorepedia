@@ -46,6 +46,7 @@ class Player
     }
 
     public static function savePlayer(Request $request) {
+        //dd($request);
         // Ovaj upit moze da vrati id na kraju
         Cypher::run("CREATE (:Player {name: '$request[name]', height: '$request[height]',
             weight: '$request[weight]', city: '$request[city]', bio: '$request[bio]', image: '$request[image]'})");
@@ -64,7 +65,9 @@ class Player
             {
                 $rel[$key] = $request[$key . "_" . $count];
             }
-            $plays = new Player_Team($rel);
+
+            $plays = Player_Team::buildFromRequest($rel, $player_id, $rel['team_name']);
+
             $plays->save();
 
             $count++;

@@ -114,7 +114,7 @@ class CoachController extends Controller
 
     public function edit($id) {
         $coach = Coach::getById($id);
-        $teams = Team::getTeams();
+        $teams = Team::getAll();
         return view("coaches.edit", compact('coach', 'teams'));
     }
 

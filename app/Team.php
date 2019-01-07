@@ -43,22 +43,6 @@ class Team
     }
 
     /**
-     * @param Node $node
-     * @return Team
-     */
-    //returns with current players and coach
-    public static function buildFromNodeForShow(Node $node)
-    {
-        $team = self::BuildFromNode($node);
-
-        $team->current_coach = Team_Coach::getCurrentForTeamId($team->id);
-        $team->current_players = Player_Team::getCurrentPlayers($team->id);
-
-        return $team;
-    }
-
-
-    /**
      * @return Team[]
      */
     public static function getTeams()
@@ -160,10 +144,11 @@ class Team
         return $team;
     }
 
-    // TODO: refaktorisati po ugledu na current team for coach
     public static function getCurrentCoach($id)
     {
         $team_coach = Team_Coach::getCurrentForTeamId($id);
+        if($team_coach === null)
+            return null;
         $current_coach = $team_coach->coach;
         return $current_coach;
     }
@@ -209,14 +194,22 @@ class Team
     public static function update($id, $request)
     {
         $team = Team::getById($id);
-        Cypher::run("MATCH (t:Team) WHERE ID(t) = $id SET t.name = '$request[name]', t.short_name = '$request[short_name]',t.city = '$request[city]', t.image = '$request[image]', t.background_image = '$request[background_image]', t.description = '$request[description]'");
-        $team_coach = new Team_Coach(["coach_id" => $request['coach'], "team_name" => $id, "coached_since" => $request['coached_since'], "coached_until" => $request['coached_until']]);
-        if ($request['coach'] != '') {
-            if ($team['current_coach'] != '') {
-                if ($team['current_coach']['id'] == $request['coach']) {
+
+        Cypher::run("MATCH (t:Team) WHERE ID(t) = $id 
+                     SET t.name = '$request->name', 
+                         t.short_name = '$request->short_name', 
+                         t.city = '$request->city', 
+                         t.image = '$request->image', 
+                         t.background_image = '$request->background_image', 
+                         t.description = '$request->description'");
+
+        if ($request['coach'] != null) {
+            $team_coach = Team_Coach::createFromRequest($request, $id);
+            if ($team->current_coach != null) {
+                if ($team->current_coach->id == $request->coach) {
                     $team_coach->update();
                 } else {
-                    Team_Coach::delete($id, $team['current_coach']['id']);
+                    Team_Coach::delete($id, $team->current_coach->id);
                     $team_coach->save();
                 }
             }
@@ -225,8 +218,8 @@ class Team
             }
         }
         else {
-            if ($team['current_coach'] != '')
-                Team_Coach::delete($id, $team['current_coach']['id']);
+            if ($team->current_coach != null)
+                Team_Coach::delete($id, $team->current_coach->id);
         }
 
     }
