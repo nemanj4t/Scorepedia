@@ -33,10 +33,16 @@
                                     <div class="col-md-6">
                                         <label>Coached since:</label>
                                         <input class="form-control" style="margin-right: 20px; float: left;" type="date" value="" name="coached_since">
+                                        @if ($errors->has('coached_since'))
+                                            <div class="alert-danger">{{ $errors->first('coached_since') }}</div>
+                                        @endif
                                     </div>
                                     <div class="col-md-6">
                                         <label>Coached until: </label>
                                         <input class="form-control" type="date" value="" name="coached_until">
+                                        @if ($errors->has('coached_until'))
+                                            <div class="alert-danger">{{ $errors->first('coached_until') }}</div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -53,17 +59,9 @@
                                 <input type="textarea" class="form-control" name="image" placeholder="url" required="required">
                             </div>
                             <div id="input-container" class="list-group">
-                                <div class="list-group-item" id="team_0">
-                                    <select name="team_name_0" class="form-control" onkeyup="addNewInput(this)" placeholder="Team">
-                                        <option value=""></option>
-                                        @foreach($teams as $team)
-                                            <option value="{{$team->id}}">{{ $team->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <input type="date" name="coached_since_0" class="form-control" onkeyup="addNewInput(this)"/>
-                                    <input type="date" name="coached_until_0" class="form-control" onkeyup="addNewInput(this)"/>
-                                </div>
+
                             </div>
+                            <button type="button" onclick="addNewInput()" class="btn btn-outline-secondary">Add previous team +</button>
                             <br>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
@@ -73,47 +71,31 @@
         </div>
     </div>
 
+    <div style="display: none" id="old-team-template">
+        <div class="list-group-item">
+            <label>Team:</label>
+            <select name="old_team[TEAMID][team_id]" class="form-control" placeholder="Team">
+                @foreach($teams as $team)
+                    <option value="{{$team->id}}">{{ $team->name }}</option>
+                @endforeach
+            </select>
+            <label> Coached since:</label>
+            <input type="date" name="old_team[TEAMID][coached_since]" class="form-control"/>
+            <label>Coached until:</label>
+            <input type="date" name="old_team[TEAMID][coached_until]" class="form-control"/>
+        </div>
+    </div>
 
 @endsection
 
 
 <script>
-    function addNewInput(element) {
-        let parent = element.parentNode;    // div u okviru koga se nalazi
-        let hasValue = false;
-        for(let i = 0; i < parent.children.length; i++) {
-            if(parent.children[i].value) {
-                hasValue = true;
-                break;
-            }
-        }
-        if (!hasValue) {
-            if(parent.parentNode.children.length === 1) {
-                return;
-            } else {
-                parent.parentNode.removeChild(parent);
-                return;
-            }
-        } else if (parent.nextElementSibling)
-            return;
+    var count = 0;
+    function addNewInput() {
+        let html = document.getElementById('old-team-template').innerHTML;
+        html = html.replace(new RegExp('TEAMID', 'g'), count);
+        count++;
 
-        let newInput = parent.cloneNode(); // novi div
-        let nameParts = newInput.id.split('_');
-        newInput.id = nameParts[0] + '_' + (parseInt(nameParts[1]) + 1);
-        for(let i = 0; i < parent.children.length; i++) {
-            let newChild;
-            if(parent.children[i].type === "select-one") {
-                newChild = parent.children[i].cloneNode(true);  // cloneNode([deep])
-
-            } else {
-                newChild = parent.children[i].cloneNode();
-            }
-            let nameParts = newChild.name.split('_');
-            let name = nameParts[0] + '_' + nameParts[1] + '_' + (parseInt(nameParts[2]) + 1);
-            newChild.name = name;
-            newChild.value = "";
-            newInput.appendChild(newChild);
-        }
-        parent.parentNode.appendChild(newInput);
+        document.getElementById('input-container').insertAdjacentHTML('beforeend', html);
     }
 </script>

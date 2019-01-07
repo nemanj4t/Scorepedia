@@ -43,25 +43,26 @@ class CoachController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required',
+            'coached_since' => 'required|date|date_format:Y-m-d|before:today',
+            'coached_until' => 'required|date|date_format:Y-m-d|after:yesterday',
+            'old_team.*.team_id' => 'required',
+            'old_team.*.coached_since' => 'required|date|date_format:Y-m-d|before:today',
+            'old_team.*.coached_until' => 'required|date|date_format:Y-m-d|after:yesterday',
+        ]);
+
         $result = Coach::saveCoach($request);
         $coach_id = $result->firstRecord()->getByIndex(0)->identity();
 
-        $keys_array = ["team_name", "coached_since", "coached_until"];
-
-        $count = 0;
-        // Dok ne nadje prvi input za vezu tim_igrac koji je prazan
-        while($request[$keys_array[0] . '_' . $count] != null)
+        foreach ($request['old_team'] as $data)
         {
-            $rel = array();
-            $rel['coach_id'] = $coach_id;
-            foreach($keys_array as $key)
-            {
-                $rel[$key] = $request[$key . "_" . $count];
-            }
-            $team_coach = new Team_Coach($rel);
+            $team_coach = new Team_Coach();
+            $team_coach->coach_id = $coach_id;
+            $team_coach->team_id = $data['team_id'];
+            $team_coach->coached_since = $data['coached_since'];
+            $team_coach->coached_until = $data['coached_until'];
             $team_coach->save();
-
-            $count++;
         }
 
 

@@ -4,6 +4,7 @@
 
     @php
         /** @var \App\Player_Team[] $plays_for_team */
+        /** @var \App\Team[] $teams */
     @endphp
 
     <div class="container" class="col-xs-1 center-block">
@@ -53,7 +54,7 @@
                                     <div class="list-group-item" id="team">
                                         <select name="team_id" required="required">
                                             @foreach($teams as $team)
-                                                <option value="{{$team['id'] }}">{{ $team['name'] }}</option>
+                                                <option value="{{$team->id}}">{{ $team->name }}</option>
                                             @endforeach
                                         </select>
                                         <input type="text" name="player_number" placeholder="Number" required="required"/>
