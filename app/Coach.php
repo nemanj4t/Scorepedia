@@ -50,11 +50,11 @@ class Coach
         foreach ($result->getRecords() as $record) {
             $coachNode = $record->value('c');
             $teamNode = $record->value('t');
-            $relationshop = $record->value('r');
+            $relationship = $record->value('r');
             $coach = Coach::buildFromNode($coachNode);
 
             if ($record->value('t')) {
-                $coach->current_team = Team_Coach::buildFromNodesAndRelationship($teamNode, $coachNode, $relationshop);
+                $coach->current_team = Team_Coach::buildFromNodesAndRelationship($teamNode, $coachNode, $relationship);
             }
 
             array_push($coaches, $coach);

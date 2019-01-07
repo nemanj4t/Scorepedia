@@ -39,7 +39,7 @@ class Neo4jUserProvider implements UserProvider
     public function retrieveByToken($identifier, $token)
     {
         $result = Cypher::run("MATCH (s) WHERE ID(s) = ".$identifier." AND s.token = '".$token."' RETURN s");
-        //dd($result);
+
         $admin = new \App\Admin;
         $admin->id = $result->firstRecord()->values()[0]->identity();
         $admin->email = $result->firstRecord()->values()[0]->values()['email'];

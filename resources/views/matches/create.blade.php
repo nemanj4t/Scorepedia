@@ -17,7 +17,7 @@
                                 <div class="col-md-6">
                                     <select type="select" class="form-control" name="hometeam" required>
                                         @foreach($teams as $team)
-                                            <option value="{{$team['id']}}">{{$team['name']}}</option>
+                                            <option value="{{$team->id}}">{{$team->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -29,7 +29,7 @@
                                 <div class="col-md-6">
                                     <select class="form-control" name="guestteam" required>
                                         @foreach($teams as $team)
-                                            <option value="{{$team['id']}}">{{$team['name']}}</option>
+                                            <option value="{{$team->id}}">{{$team->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>

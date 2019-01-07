@@ -19,22 +19,22 @@
                             <div id="input-container" class="list-group">
                                 <div class="list-group-item" id="team">
                                     <select name="team_id">
-                                        <option value="{{ $plays['team']['id'] }}">{{ $plays['team']['name'] }}</option>
+                                        <option value="{{ $plays->team->id }}">{{ $plays->team->name }}</option>
                                     </select>
-                                    <input type="text" name="number" placeholder="Number" value="{{$plays['plays_for']['number']}}"/>
+                                    <input type="text" name="number" placeholder="Number" value="{{$plays->number}}"/>
                                     <select name="position">
-                                        <option value="PG" {{ $plays['plays_for']['position'] == "PG" ? "selected":"" }}>Point guard</option>
-                                        <option value="SG" {{ $plays['plays_for']['position'] == "SG" ? "selected":"" }}>Shooting guard</option>
-                                        <option value="SF" {{ $plays['plays_for']['position'] == "SF" ? "selected":"" }}>Small forward</option>
-                                        <option value="PF" {{ $plays['plays_for']['position'] == "PF" ? "selected":"" }}>Power forward</option>
-                                        <option value="C"  {{ $plays['plays_for']['position'] == "C" ? "selected":"" }}>Center</option>
+                                        <option value="PG" {{ $plays->position == "PG" ? "selected":"" }}>Point guard</option>
+                                        <option value="SG" {{ $plays->position == "SG" ? "selected":"" }}>Shooting guard</option>
+                                        <option value="SF" {{ $plays->position == "SF" ? "selected":"" }}>Small forward</option>
+                                        <option value="PF" {{ $plays->position == "PF" ? "selected":"" }}>Power forward</option>
+                                        <option value="C"  {{ $plays->position == "C" ? "selected":"" }}>Center</option>
                                     </select>
                                     <input type="date" name="since"
-                                           value="{{ \Carbon\Carbon::createFromFormat('Ymd', $plays['plays_for']['since'])->format('Y-m-d')}}"/>
+                                           value="{{ \Carbon\Carbon::createFromFormat('Ymd', $plays->plays_since)->format('Y-m-d')}}"/>
 
-                                    @if(isset($plays['plays_for']['until']))
+                                    @if(isset($plays->plays_until))
                                         <input type="date" name="until"
-                                               value="{{ \Carbon\Carbon::createFromFormat('Ymd', $plays['plays_for']['until'])->format('Y-m-d')}}"/>
+                                               value="{{ \Carbon\Carbon::createFromFormat('Ymd', $plays->plays_until)->format('Y-m-d')}}"/>
                                     @else
                                         <input type="date" name="until"/>
                                     @endif

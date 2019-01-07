@@ -61,11 +61,14 @@
                             <div id="input-container" class="list-group">
 
                             </div>
+                            <br>
                             <button type="button" onclick="addNewInput()" class="btn btn-outline-secondary">Add previous team +</button>
                             <br>
                             <button type="submit" class="btn btn-primary">Submit</button>
+                            <br>
                         </form>
                     </div>
+                    <br>
                 </div>
             </div>
         </div>

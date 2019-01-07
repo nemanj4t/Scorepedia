@@ -31,15 +31,16 @@ class PlaysForTeamController extends Controller
 
         // Kreiranje nove veze
         // $request['team_name'] ima zapravo vrednost id-ja tima
-        $rel = new Player_Team([
-            'player_id' => $id,
-            'team_id' => $request['team_id'],
-            'player_position' => $request['player_position'],
-            'player_number' => $request['player_number'],
-            'player_since' => $request['player_since'],
-            'player_until' => $request['player_until']
-        ]);
-        $rel->save();
+//        $player_team = new Player_Team([
+//            'player_id' => $id,
+//            'team_id' => $request['team_id'],
+//            'player_position' => $request['player_position'],
+//            'player_number' => $request['player_number'],
+//            'player_since' => $request['player_since'],
+//            'player_until' => $request['player_until']
+//        ]);
+        $player_team = Player_Team::buildFromRequest($request, $id, $request->team_id);
+        $player_team->save();
 
         return redirect('/players/' . $id);
     }

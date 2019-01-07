@@ -95,12 +95,13 @@ class TeamController extends Controller
     public function edit($id)
     {
         $team = Team::getById($id);
+
         $coaches = [];
 
         $allCoaches = Coach::getAll();
 
         foreach ($allCoaches as $coach) {
-            if ($coach['current_team'] == "")
+            if ($coach->current_team === null)
                 array_push($coaches, $coach);
         }
 
@@ -109,7 +110,6 @@ class TeamController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
         Team::update($id, $request);
 
         return redirect("/teams/" . $id);

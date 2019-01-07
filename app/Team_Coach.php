@@ -178,7 +178,7 @@ class Team_Coach
 
     /**
      * @param $id
-     * @return Team_Coach
+     * @return Team_Coach[]
      */
     public static function getByTeamId($id)
     {
@@ -186,7 +186,7 @@ class Team_Coach
         $result= Cypher::run("MATCH (t:Team)-[r:TEAM_COACH]-(c:Coach) WHERE ID(t) = $id return r, c, t
                       ORDER BY r.coached_until DESC");
 
-        /** @var \App\Team_Coach $team_coach_array */
+        /** @var \App\Team_Coach[] $team_coach_array */
         $team_coach_array = [];
 
         /** @var RecordView[] $records */
@@ -217,6 +217,25 @@ class Team_Coach
         }
         return $team_coach_array;
 
+    }
+
+    /**
+     * @param $request
+     * @param $teamId
+     * @return Team_Coach
+     */
+    public static function createFromRequest($request, $teamId)
+    {
+        $team_coach = new Team_Coach();
+        $team_coach->coached_since = $request->coached_since;
+        $team_coach->coached_until = $request->coached_until;
+        $team_coach->coach_id = $request->coach;
+        $team_coach->team_id = $teamId;
+
+        $team_coach->coach = Coach::getById($team_coach->coach_id);
+        $team_coach->team = Team::getById($teamId);
+
+        return $team_coach;
     }
 
     public static function delete($team_id, $coach_id)

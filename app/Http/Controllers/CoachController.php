@@ -55,7 +55,9 @@ class CoachController extends Controller
         $result = Coach::saveCoach($request);
         $coach_id = $result->firstRecord()->getByIndex(0)->identity();
 
+
         foreach ($request['old_team'] as $data)
+
         {
             $team_coach = new Team_Coach();
             $team_coach->coach_id = $coach_id;
@@ -112,7 +114,7 @@ class CoachController extends Controller
 
     public function edit($id) {
         $coach = Coach::getById($id);
-        $teams = Team::getTeams();
+        $teams = Team::getAll();
         return view("coaches.edit", compact('coach', 'teams'));
     }
 
