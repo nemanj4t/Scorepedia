@@ -43,7 +43,21 @@ class PlayerController extends Controller
      */
     public function store(Request $request)
     {
-        Player::savePlayer($request);
+        $player = Player::savePlayer($request);
+
+        foreach ($request['all_team'] as $data)
+        {
+            $player_team = new Player_Team();
+            $player_team->position = $data['player_position'];
+            $player_team->number = $data['player_number'];
+            $player_team->played_since = $data['player_since'];
+            $player_team->played_until = $data['player_until'];
+            $player_team->player = Player::getById($player->id);
+            $player_team->team = Team::getTeamById($data['team_name']);
+
+            $player_team->save();
+        }
+
         return redirect('/apanel?active=Player&route=players');
     }
 

@@ -57,7 +57,6 @@ class CoachController extends Controller
 
 
         foreach ($request['old_team'] as $data)
-
         {
             $team_coach = new Team_Coach();
             $team_coach->coach_id = $coach_id;
