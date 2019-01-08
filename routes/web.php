@@ -24,6 +24,10 @@ Route::get('/admin/matches/{match}', "AdminController@matchManager");
 Route::post('/logout', "Auth\LoginController@logout")->name('logout');
 Route::get('/apanel', "AdminController@index");
 Route::get('/admin/matches/data/{match}', "AdminController@data");
+Route::get('/apanel/matches', "AdminController@adminMatches");
+Route::get('/apanel/players', "AdminController@adminPlayers");
+Route::get('/apanel/teams', "AdminController@adminTeams");
+Route::get('/apanel/coaches', "AdminController@adminCoaches");
 Route::post('/admin/matches/data/{match}', "AdminController@postAddition");
 
 

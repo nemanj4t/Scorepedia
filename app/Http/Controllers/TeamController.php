@@ -129,6 +129,6 @@ class TeamController extends Controller
 
         // Fali brisanje tog cvora iz redisa
 
-        return redirect('/apanel?active=Team&route=teams');
+        return redirect('/apanel/teams');
     }
 }

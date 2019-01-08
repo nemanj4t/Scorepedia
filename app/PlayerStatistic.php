@@ -3,9 +3,8 @@
 namespace App;
 
 use Illuminate\Support\Facades\Redis;
-use Illuminate\Database\Eloquent\Model;
 
-class PlayerStatistic extends Model
+class PlayerStatistic
 {
     public $points;
     public $blocks;
@@ -98,5 +97,21 @@ class PlayerStatistic extends Model
         Redis::zrem("players:steals", $id);
         Redis::zrem("players:assists", $id);
         Redis::zrem("players:fouls", $id);
+    }
+
+    public static function getStatsForMatch($matchId, $teamId, $playerId)
+    {
+        $player_statistic = new PlayerStatistic();
+
+        $stats = Redis::hgetall("match:$matchId:team:$teamId:player:$playerId");
+
+        $player_statistic->points = $stats['points'];
+        $player_statistic->assists = $stats['assists'];
+        $player_statistic->rebounds = $stats['rebounds'];
+        $player_statistic->steals = $stats['steals'];
+        $player_statistic->fouls = $stats['fouls'];
+        $player_statistic->blocks = $stats['blocks'];
+
+        return $player_statistic;
     }
 }

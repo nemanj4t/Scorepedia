@@ -30,56 +30,56 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="player in this.homePlayers">
-                            <th scope="row">{{player.id}}</th>
-                            <td>{{player.name}}</td>
+                        <tr v-for="currentPlayer in this.team_match.home.current_players">
+                            <th scope="row">{{currentPlayer.number}}</th>
+                            <td>{{currentPlayer.player.name}}</td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <button
                                         type="button"
-                                        @click="score('home', player.id)"
+                                        @click="score('home', currentPlayer.player.id)"
                                         class="btn btn-sm btn-secondary"
-                                        :disabled="match.isFinished ? true: false"
+                                        :disabled="isFinished"
                                     >
                                         P
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('blocks', 'home', player.id)"
+                                        @click="addition('blocks', 'home', currentPlayer.player.id)"
                                         class="btn btn-sm btn-secondary"
-                                        :disabled="match.isFinished ? true: false"
+                                        :disabled="isFinished"
                                     >
                                         B
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('rebounds', 'home', player.id)"
+                                        @click="addition('rebounds', 'home', currentPlayer.player.id)"
                                         class="btn btn-sm btn-secondary"
-                                        :disabled="match.isFinished ? true: false"
+                                        :disabled="isFinished"
                                     >
                                         R
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('fouls', 'home', player.id)"
+                                        @click="addition('fouls', 'home', currentPlayer.player.id)"
                                         class="btn btn-sm btn-secondary"
-                                        :disabled="match.isFinished ? true: false"
+                                        :disabled="isFinished"
                                     >
                                         F
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('assists', 'home', player.id)"
+                                        @click="addition('assists', 'home', currentPlayer.player.id)"
                                         class="btn btn-sm btn-secondary"
-                                        :disabled="match.isFinished ? true: false"
+                                        :disabled="isFinished"
                                     >
                                         A
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('steals', 'home', player.id)"
+                                        @click="addition('steals', 'home', currentPlayer.player.id)"
                                         class="btn btn-sm btn-secondary"
-                                        :disabled="match.isFinished ? true: false"
+                                        :disabled="isFinished"
                                     >
                                         S
                                     </button>
@@ -93,14 +93,14 @@
             <div id="match-view" class="col-md-4">
                 <div class="row">
                     <div class="col-md-4">
-                        <img class="float-left" id="club-logo" :src="this.match.home.image">
+                        <img class="float-left" id="club-logo" :src="this.team_match.home.image">
                     </div>
                     <div id="result" class="col-md-4 text-center">
-                        <div class="col-md-12">{{this.home.points}} - {{this.guest.points}}</div>
+                        <div class="col-md-12">{{this.team_match.home_statistic.points}} - {{this.team_match.guest_statistic.points}}</div>
                         <div class="col-md-12"><button id="finish" @click="finishMatch" :class="this.finishClass">{{this.finishText}}</button></div>
                     </div>
                     <div class="col-md-4">
-                        <img class="float-right" id="club-logo" :src="this.match.guest.image">
+                        <img class="float-right" id="club-logo" :src="this.team_match.guest.image">
                     </div>
                 </div>
                 <div class="row p-4">
@@ -108,32 +108,32 @@
                         <tbody>
                         <tr>
                             <th scope="row">blocks</th>
-                            <td>{{this.home.blocks}}</td>
-                            <td>{{this.guest.blocks}}</td>
+                            <td>{{this.team_match.home_statistic.blocks}}</td>
+                            <td>{{this.team_match.guest_statistic.blocks}}</td>
                             <th scope="row">blocks</th>
                         </tr>
                         <tr>
                             <th scope="row">rebounds</th>
-                            <td>{{this.home.rebounds}}</td>
-                            <td>{{this.guest.rebounds}}</td>
+                            <td>{{this.team_match.home_statistic.rebounds}}</td>
+                            <td>{{this.team_match.guest_statistic.rebounds}}</td>
                             <th scope="row">rebounds</th>
                         </tr>
                         <tr>
                             <th scope="row">fouls</th>
-                            <td>{{this.home.fouls}}</td>
-                            <td>{{this.guest.fouls}}</td>
+                            <td>{{this.team_match.home_statistic.fouls}}</td>
+                            <td>{{this.team_match.guest_statistic.fouls}}</td>
                             <th scope="row">fouls</th>
                         </tr>
                         <tr>
                             <th scope="row">assists</th>
-                            <td>{{this.home.assists}}</td>
-                            <td>{{this.guest.assists}}</td>
+                            <td>{{this.team_match.home_statistic.assists}}</td>
+                            <td>{{this.team_match.guest_statistic.assists}}</td>
                             <th scope="row">assists</th>
                         </tr>
                         <tr>
                             <th scope="row">steals</th>
-                            <td>{{this.home.steals}}</td>
-                            <td>{{this.guest.steals}}</td>
+                            <td>{{this.team_match.home_statistic.steals}}</td>
+                            <td>{{this.team_match.guest_statistic.steals}}</td>
                             <th scope="row">steals</th>
                         </tr>
                         </tbody>
@@ -169,56 +169,56 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="player in this.guestPlayers">
-                            <th scope="row">{{player.id}}</th>
-                            <td>{{player.name}}</td>
+                        <tr v-for="currentPlayer in this.team_match.guest.current_players">
+                            <th scope="row">{{currentPlayer.number}}</th>
+                            <td>{{currentPlayer.player.name}}</td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <button
                                         type="button"
-                                        @click="score('guest', player.id)"
+                                        @click="score('guest', currentPlayer.player.id)"
                                         class="btn btn-sm btn-secondary"
-                                        :disabled="match.isFinished ? true: false"
+                                        :disabled="isFinished"
                                     >
                                         P
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('blocks', 'guest', player.id)"
+                                        @click="addition('blocks', 'guest', currentPlayer.player.id)"
                                         class="btn btn-sm btn-secondary"
-                                        :disabled="match.isFinished ? true: false"
+                                        :disabled="isFinished"
                                     >
                                         B
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('rebounds', 'guest', player.id)"
+                                        @click="addition('rebounds', 'guest', currentPlayer.player.id)"
                                         class="btn btn-sm btn-secondary"
-                                        :disabled="match.isFinished ? true: false"
+                                        :disabled="isFinished"
                                     >
                                         R
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('fouls', 'guest', player.id)"
+                                        @click="addition('fouls', 'guest', currentPlayer.player.id)"
                                         class="btn btn-sm btn-secondary"
-                                        :disabled="match.isFinished ? true: false"
+                                        :disabled="isFinished"
                                     >
                                         F
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('assists', 'guest', player.id)"
+                                        @click="addition('assists', 'guest', currentPlayer.player.id)"
                                         class="btn btn-sm btn-secondary"
-                                        :disabled="match.isFinished ? true: false"
+                                        :disabled="isFinished"
                                     >
                                         A
                                     </button>
                                     <button
                                         type="button"
-                                        @click="addition('steals', 'guest', player.id)"
+                                        @click="addition('steals', 'guest', currentPlayer.player.id)"
                                         class="btn btn-sm btn-secondary"
-                                        :disabled="match.isFinished ? true: false"
+                                        :disabled="isFinished"
                                     >
                                         S
                                     </button>
@@ -241,81 +241,85 @@
             return {
                 finishClass: "btn btn-danger",
                 finishText: "Finish",
-                match: {
-                    isFinished: true,
+
+                isFinished: true,
+                team_match: {
                     home: {
-                        image: 'https://www.voya.ie/Interface/Icons/LoadingBasketContents.gif'
+                        image: 'https://www.voya.ie/Interface/Icons/LoadingBasketContents.gif',
+                        currentPlayers: {},
                     },
+
                     guest: {
-                        image: 'https://www.voya.ie/Interface/Icons/LoadingBasketContents.gif'
-                    }
+                        image: 'https://www.voya.ie/Interface/Icons/LoadingBasketContents.gif',
+                        currentPlayers: {},
+                    },
+
+                    home_statistic: {},
+
+                    guest_statistic: {}
                 },
-                home: {},
-                guest: {},
-                homePlayers: {},
-                guestPlayers: {}
             }
         },
 
         methods: {
             addition(statistic, team, playerId) {
-                if (team == "home") {
+                if (team === "home") {
                     switch (statistic) {
                         case "blocks" :
-                            this.home.blocks = Number(this.home.blocks) + 1;
+                            this.team_match.home_statistic.blocks = Number(this.team_match.home_statistic.blocks) + 1;
                             break;
                         case "steals" :
-                            this.home.steals = Number(this.home.steals) + 1;
+                            this.team_match.home_statistic.steals = Number(this.team_match.home_statistic.steals) + 1;
                             break;
                         case "assists" :
-                            this.home.assists = Number(this.home.assists) + 1;
+                            this.team_match.home_statistic.assists = Number(this.team_match.home_statistic.assists) + 1;
                             break;
                         case "rebounds" :
-                            this.home.rebounds = Number(this.home.rebounds) + 1;
+                            this.team_match.home_statistic.rebounds = Number(this.team_match.home_statistic.rebounds) + 1;
                             break;
                         case "fouls" :
-                            this.home.fouls = Number(this.home.fouls) + 1;
+                            this.team_match.home_statistic.fouls = Number(this.team_match.home_statistic.fouls) + 1;
                             break;
                     }
-                    this.postAddition(this.match.home.id, playerId, 1, statistic);
+                    this.postAddition(this.team_match.home.id, playerId, 1, statistic);
                 }
                 else {
                     switch (statistic) {
                         case "blocks" :
-                            this.guest.blocks = Number(this.guest.blocks) + 1;
+                            this.team_match.guest_statistic.blocks = Number(this.team_match.guest_statistic.blocks) + 1;
                             break;
                         case "steals" :
-                            this.guest.steals = Number(this.guest.steals) + 1;
+                            this.team_match.guest_statistic.steals = Number(this.team_match.guest_statistic.steals) + 1;
                             break;
                         case "assists" :
-                            this.guest.assists = Number(this.guest.assists) + 1;
+                            this.team_match.guest_statistic.assists = Number(this.team_match.guest_statistic.assists) + 1;
                             break;
                         case "rebounds" :
-                            this.guest.rebounds = Number(this.guest.rebounds) + 1;
+                            this.team_match.guest_statistic.rebounds = Number(this.team_match.guest_statistic.rebounds) + 1;
                             break;
                         case "fouls" :
-                            this.guest.fouls = Number(this.guest.fouls) + 1;
+                            this.team_match.guest_statistic.fouls = Number(this.team_match.guest_statistic.fouls) + 1;
                             break;
                     }
-                    this.postAddition(this.match.guest.id, playerId, 1, statistic);
+                    this.postAddition(this.team_match.guest.id, playerId, 1, statistic);
                 }
             },
 
             score(team, playerId){
-                var value = 0;
-                if(team == "home") {
+                let value = 0;
+                if(team === "home") {
                     document.getElementsByName('homeoptradio').forEach(element => {
                         if(element.checked) value = element.value;
                     });
-                    this.home.points = Number(this.home.points) + Number(value);
-                    this.postAddition(this.match.home.id, playerId, value, "points")
+                    this.team_match.home_statistic.points = Number(this.team_match.home_statistic.points) + Number(value);
+                    this.postAddition(this.team_match.home.id, playerId, value, "points")
                 }
                 else {
                     document.getElementsByName('guestoptradio').forEach(element => {
                         if(element.checked) value = element.value;
                     });
-                    this.guest.points = Number(this.guest.points) + Number(value);
-                    this.postAddition(this.match.guest.id, playerId, value, "points")
+                    this.team_match.guest_statistic.points = Number(this.team_match.guest_statistic.points) + Number(value);
+                    this.postAddition(this.team_match.guest.id, playerId, value, "points")
                 }
             },
 
@@ -329,9 +333,9 @@
             },
 
             finishMatch() {
-                this.match.isFinished = !this.match.isFinished;
+                this.isFinished = !this.isFinished;
 
-                if(this.match.isFinished) {
+                if(this.isFinished) {
                     this.finishClass = "btn btn-secondary";
                     this.finishText = "Unfinish";
                 } else {
@@ -340,8 +344,8 @@
                 }
 
                 axios.put('/matches', {
-                    matchId: this.match.id,
-                    finished: this.match.isFinished
+                    matchId: this.id,
+                    finished: this.isFinished
                 });
             }
         },
@@ -349,15 +353,13 @@
         mounted() {
             axios.get('/admin/matches/data/' + this.id)
                 .then(response => {
-                    this.match = response.data.match;
-                    this.home = response.data.home;
-                    this.guest = response.data.guest;
-                    this.homePlayers = response.data.homePlayers;
-                    this.guestPlayers = response.data.guestPlayers;
-                    this.finishText = this.match.isFinished ? "Unfinish" : "Finish";
-                    this.finishClass = this.match.isFinished ? "btn btn-secondary" : "btn btn-danger";
+                    this.team_match = response.data.team_match;
+                    this.isFinished = response.data.isFinished;
+                    this.finishText = this.isFinished ? "Unfinish" : "Finish";
+                    this.finishClass = this.isFinished ? "btn btn-secondary" : "btn btn-danger";
                     console.log(response.data)
                 });
+            console.log(this.id);
         }
     }
 
@@ -371,7 +373,7 @@
 
     #result {
         margin-top: auto;
-        font-size: 24px;
+        font-size: 20px;
     }
 
     #match-view {

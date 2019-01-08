@@ -139,6 +139,6 @@ class CoachController extends Controller
 
         // Fali brisanje tog cvora iz redisa
 
-        return redirect('/apanel?active=Coach&route=coaches');
+        return redirect('/apanel/coaches');
     }
 }
