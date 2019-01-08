@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Ahsan\Neo4j\Facade\Cypher;
 use App\Team;
+use App\PlayerStatistic;
 use App\Match;
 use App\Player;
 use Carbon\Carbon;
@@ -20,22 +21,24 @@ class MatchController extends Controller
     public function index()
     {
         $matches = Match::getAll();
+
         $liveMatches = [];
         $finishedMatches = [];
         $upcomingMatches = [];
+
         foreach ($matches as $match)
         {
-            if ($match['isFinished'])
+            if ($match->isFinished)
             {
-                array_push($finishedMatches, $match);
+                $finishedMatches[] = $match;
             }
             elseif (Match::isLive($match))
             {
-                array_push($liveMatches, $match);
+                $liveMatches[] = $match;
             }
             else
             {
-                array_push($upcomingMatches, $match);
+                $upcomingMatches[] = $match;
             }
         }
 
@@ -62,6 +65,12 @@ class MatchController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'date' => 'required',
+            'time' => 'required',
+            'hometeam' => 'required',
+            'guestteam' => 'required'
+        ]);
         //can't pick a past date
         if(Carbon::now() > (new Carbon($request->date." ".$request->time)))
         {
@@ -82,28 +91,24 @@ class MatchController extends Controller
     public function show($id)
     {
         $match = Match::getById($id);
+        if($match === null)
+        {
+            return abort(404);
+        }
 
-        $home = Redis::hgetall("match:{$id}:team:{$match['home']['id']}");
-        $guest = Redis::hgetall("match:{$id}:team:{$match['guest']['id']}");
+        foreach($match->team_match->guest->current_players as $player_team)
+        {
+            $player_team->player->statistics = PlayerStatistic::getStatsForMatch(
+                $id, $match->team_match->guest->id, $player_team->player->id);
+        }
 
-        $homePlayers = [];
-        $guestPlayers = [];
+        foreach($match->team_match->home->current_players as $player_team)
+        {
+            $player_team->player->statistics = PlayerStatistic::getStatsForMatch(
+                $id, $match->team_match->home->id, $player_team->player->id);
+        }
 
-        foreach(Redis::keys("*match:{$id}:team:{$match['home']['id']}:*") as $key) {
-            $playerIndex = intval(explode(":", $key)[5]);
-            $player = Player::getById($playerIndex);
-            $player->statistics = Redis::hgetall($key);
-            array_push($homePlayers, $player);
-        };
-
-        foreach(Redis::keys("*match:{$id}:team:{$match['guest']['id']}:*") as $key) {
-            $playerIndex = intval(explode(":", $key)[5]);
-            $player = Player::getById($playerIndex);
-            $player->statistics = Redis::hgetall($key);
-            array_push($guestPlayers, $player);
-        };
-
-        return view("matches.show", compact('match', 'home', 'guest', 'homePlayers', 'guestPlayers'));
+        return view("matches.show", compact('match'));
     }
 
 
@@ -111,7 +116,6 @@ class MatchController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
@@ -129,6 +133,6 @@ class MatchController extends Controller
     {
         Match::deleteMatch($id);
 
-        return redirect('/apanel?active=Match&route=matches');
+        return redirect('/apanel/matches');
     }
 }

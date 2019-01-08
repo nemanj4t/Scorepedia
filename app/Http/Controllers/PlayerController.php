@@ -131,6 +131,6 @@ class PlayerController extends Controller
     {
         Player::deletePlayer($id);
 
-        return redirect('/apanel?active=Player&route=players');
+        return redirect('/apanel/players');
     }
 }

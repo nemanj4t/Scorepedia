@@ -4,6 +4,7 @@ namespace App;
 
 use Ahsan\Neo4j\Facade\Cypher;
 use GraphAware\Neo4j\Client\Formatter\Result;
+use GraphAware\Neo4j\Client\Formatter\Type\Node;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Carbon\Carbon;
@@ -11,84 +12,66 @@ use Carbon\Carbon;
 class Match
 {
     public $id;
-    public $home;
-    public $guest;
-    public $statistic;
+    public $isFinished;
+    public $date;
+    public $time;
+    public $team_match;
 
-    public static function getById($id)
+    /**
+     * @param Node $node
+     * @return Match
+     */
+    public static function buildFromNode($node)
     {
-        $query = Cypher::Run("MATCH (m:Match) WHERE ID(m) = {$id} RETURN m");
-
-        $properties = $query->firstRecord()->values()[0]->values();
-        $match = array_merge($properties, ['id' => $id]);
-
-        $homeTeamQuery = Cypher::Run(
-            "MATCH (m:Match)-[:TEAM_MATCH {status: \"home\"}]-(t:Team) 
-             WHERE ID(m) = {$id} RETURN t");
-
-        $homeTeamProps = $homeTeamQuery->getRecords()[0]->values()[0]->values();
-        $homeTeamId = $homeTeamQuery->getRecords()[0]->values()[0]->identity();
-        $homeTeam = array_merge($homeTeamProps, ['id' => $homeTeamId]);
-
-        $guestTeamQuery = Cypher::Run(
-            "MATCH (m:Match)-[:TEAM_MATCH {status: \"guest\"}]-(t:Team) 
-             WHERE ID(m) = {$id} RETURN t");
-
-        $guestTeamProps = $guestTeamQuery->getRecords()[0]->values()[0]->values();
-        $guestTeamId = $guestTeamQuery->getRecords()[0]->values()[0]->identity();
-        $guestTeam = array_merge($guestTeamProps, ['id' => $guestTeamId]);
-
-        $match = array_merge($match, ['home' => $homeTeam]);
-        $match = array_merge($match, ['guest' => $guestTeam]);
+        $match = new Match();
+        $match->id = $node->identity();
+        $match->isFinished = $node->value('isFinished');
+        $match->date = $node->value('date');
+        $match->time = $node->value('time');
 
         return $match;
     }
 
+    /**
+     * @param $id
+     * @return Match|null
+     */
+    public static function getById($id)
+    {
+        $query = Cypher::Run("MATCH (m:Match) WHERE ID(m) = {$id} RETURN m");
+
+        if(!$query->hasRecord())
+            return null;
+
+        $node = $query->firstRecord()->value('m');
+        $match = self::buildFromNode($node);
+        $match->team_match = Team_Match::getByMatchIdForShow($id);
+
+        return $match;
+    }
+
+    /**
+     * @return Match[]
+     */
     public static function getAll()
     {
         $query = Cypher::Run("MATCH (m:Match) RETURN m ORDER BY m.date");
         $matches = [];
 
-        foreach($query->getRecords() as $record) {
-            $id = $record->values()[0]->identity();
-            $properties = $record->values()[0]->values();
-            $match = array_merge($properties, ['id' => $id]);
+        foreach($query->getRecords() as $record)
+        {
+            $node = $record->value('m');
+            $match = self::buildFromNode($node);
+            $match->team_match = Team_Match::getByMatchId($match->id);
 
-            $homeTeamQuery = Cypher::Run(
-                "MATCH (m:Match)-[:TEAM_MATCH {status: \"home\"}]-(t:Team) 
-                 WHERE ID(m) = {$id} RETURN t");
-
-            $homeTeam = $homeTeamQuery->getRecords()[0]->values()[0]->values();
-            $homeTeamId = $homeTeamQuery->getRecords()[0]->values()[0]->identity();
-            $homeTeamScore = Redis::hget("match:{$id}:team:{$homeTeamId}", "points");
-            $homeTeam = array_merge($homeTeam, ['points' => $homeTeamScore]);
-
-            $guestTeamQuery = Cypher::Run(
-                "MATCH (m:Match)-[:TEAM_MATCH {status: \"guest\"}]-(t:Team) 
-                 WHERE ID(m) = {$id} RETURN t");
-
-            $guestTeam = $guestTeamQuery->getRecords()[0]->values()[0]->values();
-            $guestTeamId = $guestTeamQuery->getRecords()[0]->values()[0]->identity();
-            $guestTeamScore = Redis::hget("match:{$id}:team:{$guestTeamId}", "points");
-            $guestTeam = array_merge($guestTeam, ['points' => $guestTeamScore]);
-
-            $match = array_merge($match, ['home' => $homeTeam]);
-            $match = array_merge($match, ['guest' => $guestTeam]);
-
-            array_push($matches, $match);
+            $matches[] = $match;
         }
+
         return $matches;
     }
 
     public static function saveMatch(Request $request)
     {
-        $request->validate([
-            'date' => 'required',
-            'time' => 'required',
-            'hometeam' => 'required',
-            'guestteam' => 'required'
-        ]);
-
         /** @var Result $query */
         $query = Cypher::run(
             "MATCH (t1:Team) WHERE ID(t1) = $request->hometeam
@@ -116,10 +99,10 @@ class Match
             "steals", 0,
             "assists", 0);
 
-        foreach (Player_Team::getCurrentPlayers($request->hometeam) as $player)
+        foreach (Player_Team::getCurrentPlayers($request->hometeam) as $current_player)
         {
             Redis::hmset(
-                "match:{$matchId}:team:{$request->hometeam}:player:{$player['player']['id']}",
+                "match:{$matchId}:team:{$request->hometeam}:player:{$current_player->player->id}",
                 "points", 0,
                 "blocks", 0,
                 "rebounds", 0,
@@ -128,10 +111,10 @@ class Match
                 "assists", 0);
         }
 
-        foreach (Player_Team::getCurrentPlayers($request->guestteam) as $player)
+        foreach (Player_Team::getCurrentPlayers($request->guestteam) as $current_player)
         {
             Redis::hmset(
-                "match:{$matchId}:team:{$request->guestteam}:player:{$player['player']['id']}",
+                "match:{$matchId}:team:{$request->guestteam}:player:{$current_player->player->id}",
                 "points", 0,
                 "blocks", 0,
                 "rebounds", 0,
@@ -142,7 +125,7 @@ class Match
 
         Redis::incr("count:matches");
     }
-
+    //Api call for finishing match
     public static function finishMatch($id, $finished)
     {
         if($finished)
@@ -161,23 +144,15 @@ class Match
 
     public static function isLive($match)
     {
-        return Carbon::now('Europe/Belgrade') > (new Carbon($match['date']." ".$match['time'], 'Europe/Belgrade'));
+        return Carbon::now('Europe/Belgrade') > (new Carbon($match->date." ".$match->time, 'Europe/Belgrade'));
     }
 
     public static function deleteMatch($id)
     {
-        // Mozda treba da se izmeni
-        $match = Match::getById($id);
         Cypher::Run("MATCH (m:Match) WHERE ID(m) = $id DETACH DELETE m");
-        Redis::del("match:{$id}:team:{$match['home']['id']}");
-        Redis::del("match:{$id}:team:{$match['guest']['id']}");
-
-        foreach (Player_Team::getCurrentPlayers($match['home']['id']) as $player) {
-            Redis::del("match:{$id}:team:{$match['home']['id']}:player:{$player['player']['id']}");
-        }
-
-        foreach (Player_Team::getCurrentPlayers($match['guest']['id']) as $player) {
-            Redis::del("match:{$id}:team:{$match['guest']['id']}:player:{$player['player']['id']}");
+        foreach(Redis::keys("*match:{$id}:*") as $key)
+        {
+            Redis::del($key);
         }
 
         Redis::decr("count:matches");

@@ -202,6 +202,7 @@ class Player_Team
         $result = Cypher::Run("MATCH (p:Player)-[r:PLAYS]-(t:Team) WHERE ID(t) = $teamId return r, p
                       ORDER BY r.until DESC");
 
+
         $plays_for_team = [];
         foreach ($result->getRecords() as $record) {
             $playerNode = $record->nodeValue('p');

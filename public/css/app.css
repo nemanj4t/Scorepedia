@@ -10524,9 +10524,9 @@ a.text-dark:focus {
   max-width: 100%;
 }
 
-#result {
+.result {
   margin-top: auto;
-  font-size: 24px;
+  font-size: 1.1rem;
 }
 
 #match-view {
