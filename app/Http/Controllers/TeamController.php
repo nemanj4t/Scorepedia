@@ -66,7 +66,7 @@ class TeamController extends Controller
 
         Team::save($request);
 
-        return redirect('/apanel?active=Team&route=teams');
+        return redirect('/apanel/teams');
     }
 
     /**

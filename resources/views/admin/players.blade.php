@@ -35,7 +35,7 @@
             @foreach($data as $single_data)
                 <tr>
                     <td>{{$single_data->id}}</td>
-                    <td><a href="players/{{$single_data->id}}">{{$single_data->name}}</a></td>
+                    <td><a href="/players/{{$single_data->id}}">{{$single_data->name}}</a></td>
                     <td>{{$single_data->city}}</td>
                     <td><img id="img" src="{{$single_data->image}}"></td>
                     <td>

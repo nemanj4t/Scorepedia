@@ -74,7 +74,7 @@
                     <div class="col-md-5 m-4 card" style="border: solid 1px; padding: 0">
                         <div class="card-header">
                             <label class="float-left" for="">{{(new \Carbon\Carbon($match->date." ".$match->time, 'Europe/Belgrade'))->diffForHumans()}}</label>
-                            <form action="matches/{{$match->id}}" method="POST">
+                            <form action="/matches/{{$match->id}}" method="POST">
                                 @csrf
                                 <input type="hidden" name="_method" value="delete" />
                                 <button class="btn btn-sm btn-danger float-right ml-2">Delete</button>
@@ -107,7 +107,7 @@
                     <div class="col-md-5 m-4 card" style="border: solid 1px; padding: 0">
                         <div class="card-header">
                             <label class="float-left" for="">{{(new \Carbon\Carbon($match->date." ".$match->time, 'Europe/Belgrade'))->diffForHumans()}}</label>
-                            <form action="matches/{{$match->id}}" method="POST">
+                            <form action="/matches/{{$match->id}}" method="POST">
                                 @csrf
                                 <input type="hidden" name="_method" value="delete" />
                                 <button class="btn btn-sm btn-danger float-right ml-2">Delete</button>

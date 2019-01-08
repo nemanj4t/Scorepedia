@@ -79,7 +79,7 @@ class MatchController extends Controller
 
         Match::saveMatch($request);
 
-        return redirect('/apanel?active=Match&route=matches');
+        return redirect('/apanel/matches');
     }
 
     /**

@@ -44,7 +44,8 @@ class PlayerController extends Controller
     public function store(Request $request)
     {
         Player::savePlayer($request);
-        return redirect('/apanel?active=Player&route=players');
+
+        return redirect('/apanel/players');
     }
 
     /**
