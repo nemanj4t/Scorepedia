@@ -5,13 +5,15 @@ namespace App;
 use GraphAware\Neo4j\Client\Formatter\Result;
 use Ahsan\Neo4j\Facade\Cypher;
 use Carbon\Facade;
+use GraphAware\Neo4j\Client\Formatter\Type\Node;
+use GraphAware\Neo4j\Client\Formatter\Type\Relationship;
 
 class Player_Team
 {
     public $position;
     public $number;
-    public $plays_since;
-    public $plays_until;
+    public $played_since;
+    public $played_until;
 
     /** @var Team */
     public $team;
@@ -24,30 +26,44 @@ class Player_Team
         $player_team = new Player_Team();
         $player_team->number = $relationship->value('number');
         $player_team->position = $relationship->value('position');
-        $player_team->plays_since = $relationship->value('since');
-        $player_team->plays_until = $relationship->value('until', null);
+        $player_team->played_since = $relationship->value('played_since', null);
+        $player_team->played_until = $relationship->value('played_until', null);
 
         $player_team->team = Team::buildFromNode($node);
 
         return $player_team;
     }
 
+    public static function buildFromNodesAndRelationship(Node $playerNode, Node $teamNode, Relationship $relationship)
+    {
+        $player_team = new Player_Team();
+        $player_team->position = $relationship->value('position');
+        $player_team->number = $relationship->value('number', null);
+        $player_team->played_since = $relationship->value('played_since', null);
+        $player_team->played_until = $relationship->value('played_until', null);
+
+        $player_team->team = Team::buildFromNode($teamNode);
+        $player_team->player = Player::buildFromNode($playerNode);
+
+        return $player_team;
+    }
+
     public function save()
     {
-        $plays_since = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_since)->format("Ymd");
+        $plays_since = \Carbon\Carbon::parse($this->played_since)->format("Y-m-d");
 
 
-        if($this->plays_until)
+        if($this->played_until)
         {
-            $plays_until = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_until)->format("Ymd");
+            $plays_until = \Carbon\Carbon::parse($this->played_until)->format("Y-m-d");
 
             // umesto TEAM_PLAYER je PLAYED ili PLAYS
             Cypher::Run ("MATCH (n:Player), (t:Team) WHERE ID(n) = " . $this->player->id . " AND ID(t) = " . $this->team->id .
                 " CREATE (n)-[:PLAYED {
             position: '" . $this->position . "', 
             number: " . $this->number . ", 
-            since: " . $plays_since . ",  
-            until: " . $plays_until . "
+            played_since: '" . $this->played_since . "',  
+            played_until: '" . $this->played_until . "'
             }]->(t)");
         }
         else
@@ -56,43 +72,43 @@ class Player_Team
                 " CREATE (n)-[:PLAYS {
             position: '" . $this->position . "', 
             number: " . $this->number . ", 
-            since: " . $this->plays_since . "  
+            played_since: '" . $this->played_since . "'  
             }]->(t)");
         }
     }
 
     public function update()
     {
-        $plays_since = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_since)->format("Ymd");
+        $plays_since = \Carbon\Carbon::parse($this->played_since)->format("Y-m-d");
         // Proveri se koja je veza bila ranije
-        $relType = Cypher::Run ("MATCH (p:Player)-[r]-(t:Team) WHERE ID(p) = " . $this->player_id .
-            " AND ID(t) = " . $this->team_id . " RETURN type(r)")->getRecords()[0]->value("type(r)");
+        $relType = Cypher::Run ("MATCH (p:Player)-[r]-(t:Team) WHERE ID(p) = " . $this->player->id .
+            " AND ID(t) = " . $this->team->id . " RETURN type(r)")->getRecords()[0]->value("type(r)");
 
-        if($this->plays_until)
+        if($this->played_until)
         {
-            $plays_until = \Carbon\Carbon::createFromFormat("Y-m-d", $this->plays_until)->format("Ymd");
+            $plays_until = \Carbon\Carbon::parse($this->played_until)->format("Y-m-d");
             // Ako je i ranije bila PLAYED onda se samo menja atribut "until"
             if($relType == "PLAYED")
             {
                 Cypher::Run ("MATCH (p:Player)-[r:PLAYED]-(t:Team) 
-                WHERE ID(p) = " . $this->player_id . " AND ID(t) = " . $this->team_id .
+                WHERE ID(p) = " . $this->player->id . " AND ID(t) = " . $this->team->id .
                     " SET r.position = '" . $this->position . "', 
                     r.number = " . $this->number . ", 
-                    r.since = " . $plays_since . ",  
-                    r.until = " . $plays_until);
+                    r.played_since = '" . $this->played_since . "',  
+                    r.played_until = '" . $this->played_until. "'");
             }
             else
             {
                 // Ako je bila PLAYS onda se prethodna veza zamenjuje vezom PLAYED
-                Cypher::Run ("MATCH (p:Player)-[r:PLAYS]-(t:Team) WHERE ID(p) = ". $this->player_id .
-                    " AND ID(t) = ". $this->team_id .
+                Cypher::Run ("MATCH (p:Player)-[r:PLAYS]-(t:Team) WHERE ID(p) = ". $this->player->id .
+                    " AND ID(t) = ". $this->team->id.
                     " CREATE (p)-[r2:PLAYED]->(t) 
                         SET r2 = r,
                         r2.position = '" . $this->position . "',
                         r2.number = " . $this->number . ",
-                        r2.since = " . $plays_since . ",
-                        r2.until = " . $plays_until .
-                        " WITH r
+                        r2.played_since = '" . $this->played_since . "',
+                        r2.played_until = '" . $this->played_until .
+                        "' WITH r
                         DELETE r");
             }
         }
@@ -101,14 +117,14 @@ class Player_Team
             // Ako je bilo PLAYED i a treba da se promeni u PLAYS
             if($relType == "PLAYED")
             {
-                Cypher::Run ("MATCH (p:Player)-[r:PLAYED]-(t:Team) WHERE ID(p) = ". $this->player_id .
-                    " AND ID(t) = ". $this->team_id .
+                Cypher::Run ("MATCH (p:Player)-[r:PLAYED]-(t:Team) WHERE ID(p) = ". $this->player->id .
+                    " AND ID(t) = ". $this->team->id .
                     " CREATE (p)-[r2:PLAYS]->(t) 
                         SET r2 = r,
                         r2.position = '" . $this->position . "',
                         r2.number = " . $this->number . ",
-                        r2.since = " . $plays_since . ",
-                        r2.until = null 
+                        r2.played_since = '" . $this->played_since . "',
+                        r2.played_until = null 
                          WITH r
                         DELETE r");
             }
@@ -116,10 +132,10 @@ class Player_Team
             {
                 // Ako je bilo PLAYED i ako je i dalje PLAYS
                 Cypher::Run("MATCH (p:Player)-[r:PLAYS]-(t:Team) 
-                WHERE ID(p) = " . $this->player_id . " AND ID(t) = " . $this->team_id .
+                WHERE ID(p) = " . $this->player->id . " AND ID(t) = " . $this->team->id .
                     " SET r.position = '" . $this->position . "', 
                     r.number = " . $this->number . ", 
-                    r.since = " . $plays_since);
+                    r.played_since = '" . $this->played_since . "'");
             }
 
         }
@@ -194,8 +210,8 @@ class Player_Team
             $player_team = new Player_Team();
             $player_team->position = $relationship->value('position');
             $player_team->number = $relationship->value('number');
-            $player_team->plays_since = $relationship->value('since', null);
-            $player_team->plays_until = $relationship->value('until', null);
+            $player_team->played_since = $relationship->value('played_since', null);
+            $player_team->played_until = $relationship->value('played_until', null);
             $player_team->player = Player::buildFromNode($playerNode);
 
             $plays_for_team[] = $player_team;
@@ -207,6 +223,7 @@ class Player_Team
     /**
      * @param $rel
      * @param $playerId
+     * @param $teamId
      * @return Player_Team
      */
     public static function buildFromRequest($rel, $playerId, $teamId)
@@ -214,8 +231,8 @@ class Player_Team
         $player_team = new Player_Team();
         $player_team->position = $rel['player_position'];
         $player_team->number = $rel['player_number'];
-        $player_team->plays_since = $rel['player_since'];
-        $player_team->plays_until = $rel['player_until'];
+        $player_team->played_since = $rel['player_since'];
+        $player_team->played_until = $rel['player_until'];
 
         $player_team->player = Player::getById($playerId);
         $player_team->team = Team::getById($teamId);

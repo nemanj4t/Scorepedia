@@ -53,11 +53,11 @@ class TeamController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
+        $request->validate([
             'name' => 'required',
             'short_name' => 'required',
-            'coached_since' => 'required',
-            'coached_until' => 'required',
+            'coached_since' => 'required|date|date_format:Y-m-d|before:today',
+            'coached_until' => 'required|date|date_format:Y-m-d|after:yesterday',
             'city' => 'required',
             'description' => 'required',
             'image' => 'required',
@@ -110,6 +110,17 @@ class TeamController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required',
+            'short_name' => 'required',
+            'coached_since' => 'required|date|date_format:Y-m-d|before:today',
+            'coached_until' => 'required|date|date_format:Y-m-d|after:yesterday',
+            'city' => 'required',
+            'description' => 'required',
+            'image' => 'required',
+            'background_image' => 'required',
+        ]);
+
         Team::update($id, $request);
 
         return redirect("/teams/" . $id);

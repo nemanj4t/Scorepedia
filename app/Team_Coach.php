@@ -136,7 +136,7 @@ class Team_Coach
 
     /**
      * @param $id
-     * @return Team_Coach
+     * @return Team_Coach[]
      */
     public static function getByCoachId($id)
     {
@@ -144,7 +144,7 @@ class Team_Coach
         $result= Cypher::run("MATCH (t:Team)-[r:TEAM_COACH]-(c:Coach) WHERE ID(c) = $id return r, t, c
                       ORDER BY r.coached_until DESC");
 
-        /** @var \App\Team_Coach $team_coach_array */
+        /** @var \App\Team_Coach[] $team_coach_array */
         $team_coach_array = [];
 
         /** @var RecordView[] $records */

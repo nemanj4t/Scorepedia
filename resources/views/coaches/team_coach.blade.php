@@ -19,11 +19,11 @@
                         <div id="input-container" class="list-group">
                             <div class="list-group-item" id="team">
                                 <input type="hidden" name="team_id" value="{{$rel->team_id}}"/>
-                                <input type="text" name="prev_team" value="{{$rel->team->name}}"/>
-                                <input type="date" name="since"
+                                <input type="text" class="form-control" name="prev_team" value="{{$rel->team->name}}"/>
+                                <input type="date" class="form-control" name="coached_since"
                                        value="{{$rel->coached_since}}"/>
 
-                                <input type="date" name="until"
+                                <input type="date" class="form-control" name="coached_until"
                                        value="{{$rel->coached_until}}"/>
                             </div>
                         </div>
@@ -38,26 +38,51 @@
             <div class="card-body">
                 <form method="POST" action="/coaches/edit/{{ $coach_id }}/team_coach">
                     @csrf
-                    <div class="list-group-item" id="team">
-                        <select name="team_name" required="required">
-                            @foreach($teams as $team)
-                                <option value="{{$team->id }}">{{ $team->name }}</option>
-                            @endforeach
-                        </select>
-                        <input type="date" name="coached_since" required="required"/>
-                        <input type="date" name="coached_until" required="required"/>
+                    <div id="input-container-new" class="list-group">
+                        <label>Add previous teams:</label>
+
                     </div>
+
+                    <button type="button" onclick="addNewInput()" class="btn btn-outline-secondary">Add previous team +</button>
                     <button type="submit" class="btn btn-primary" value="add">Add</button>
                 </form>
             </div>
         </div>
     </div>
 
+    <div style="display: none" id="old-team-template">
+        <div class="list-group-item">
+            <button class="button btn-danger" onclick="deleteInput(this)">X</button>
+            <label>Team:</label>
+            <select name="old_team[TEAMID][team_id]" class="form-control" placeholder="Team">
+                @foreach($teams as $team)
+                    <option value="{{$team->id}}">{{ $team->name }}</option>
+                @endforeach
+            </select>
+            <label> Coached since:</label>
+            <input type="date" name="old_team[TEAMID][coached_since]" class="form-control"/>
+            <label>Coached until:</label>
+            <input type="date" name="old_team[TEAMID][coached_until]" class="form-control"/>
+
+        </div>
+    </div>
+
 @endsection
 
-<script>
 
-    // Promena rute u zavisnosti od buttona
+<script>
+    var count = 0;
+    function addNewInput() {
+        let html = document.getElementById('old-team-template').innerHTML;
+        html = html.replace(new RegExp('TEAMID', 'g'), count);
+        count++;
+
+        document.getElementById('input-container-new').insertAdjacentHTML('beforeend', html);
+    }
+    function deleteInput(el) {
+        el.parentNode.parentNode.removeChild(el.parentNode);
+    }
+
     function changeAction(element) {
         let form = element.parentNode;
         let method = form.children[0]; // prvi je hidden input za metodu
@@ -67,45 +92,5 @@
         } else {
             method.value = "DELETE";
         }
-    }
-
-    // Multiple inputs
-    function addNewInput(element) {
-        let parent = element.parentNode;    // div u okviru koga se nalazi
-        let hasValue = false;
-        for(let i = 0; i < parent.children.length; i++) {
-            if(parent.children[i].value) {
-                hasValue = true;
-                break;
-            }
-        }
-        if (!hasValue) {
-            if(parent.parentNode.children.length === 1) {
-                return;
-            } else {
-                parent.parentNode.removeChild(parent);
-                return;
-            }
-        } else if (parent.nextElementSibling)
-            return;
-
-        let newInput = parent.cloneNode(); // novi div
-        let nameParts = newInput.id.split('_');
-        newInput.id = nameParts[0] + '_' + (parseInt(nameParts[1]) + 1);
-        for(let i = 0; i < parent.children.length; i++) {
-            let newChild;
-            if(parent.children[i].type === "select-one") {
-                newChild = parent.children[i].cloneNode(true);  // cloneNode([deep])
-
-            } else {
-                newChild = parent.children[i].cloneNode();
-            }
-            let nameParts = newChild.name.split('_');
-            let name = nameParts[0] + '_' + nameParts[1] + '_' + (parseInt(nameParts[2]) + 1);
-            newChild.name = name;
-            newChild.value = "";
-            newInput.appendChild(newChild);
-        }
-        parent.parentNode.appendChild(newInput);
     }
 </script>

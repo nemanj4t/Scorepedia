@@ -20,34 +20,35 @@ class TeamCoachController extends Controller
 
     public function store($id, Request $request)
     {
-        // Kreiranje nove veze
-        // $request['team_name'] ima zapravo vrednost id-ja tima
-        $rel = new Team_Coach([
-            'coach_id' => $id,
-            'team_name' => $request['team_name'],
-            'coached_since' => $request['coached_since'],
-            'coached_until' => $request['coached_until']
-        ]);
-        $rel->save();
+        foreach ($request['old_team'] as $data)
+
+        {
+            $team_coach = new Team_Coach();
+            $team_coach->coach_id = $id;
+            $team_coach->team_id = $data['team_id'];
+            $team_coach->coached_since = $data['coached_since'];
+            $team_coach->coached_until = $data['coached_until'];
+            $team_coach->save();
+        }
 
         return redirect('/coaches/' . $id);
     }
 
     public function update($id, Request $request)
     {
-        $rel = new Team_Coach([
-            'coach_id' => $id,
-            'team_name' => $request['team_id'],
-            'coached_since' => $request['since'],
-            'coached_until' => $request['until']
-        ]);
-        $rel->update();
+        $team_coach = new Team_Coach();
+        $team_coach->team_id = $request['team_id'];
+        $team_coach->coach_id = $id;
+        $team_coach->coached_since = $request['coached_since'];
+        $team_coach->coached_until = $request['coached_until'];
+        $team_coach->update();
 
         return redirect('/coaches/' . $id);
     }
 
     public function destroy($id, Request $request)
     {
+
         Team_Coach::delete($request['team_id'], $id);
 
         return redirect('/coaches/' . $id);

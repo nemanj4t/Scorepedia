@@ -18,11 +18,17 @@ class Team
     public $image;
     public $background_image;
 
-    public $current_players;
-    public $all_players;
+    /** @var Player_Team[] $current_players */
+    public $current_players = [];
 
+    /** @var Player_Team[] $all_players */
+    public $all_players = [];
+
+    /** @var Team_Coach $current_coach */
     public $current_coach;
-    public $all_coaches;
+
+    /** @var Team_Coach[] $all_coaches */
+    public $all_coaches = [];
 
     /**
      * @param Node $node
@@ -88,25 +94,59 @@ class Team
      */
     public static function getAll()
     {
+        $now = Carbon::now()->format('Y-m-d');
+
         /** @var Result $result */
-        $result = Cypher::run("MATCH (t:Team) RETURN t");
+        $result = Cypher::run("MATCH (t:Team) 
+                                OPTIONAL MATCH (t)-[tcall:TEAM_COACH]-(c:Coach)
+                                OPTIONAL MATCH (p:Player)-[ptc:PLAYS]-(t)
+                                OPTIONAL MATCH (p:Player)-[ptall:PLAYS|PLAYED]-(t) RETURN t, c, p, tcall, ptc, ptall");
+
+        /** @var Team[] $teams */
         $teams = [];
         foreach ($result->getRecords() as $record) {
-            $node = $record->value('t');
-            $team = self::buildFromNode($node);
+            $teamNode = $record->value('t');
+            $coachNode = $record->value('c');
+            $playerNode = $record->value('p');
+            $tcallRelation = $record->value('tcall');
+            $ptcRelation = $record->value('ptc');
+            $ptallRelation = $record->value('ptall');
 
-            $current_coach = Team_Coach::getCurrentForTeamId($team->id);
-            $all_coaches = Team_Coach::getByTeamId($team->id);
-            $current_players = Player_Team::getCurrentPlayers($team->id);
-            $all_players = Player_Team::getByTeamId($team->id);
+            $team = Team::buildFromNode($teamNode);
 
-            $team->current_players = $current_players;
-            $team->all_players = $all_players;
+            if ($record->value('tcall'))
+            {
+                $team->all_coaches[] = Team_Coach::buildFromNodesAndRelationship($teamNode, $coachNode, $tcallRelation);
 
-            $team->current_coach = $current_coach;
-            $team->all_coaches = $all_coaches;
+                if (Carbon::parse($record->value('tcall')->value('coached_until'))->gt($now))
+                    $team->current_coach = Team_Coach::buildFromNodesAndRelationship($teamNode, $coachNode, $tcallRelation);
 
-            array_push($teams, $team);
+            }
+
+            if ($record->value('ptall')) {
+                $team->all_players[] = Player_Team::buildFromNodesAndRelationship($playerNode, $teamNode, $ptallRelation);
+            }
+
+            if ($record->value('ptc')) {
+                    $team->current_players[] = Player_Team::buildFromNodesAndRelationship($playerNode, $teamNode, $ptcRelation);
+            }
+
+
+         $isInArray = false;
+         foreach($teams as $t) {
+             if ($t->id == $teamNode->identity()) {
+                 $t->all_coaches = array_merge($t->all_coaches, $team->all_coaches);
+                 $t->all_players = array_merge($t->all_players, $team->all_players);
+                 $t->current_players = array_merge($t->current_players, $team->current_players);
+                 if ($t->current_coach == null)
+                    $t->current_coach = $team->current_coach;
+                 $isInArray = true;
+                 break;
+             }
+         }
+         if ($isInArray == false)
+             array_push($teams, $team);
+
         }
         return $teams;
     }
@@ -206,10 +246,10 @@ class Team
         if ($request['coach'] != null) {
             $team_coach = Team_Coach::createFromRequest($request, $id);
             if ($team->current_coach != null) {
-                if ($team->current_coach->id == $request->coach) {
+                if ($team->current_coach->coach_id == $request->coach) {
                     $team_coach->update();
                 } else {
-                    Team_Coach::delete($id, $team->current_coach->id);
+                    Team_Coach::delete($id, $team->current_coach->coach_id);
                     $team_coach->save();
                 }
             }
@@ -219,7 +259,7 @@ class Team
         }
         else {
             if ($team->current_coach != null)
-                Team_Coach::delete($id, $team->current_coach->id);
+                Team_Coach::delete($id, $team->current_coach->team_id);
         }
 
     }

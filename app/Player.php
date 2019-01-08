@@ -39,6 +39,13 @@ class Player
 
     public static function getById($id){
         $query = Cypher::run("MATCH (p:Player) WHERE ID(p) = {$id} RETURN p");
+
+        try {
+            $record = $query->getRecord();
+        } catch (\RuntimeException $exception) {
+            return null;
+        }
+
         $node = $query->firstRecord()->nodeValue('p');
         $player = self::buildFromNode($node);
 

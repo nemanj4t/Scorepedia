@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Player;
+use App\Team_Coach;
 use GraphAware\Bolt\Tests\Integration\Packing\PackingListIntegrationTest;
 use Illuminate\Http\Request;
 use App\Player_Team;
@@ -39,8 +41,19 @@ class PlaysForTeamController extends Controller
 //            'player_since' => $request['player_since'],
 //            'player_until' => $request['player_until']
 //        ]);
-        $player_team = Player_Team::buildFromRequest($request, $id, $request->team_id);
-        $player_team->save();
+
+        foreach ($request['old_team'] as $data)
+
+        {
+            $player_team = new Player_Team();
+            $player_team->position = $data['player_position'];
+            $player_team->number = $data['player_number'];
+            $player_team->played_since = $data['player_since'];
+            $player_team->played_until = $data['player_until'];
+            $player_team->player = Player::getById($id);
+            $player_team->team = Team::getById($data['team_id']);
+            $player_team->save();
+        }
 
         return redirect('/players/' . $id);
     }
@@ -55,15 +68,16 @@ class PlaysForTeamController extends Controller
 //            'player_since' => 'required'
 //        ]);
 
-        $rel = new Player_Team([
-            'player_id' => $id,
-            'team_id' => $request['team_id'],
-            'player_position' => $request['position'],
-            'player_number' => $request['number'],
-            'player_since' => $request['since'],
-            'player_until' => $request['until']
-        ]);
-        $rel->update();
+        $player_team = new Player_Team;
+
+        $player_team->player = Player::getById($id);
+        $player_team->team = Team::getById($request['team_id']);
+        $player_team->position = $request['position'];
+        $player_team->number = $request['number'];
+        $player_team->played_since = $request['since'];
+        $player_team->played_until = $request['until'];
+
+        $player_team->update();
 
         return redirect('/players/' . $id);
     }

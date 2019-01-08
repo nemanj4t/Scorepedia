@@ -16,13 +16,16 @@
                             <div class="form-group">
                                 <label>Coach name:</label>
                                 <input type="text" class="form-control" name="name"  placeholder="Enter name" required="required">
+                                @if ($errors->has('name'))
+                                    <div class="alert-danger">{{ $errors->first('name') }}</div>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label>Team:</label>
                                 <select class="form-control" name="team" >
                                     <option value="" selected>No current team</option>
                                     @foreach ($teams as $team)
-                                        @if ($team->current_coach == '')
+                                        @if ($team->current_coach == null)
                                             <option value="{{$team->id}}">{{$team->name}}</option>
                                         @endif
                                     @endforeach
@@ -49,17 +52,31 @@
                             <div class="form-group">
                                 <label>Bio:</label>
                                 <input type="textarea" class="form-control" name="bio" placeholder="Biography" required="required">
+                                @if ($errors->has('bio'))
+                                    <div class="alert-danger">{{ $errors->first('bio') }}</div>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label>City:</label>
                                 <input type="text" class="form-control" name="city" placeholder="City" required="required">
+                                @if ($errors->has('city'))
+                                    <div class="alert-danger">{{ $errors->first('city') }}</div>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label>Image url:</label>
                                 <input type="textarea" class="form-control" name="image" placeholder="url" required="required">
+                                @if ($errors->has('image'))
+                                    <div class="alert-danger">{{ $errors->first('image') }}</div>
+                                @endif
                             </div>
                             <div id="input-container" class="list-group">
-
+                                @if ($errors->has('old_team.*.coached_since'))
+                                    <div class="alert-danger">{{ $errors->first('old_team.*.coached_since') }}</div>
+                                @endif
+                                @if ($errors->has('old_team.*.coached_until'))
+                                    <div class="alert-danger">{{ $errors->first('old_team.*.coached_until') }}</div>
+                                @endif
                             </div>
                             <br>
                             <button type="button" onclick="addNewInput()" class="btn btn-outline-secondary">Add previous team +</button>
@@ -76,6 +93,7 @@
 
     <div style="display: none" id="old-team-template">
         <div class="list-group-item">
+            <button class="button btn-danger" onclick="deleteInput(this)">X</button>
             <label>Team:</label>
             <select name="old_team[TEAMID][team_id]" class="form-control" placeholder="Team">
                 @foreach($teams as $team)
@@ -86,6 +104,7 @@
             <input type="date" name="old_team[TEAMID][coached_since]" class="form-control"/>
             <label>Coached until:</label>
             <input type="date" name="old_team[TEAMID][coached_until]" class="form-control"/>
+
         </div>
     </div>
 
@@ -100,5 +119,8 @@
         count++;
 
         document.getElementById('input-container').insertAdjacentHTML('beforeend', html);
+    }
+    function deleteInput(el) {
+        el.parentNode.parentNode.removeChild(el.parentNode);
     }
 </script>

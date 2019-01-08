@@ -99,11 +99,11 @@
                                                                                 <td><a href="/teams/{{$player_team->team->id}}">{{$player_team->team->name}}</a></td>
                                                                                 <td>{{$player_team->position}}</td>
                                                                                 <td>{{$player_team->number}}</td>
-                                                                                <td>{{ \Carbon\Carbon::parse($player_team->plays_since)->format('d-m-Y')}}</td>
-                                                                                @if (isset($player_team->plays_until))
-                                                                                    <td>{{ \Carbon\Carbon::parse($player_team->plays_until)->format('d-m-Y')}}</td>
+                                                                                <td>{{ \Carbon\Carbon::parse($player_team->played_since)->format('d-m-Y')}}</td>
+                                                                                @if (isset($player_team->played_until))
+                                                                                    <td>{{ \Carbon\Carbon::parse($player_team->played_until)->format('d-m-Y')}}</td>
                                                                                 @else
-                                                                                    <td> ??? </td>
+                                                                                    <td> Present </td>
                                                                                 @endif
                                                                             </tr>
                                                                         @endforeach

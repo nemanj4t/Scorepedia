@@ -124,7 +124,14 @@ class Coach
                 if ($coach->current_team->team->id == $request['team']) {
                     $team_coach->update();
                 } else {
-                    Team_Coach::delete($coach->current_team->team_id, $id);
+
+                    $team_coach_old_current = new Team_Coach();
+                    $team_coach_old_current->coach_id = $id;
+                    $team_coach_old_current->team_id = $coach->current_team->team_id;
+                    $team_coach_old_current->coached_since = $coach->current_team->coached_since;
+                    $team_coach_old_current->coached_until= Carbon::yesterday()->format('y-m-d');
+                    $team_coach_old_current->update();
+
                     $team_coach->save();
                 }
             }
@@ -133,8 +140,10 @@ class Coach
             }
         }
         else {
-            if ($coach->current_team != '')
-                Team_Coach::delete($coach->current_team->team_id, $id);
+            if ($coach->current_team != '') {
+                $team_coach->coached_until = Carbon::yesterday()->format('y-m-d');
+                $team_coach->update();
+            }
         }
 
     }

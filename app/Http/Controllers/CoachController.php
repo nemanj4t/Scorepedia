@@ -45,11 +45,11 @@ class CoachController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'coached_since' => 'required|date|date_format:Y-m-d|before:today',
-            'coached_until' => 'required|date|date_format:Y-m-d|after:yesterday',
+            'coached_since' => 'date|date_format:Y-m-d|before:today',
+            'coached_until' => 'date|date_format:Y-m-d|after:yesterday',
             'old_team.*.team_id' => 'required',
             'old_team.*.coached_since' => 'required|date|date_format:Y-m-d|before:today',
-            'old_team.*.coached_until' => 'required|date|date_format:Y-m-d|after:yesterday',
+            'old_team.*.coached_until' => 'required|date|date_format:Y-m-d|before:yesterday',
         ]);
 
         $result = Coach::saveCoach($request);
@@ -121,6 +121,15 @@ class CoachController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $request->validate([
+            'name' => 'required',
+            'coached_since' => 'date|date_format:Y-m-d|before:today',
+            'coached_until' => 'date|date_format:Y-m-d|after:yesterday',
+            'old_team.*.team_id' => 'required',
+            'old_team.*.coached_since' => 'required|date|date_format:Y-m-d|before:today',
+            'old_team.*.coached_until' => 'required|date|date_format:Y-m-d|before:yesterday',
+        ]);
+
         Coach::update($id, $request);
 
         return redirect("/coaches/" . $id);
