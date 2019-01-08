@@ -55,6 +55,7 @@ class CoachController extends Controller
         $result = Coach::saveCoach($request);
         $coach_id = $result->firstRecord()->getByIndex(0)->identity();
 
+
         if(isSet($_POST['old_team'])) {
             foreach ($request['old_team'] as $data) {
                 $team_coach = new Team_Coach();
@@ -65,8 +66,6 @@ class CoachController extends Controller
                 $team_coach->save();
             }
         }
-
-
         return redirect('/apanel/coaches');
     }
 

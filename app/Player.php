@@ -52,37 +52,27 @@ class Player
         return $player;
     }
 
+    /**
+     * @param $request
+     * @return Player|null
+     */
     public static function savePlayer(Request $request) {
         //dd($request);
         // Ovaj upit moze da vrati id na kraju
-        Cypher::run("CREATE (:Player {name: '$request[name]', height: '$request[height]',
-            weight: '$request[weight]', city: '$request[city]', bio: '$request[bio]', image: '$request[image]'})");
+        /** @var Result $result */
+       $result = Cypher::run("CREATE (p:Player {name: '$request[name]', height: '$request[height]',
+            weight: '$request[weight]', city: '$request[city]', bio: '$request[bio]', image: '$request[image]'}) RETURN p");
 
-        $result = Cypher::run("MATCH (n:Player) WHERE n.name = '$request[name]' return ID(n)")->getRecords();
-        $player_id = $result[0]->values()[0];
-        $keys_array = ["team_name", "player_number", "player_position", "player_since", "player_until"];
+       $record = $result->getRecord();
+       $nodePlayer = $record->value('p');
+       $player = Player::buildFromNode($nodePlayer);
 
-        $count = 0;
-        // Dok ne nadje prvi input za vezu tim_igrac koji je prazan
-        while($request[$keys_array[0] . '_' . $count] != null)
-        {
-            $rel = array();
-            $rel['player_id'] = $player_id;
-            foreach($keys_array as $key)
-            {
-                $rel[$key] = $request[$key . "_" . $count];
-            }
-
-            $plays = Player_Team::buildFromRequest($rel, $player_id, $rel['team_name']);
-
-            $plays->save();
-
-            $count++;
-        }
         //counter players
         Redis::incr("count:players");
         // Dodavanje globalne statistike za ovog igraca u redis
-        PlayerStatistic::saveGlobalStats($player_id);
+        PlayerStatistic::saveGlobalStats($player->id);
+
+        return $player;
     }
 
     /**

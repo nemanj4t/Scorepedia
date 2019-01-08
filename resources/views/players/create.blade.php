@@ -7,106 +7,93 @@
     @endphp
 
     <div class="container" class="col-xs-1 center-block">
-        <div class="col-sm-7">
-            <div class="card">
-                <div class="card-body">
-                    <form action="/players" method="POST">
-                        @csrf
-                        <div class="form-group">
-                            <label>Player name:</label>
-                            <input type="text" class="form-control" name="name"  placeholder="Enter name" required="required">
-                        </div>
-                        <div class="form-group">
-                            <label>Bio:</label>
-                            <input type="textarea" class="form-control" name="bio" placeholder="Biography" required="required">
-                        </div>
-                        <div class="form-group">
-                            <label>Height(cm):</label>
-                            <input type="text" class="form-control" name="height" placeholder="Height" required="required">
-                        </div>
-                        <div class="form-group">
-                            <label>Weight(kg):</label>
-                            <input type="text" class="form-control" name="weight" placeholder="Weight" required="required">
-                        </div>
-                        <div class="form-group">
-                            <label>City:</label>
-                            <input type="text" class="form-control" name="city" placeholder="City" required="required">
-                        </div>
-                        <div class="form-group">
-                            <label>Image url:</label>
-                            <input type="textarea" class="form-control" name="image" placeholder="url" required="required">
-                        </div>
-                        {{--Unos liste timova za koje igrac igrac igra ili je igrao--}}
-                        <div id="input-container" class="list-group">
-                            <div class="list-group-item" id="team_0">
-                                <select name="team_name_0" onchange="addNewInput(this)">
-                                    <option value=""></option>
-                                    @foreach($teams as $team)
-                                        <option value="{{$team->id }}">{{ $team->name }}</option>
-                                    @endforeach
-                                </select>
-                                <input type="number" min="0" name="player_number_0" placeholder="Number" onchange="addNewInput(this)"/>
-                                <select name="player_position_0" onchange="addNewInput(this)">
-                                    <option value=""></option>
-                                    <option value="PG">Point guard</option>
-                                    <option value="SG">Shooting guard</option>
-                                    <option value="SF">Small forward</option>
-                                    <option value="PF">Power forward</option>
-                                    <option value="C">Center</option>
-                                </select>
-                                <input type="date" name="player_since_0" onchange="addNewInput(this)"/>
-                                <input type="date" name="player_until_0" onchange="addNewInput(this)"/>
+        <div class="row" style="justify-content: center; margin: 50px;">
+            <div class="col-sm-7">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="/players" method="POST">
+                            @csrf
+                            <div class="form-group">
+                                <label>Player name:</label>
+                                <input type="text" class="form-control" name="name"  placeholder="Enter name" required="required">
                             </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
+                            <div class="form-group">
+                                <label>Bio:</label>
+                                <input type="textarea" class="form-control" name="bio" placeholder="Biography" required="required">
+                            </div>
+                            <div class="form-group">
+                                <label>Height(cm):</label>
+                                <input type="text" class="form-control" name="height" placeholder="Height" required="required">
+                            </div>
+                            <div class="form-group">
+                                <label>Weight(kg):</label>
+                                <input type="text" class="form-control" name="weight" placeholder="Weight" required="required">
+                            </div>
+                            <div class="form-group">
+                                <label>City:</label>
+                                <input type="text" class="form-control" name="city" placeholder="City" required="required">
+                            </div>
+                            <div class="form-group">
+                                <label>Image url:</label>
+                                <input type="textarea" class="form-control" name="image" placeholder="url" required="required">
+                            </div>
+                            {{--Unos liste timova za koje igrac igrac igra ili je igrao--}}
+                            <div id="input-container" class="list-group">
+
+
+                            </div>
+                            <br>
+                            <button type="button" onclick="addNewInput()" class="btn btn-outline-secondary">Add previous team +</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <div style="display: none" id="all-team-template">
+        <div class="list-group-item">
+            <button class="button btn-danger" onclick="deleteInput(this)">X</button>
+            <label>Team:</label>
+            <select name="all_team[TEAMID][team_name]" class="form-control">
+                <option value=""></option>
+                @foreach($teams as $team)
+                    <option value="{{$team->id }}">{{ $team->name }}</option>
+                @endforeach
+            </select>
+            <label>Number:</label>
+            <input type="number" min="0" name="all_team[TEAMID][player_number]" class="form-control" placeholder="Number"/>
+            <label>Position:</label>
+            <select name="all_team[TEAMID][player_position]" class="form-control">
+                <option value=""></option>
+                <option value="PG">Point guard</option>
+                <option value="SG">Shooting guard</option>
+                <option value="SF">Small forward</option>
+                <option value="PF">Power forward</option>
+                <option value="C">Center</option>
+            </select>
+            <label>Played since:</label>
+            <input type="date" name="all_team[TEAMID][player_since]" class="form-control"/>
+            <label>Played until:</label>
+            <input type="date" name="all_team[TEAMID][player_until]" class="form-control"/>
+        </div>
+    </div>
 
 
 @endsection
 
 <script>
-    function addNewInput(element) {
-        let parent = element.parentNode;    // div u okviru koga se nalazi
-        let hasValue = false;
-        for(let i = 0; i < parent.children.length; i++) {
-            if(parent.children[i].value) {
-                hasValue = true;
-                break;
-            }
-        }
-        if (!hasValue) {
-            if(parent.parentNode.children.length === 1) {
-                return;
-            } else {
-                parent.parentNode.removeChild(parent);
-                return;
-            }
-        } else if (parent.nextElementSibling)
-            return;
+    var count = 0;
+    function addNewInput() {
+        let html = document.getElementById('all-team-template').innerHTML;
+        html = html.replace(new RegExp('TEAMID', 'g'), count);
+        count++;
 
-        let newInput = parent.cloneNode(); // novi div
-        let nameParts = newInput.id.split('_');
-        newInput.id = nameParts[0] + '_' + (parseInt(nameParts[1]) + 1);
-        for(let i = 0; i < parent.children.length; i++) {
-            let newChild;
-            if(parent.children[i].type === "select-one") {
-                newChild = parent.children[i].cloneNode(true);  // cloneNode([deep])
-
-            } else {
-                newChild = parent.children[i].cloneNode();
-            }
-            let nameParts = newChild.name.split('_');
-            let name = nameParts[0] + '_' + nameParts[1] + '_' + (parseInt(nameParts[2]) + 1);
-            newChild.name = name;
-            newChild.value = "";
-            newInput.appendChild(newChild);
-        }
-        parent.parentNode.appendChild(newInput);
+        document.getElementById('input-container').insertAdjacentHTML('beforeend', html);
+    }
+    function deleteInput(el) {
+        el.parentNode.parentNode.removeChild(el.parentNode);
     }
 </script>
 
