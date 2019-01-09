@@ -21,10 +21,17 @@ class StatisticController extends Controller
         if($show == 'short') {
             // Top 5 stats
             $records = PlayerStatistic::getTopOfEach(5);
+
             $ids = [];
             foreach($records as $set) {
-                $ids += array_keys($set);
+                $keys = array_keys($set);
+                foreach($keys as $key) {
+                    if(!in_array($key, $ids, true)) {
+                        array_push($ids, $key);
+                    }
+                }
             }
+
             $players = Player::getSomeWithCurrentTeam($ids);
 
             $stats = [];
