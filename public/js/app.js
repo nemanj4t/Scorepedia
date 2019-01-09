@@ -4692,7 +4692,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 		};
 	}
 
-	// Tag
+	// Tagged
 	Expr.find["TAG"] = support.getElementsByTagName ?
 		function( tag, context ) {
 			if ( typeof context.getElementsByTagName !== "undefined" ) {
