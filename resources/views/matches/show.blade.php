@@ -43,7 +43,7 @@
                     <div class="col-md-3">
                         <img class="float-left" id="club-logo" src="{{$match->team_match->home->image}}">
                     </div>
-                    <div id="result" class="col-md-6 text-center">{{$match->team_match->home_statistic->points}} - {{$match->team_match->guest_statistic->points}}</div>
+                    <div class="col-md-6 text-center result">{{$match->team_match->home_statistic->points}} - {{$match->team_match->guest_statistic->points}}</div>
                     <div class="col-md-3">
                         <img class="float-right" id="club-logo" src="{{$match->team_match->guest->image}}">
                     </div>
@@ -83,6 +83,27 @@
                         </tr>
                         </tbody>
                     </table>
+                    <div class="col-md-12">
+                        <p>
+                            <button class="btn btn-primary col-md-12" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                Comments
+                            </button>
+                        </p>
+                        <div class="collapse" id="collapseExample">
+                            <form action="/matches/{{$match->id}}/comments" method="post">
+                                @csrf
+                                <input type="text" name="name" placeholder="name" class="form-control form-group">
+                                <textarea name="content" placeholder="comment" class="form-control form-group" id="" cols="30" rows="4"></textarea>
+                                <button type="submit" class="btn btn-secondary btn-sm form-group">Post</button>
+                            </form>
+                            @foreach($comments as $comment)
+                                <div class="card card-body">
+                                    <strong>{{$comment->publisher}}</strong>
+                                    <p>{{$comment->content}}</p>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
             </div>
             <div id="guest" class="col-md-4 p-4">
