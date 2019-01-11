@@ -6,11 +6,20 @@ use Ahsan\Neo4j\Facade\Cypher;
 
 class Team_Match
 {
+    /** @var Team $home*/
     public $home;
+    /** @var Team  $guest*/
     public $guest;
+    /** @var TeamStatistic $home_statistic */
     public $home_statistic;
+    /** @var TeamStatistic $guest_statistic*/
     public $guest_statistic;
 
+
+    /**
+     * @param $matchId
+     * @return Team_Match
+     */
     public static function getByMatchId($matchId)
     {
         $query = Cypher::run("MATCH (t:Team)-[r:TEAM_MATCH]->(m:Match) WHERE ID(m) = $matchId RETURN r, t");
@@ -39,6 +48,10 @@ class Team_Match
         return $team_match;
     }
 
+    /**
+     * @param $matchId
+     * @return Team_Match
+     */
     public static function getByMatchIdForShow($matchId)
     {
         $query = Cypher::run("MATCH (t:Team)-[r:TEAM_MATCH]->(m:Match) WHERE ID(m) = $matchId RETURN r, t");

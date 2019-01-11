@@ -129,7 +129,7 @@ class Coach
                     $team_coach_old_current->coach_id = $id;
                     $team_coach_old_current->team_id = $coach->current_team->team_id;
                     $team_coach_old_current->coached_since = $coach->current_team->coached_since;
-                    $team_coach_old_current->coached_until= Carbon::yesterday()->format('y-m-d');
+                    $team_coach_old_current->coached_until= Carbon::yesterday()->format('Y-m-d');
                     $team_coach_old_current->update();
 
                     $team_coach->save();
@@ -140,8 +140,8 @@ class Coach
             }
         }
         else {
-            if ($coach->current_team != '') {
-                $team_coach->coached_until = Carbon::yesterday()->format('y-m-d');
+            if ($coach->current_team != null) {
+                $team_coach->coached_until = Carbon::yesterday()->format('Y-m-d');
                 $team_coach->update();
             }
         }
