@@ -45,8 +45,8 @@ class CoachController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'coached_since' => 'date|date_format:Y-m-d|before:today',
-            'coached_until' => 'date|date_format:Y-m-d|after:yesterday',
+            'coached_since' => 'date|date_format:Y-m-d|before:today|nullable',
+            'coached_until' => 'date|date_format:Y-m-d|after:yesterday|nullable',
             'old_team.*.team_id' => 'required',
             'old_team.*.coached_since' => 'required|date|date_format:Y-m-d|before:today',
             'old_team.*.coached_until' => 'required|date|date_format:Y-m-d|before:yesterday',
@@ -56,18 +56,17 @@ class CoachController extends Controller
         $coach_id = $result->firstRecord()->getByIndex(0)->identity();
 
 
-        foreach ($request['old_team'] as $data)
-        {
-            $team_coach = new Team_Coach();
-            $team_coach->coach_id = $coach_id;
-            $team_coach->team_id = $data['team_id'];
-            $team_coach->coached_since = $data['coached_since'];
-            $team_coach->coached_until = $data['coached_until'];
-            $team_coach->save();
+        if(isSet($_POST['old_team'])) {
+            foreach ($request['old_team'] as $data) {
+                $team_coach = new Team_Coach();
+                $team_coach->coach_id = $coach_id;
+                $team_coach->team_id = $data['team_id'];
+                $team_coach->coached_since = $data['coached_since'];
+                $team_coach->coached_until = $data['coached_until'];
+                $team_coach->save();
+            }
         }
-
-
-        return redirect('/apanel?active=Coach&route=coaches');
+        return redirect('/apanel/coaches');
     }
 
     /**
@@ -119,7 +118,6 @@ class CoachController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
         $request->validate([
             'name' => 'required',
             'coached_since' => 'date|date_format:Y-m-d|before:today',

@@ -97,3 +97,6 @@ Route::get('/standings/streak', "StandingsController@streak");
 // Komentari su u okviru meca
 Route::post('/matches/{match}/comments', "CommentController@store");   // usnimanje novog komentara (mozda ne treba kontroler)
 
+// ArticleController
+Route::get('/articles', "ArticleController@index");
+

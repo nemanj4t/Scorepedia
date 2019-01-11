@@ -58,7 +58,7 @@ class PlayerController extends Controller
             $player_team->save();
         }
 
-        return redirect('/apanel?active=Player&route=players');
+        return redirect('/apanel/players');
     }
 
     /**

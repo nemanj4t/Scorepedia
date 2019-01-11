@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Ahsan\Neo4j\Facade\Cypher;
@@ -79,7 +80,7 @@ class MatchController extends Controller
 
         Match::saveMatch($request);
 
-        return redirect('/apanel?active=Match&route=matches');
+        return redirect('/apanel/matches');
     }
 
     /**
@@ -107,8 +108,9 @@ class MatchController extends Controller
             $player_team->player->statistics = PlayerStatistic::getStatsForMatch(
                 $id, $match->team_match->home->id, $player_team->player->id);
         }
+        $comments = Comment::getAllCommentsByMatchId($id);
 
-        return view("matches.show", compact('match'));
+        return view("matches.show", compact('match', 'comments'));
     }
 
 
