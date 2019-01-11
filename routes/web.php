@@ -99,4 +99,8 @@ Route::post('/matches/{match}/comments', "CommentController@store");   // usnima
 
 // ArticleController
 Route::get('/articles', "ArticleController@index");
+Route::get('/articles/{article}', "ArticleController@show");
+Route::get('/articles/create', "ArticleController@create");
+Route::post('/articles', "ArticleController@store");
+Route::delete('/articles', "ArticleController@destroy");
 

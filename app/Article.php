@@ -18,12 +18,16 @@ class Article
     public $content;
     public $timestamp;
 
+    public $taggedTeams = [];
+    public $taggedPlayers = [];
+    public $taggedCoaches = [];
+
     public static function buildFromNode(Node $node)
     {
         $article = new Article();
         $article->id = $node->identity();
         $article->content = $node->value('content');
-        $article->timestamp = $node->value('timestamp');
+        //$article->timestamp = $node->value('timestamp');
 
         return $article;
     }
@@ -47,30 +51,40 @@ class Article
         
         try {
             $record = $query->getRecord();
+            $node = $query->firstRecord()->nodeValue('a');
+            $article = self::buildFromNode($node);
+
+            $teamQuery = Cypher::Run("MATCH (a:Article)-[:TAGGED_TEAM]-(t:Team) return t");
+            foreach($teamQuery->getRecords() as $teamRecord) {
+                $article->taggedTeams[] = Team::buildFromNode($teamRecord->nodeValue('t'));
+            }
+
+            $playerQuery = Cypher::Run("MATCH (a:Article)-[:TAGGED_PLAYER]-(p:Player) return p");
+            foreach($playerQuery->getRecords() as $playerRecord) {
+                $article->taggedPlayers[] = Player::buildFromNode($playerRecord->nodeValue('p'));
+            }
+
+            $coachQuery = Cypher::Run("MATCH (a:Article)-[:TAGGED_COACH]-(c:Coach) return c");
+            foreach($coachQuery->getRecords() as $coachRecord) {
+                $article->taggedCoaches[] = Coach::buildFromNode($coachRecord->nodeValue('c'));
+            }
+
+            return $article;
         } catch (\RuntimeException $exception) {
             return null;
         }
-
-        $node = $query->firstRecord()->nodeValue('a');
-        $article = self::buildFromNode($node);
-
-        return $article;
     }
 
     public static function saveArticle(Request $request)
     {
-
         $timestamp = \Carbon\Carbon::now()->format("Ymd");
-        $result = Cypher::Run("CREATE (a:Article {content: '$request[content]',
-        timestamp: $timestamp}) RETURN ID(a)");
 
         try {
-            // Racunam da tagovani podaci (input elementi html)
-            // imaju za ime niz kao za Player_Team veze
-            // ovo je otprilike, izmenicemo kad se dogovorimo
-            // kako ce tacno da izgleda
+            $result = Cypher::Run("CREATE (a:Article {content: '$request[content]',
+            timestamp: $timestamp}) RETURN ID(a)");
+
             $record = $result->getRecord();
-            $article_id = $record->values('ID(a)');
+            $article_id = $record->value('ID(a)');
 
             foreach($request['taggedPlayer'] as $name) {
                 Tag::tagPlayer($article_id, $name);
@@ -83,9 +97,26 @@ class Article
             foreach($request['taggedTeam'] as $name) {
                 Tag::tagTeam($article_id, $name);
             }
+
+            // succeeded
+            return true;
         }
         catch(\RuntimeException $ex) {
-            return null;
+            return false;
+        }
+    }
+
+    public static function deleteArticle($id)
+    {
+        $result = Cypher::run("MATCH (a:Article) WHERE ID(a) = $id DETACH DELETE a RETURN COUNT(a)");
+        try {
+            $record = $result->getRecord();
+            $deletedCount = $record->value('COUNT(a)');
+
+            return $deletedCount;
+        }
+        catch (\RuntimeException $ex) {
+            return 0;
         }
     }
 }
