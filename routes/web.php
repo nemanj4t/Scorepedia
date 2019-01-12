@@ -100,3 +100,7 @@ Route::post('/matches/{match}/comments', "CommentController@store");   // usnima
 // ArticleController
 Route::get('/articles', "ArticleController@index");
 
+//SearchController
+Route::get('/search', "SearchController@index");
+
+

@@ -44,6 +44,17 @@
                     <a class="p-2 text-dark" href="/matches">Matches </a><img style="height: 15px" src="https://mareeg.com/wp-content/uploads/2017/02/LIVE.png">
                 </ul>
 
+                <div class="col-sm-3 col-md-3">
+                    <form action="/search" method="GET" class="navbar-form" role="search">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search" name="q">
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
