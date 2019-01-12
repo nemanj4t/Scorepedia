@@ -14,6 +14,35 @@ use Carbon\Carbon;
 
 class MatchController extends Controller
 {
+
+    // Axios gadja ovo
+    public function getData()
+    {
+        $matches = Match::getAll();
+
+        $liveMatches = [];
+        $finishedMatches = [];
+        $upcomingMatches = [];
+
+        foreach ($matches as $match)
+        {
+            if ($match->isFinished)
+            {
+                $finishedMatches[] = $match;
+            }
+            elseif (Match::isLive($match))
+            {
+                $liveMatches[] = $match;
+            }
+            else
+            {
+                $upcomingMatches[] = $match;
+            }
+        }
+
+        return compact('liveMatches', 'finishedMatches', 'upcomingMatches');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -21,6 +50,9 @@ class MatchController extends Controller
      */
     public function index()
     {
+        // Testiranje
+        return view('matches.indexvue');
+
         $matches = Match::getAll();
 
         $liveMatches = [];

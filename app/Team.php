@@ -285,4 +285,17 @@ class Team
 
         Redis::decr("count:teams");
     }
+
+    public static function cacheTeams($seconds)
+    {
+        if($value = Redis::get('teams:cache')) {
+            return json_decode($value);
+        }
+
+        $value = self::getTeams();
+
+        Redis::setex('teams:cache', $seconds, json_encode($value));
+
+        return $value;
+    }
 }
