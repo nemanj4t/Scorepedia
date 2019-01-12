@@ -39,11 +39,7 @@
                                         <tr class="ok">
                                             <td class="avatar"><img id="img" class="avatar" src={{$player->image}}></td>
                                             <td><a href="/players/{{$player->id}}">{{$player->name}}</a></td>
-                                            @if (isset($player->current_team))
-                                                <td>{{$player->current_team->name}}</td>
-                                            @else
-                                                <td>No current team</td>
-                                            @endif
+                                            <td>{{$player->height}}m</td>
                                             <td><a href="/players">Player</a></td>
                                         </tr>
                                     @endforeach
@@ -51,11 +47,7 @@
                                         <tr class="ok">
                                             <td class="avatar"><img id="img" src={{$team->image}}></td>
                                             <td><a href="/teams/{{$team->id}}">{{$team->name}}</a></td>
-                                            @if (isset($team->current_coach))
-                                                <td><a href="/coaches/{{$team->current_coach->coach_id}}">{{$team->current_coach->coach->name}}</a></td>
-                                            @else
-                                                <td>No current coach</td>
-                                            @endif
+                                            <td>{{$team->short_name}}</td>
                                             <td><a href="/teams">Team</a></td>
                                         </tr>
                                     @endforeach
@@ -63,11 +55,7 @@
                                         <tr class="ok">
                                             <td class="avatar"><img id="img" class="avatar" src={{$coach->image}}></td>
                                             <td><a href="/coaches/{{$coach->id}}">{{$coach->name}}</a></td>
-                                            @if($coach->current_team != null)
-                                                <td><a href="/teams/{{$coach->current_team->team_id}}">{{$coach->current_team->team->name}}</a></td>
-                                            @else
-                                                <td>No professional engagement currently</td>
-                                            @endif
+                                            <td>{{$coach->city}}</td>
                                             <td><a href="/coaches">Coach</a></td>
                                         </tr>
                                     @endforeach
