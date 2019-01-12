@@ -32,6 +32,4 @@ class Tag
         Cypher::Run("MATCH (a:Article), (c:Coach) WHERE ID(a) = $article_id AND c.name = 
         $name (a)-[t:TAGGED_COACH]->(c)");
     }
-
-
 }
