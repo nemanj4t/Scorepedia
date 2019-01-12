@@ -23,7 +23,7 @@
                                     <strong>{{match.team_match.home.short_name}}</strong>
                                 </div>
                                 <div class="col-md-4 text-center">
-                                    <!-- <small><i>started {{(new \Carbon\Carbon($match->date." ".$match->time, 'Europe/Belgrade'))->diffForHumans()}}</i></small> -->
+                                    {{match.carbon}}
                                 </div>
                                 <div class="col-md-4 text-center">
                                     <strong>{{match.team_match.guest.short_name}}</strong>
@@ -55,7 +55,7 @@
                                     <strong>{{match.team_match.home.short_name}}</strong>
                                 </div>
                                 <div class="col-md-4 text-center">
-                                    <!-- <small><i>starts {{(new \Carbon\Carbon($match->date." ".$match->time, 'Europe/Belgrade'))->diffForHumans()}}</i></small> -->
+                                    {{match.carbon}}
                                 </div>
                                 <div class="col-md-4 text-center">
                                     <strong>{{match.team_match.guest.short_name}}</strong>
@@ -87,7 +87,7 @@
                                     <strong>{{match.team_match.home.short_name}}</strong>
                                 </div>
                                 <div class="col-md-4 text-center">
-                                    <!-- <small><i>{{(new \Carbon\Carbon($match->date." ".$match->time, 'Europe/Belgrade'))}}</i></small> -->
+                                    {{match.carbon}}
                                 </div>
                                 <div class="col-md-4 text-center">
                                     <strong>{{match.team_match.guest.short_name}}</strong>
