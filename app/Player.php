@@ -163,4 +163,17 @@ class Player
 
         Redis::decr("count:players");
     }
+
+    public static function cachePlayers($seconds)
+    {
+        if($value = Redis::get('players:cache')) {
+            return json_decode($value);
+        }
+
+        $value = self::getAllWithCurrentTeam();
+
+        Redis::setex('players:cache', $seconds, json_encode($value));
+
+        return $value;
+    }
 }

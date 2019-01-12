@@ -19,7 +19,7 @@ class PlayerController extends Controller
      */
     public function index()
     {
-        $players = Player::getAllWithCurrentTeam();
+        $players = Player::cachePlayers(10);
         return view('players.index', compact('players'));
     }
 

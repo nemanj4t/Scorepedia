@@ -19,7 +19,7 @@ class TeamController extends Controller
      */
     public function index()
     {
-        $teams = Team::getTeams();
+        $teams = Team::cacheTeams(10);
 
         return view('teams.index', compact('teams'));
     }
