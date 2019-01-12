@@ -17,6 +17,9 @@ class Match
     public $time;
     public $team_match;
 
+    public static $loserPreviousStreak;
+
+
     /**
      * @param Node $node
      * @return Match
@@ -204,7 +207,7 @@ class Match
             "team:standings:{$winner->id}",
             "points", Redis::zscore("points", $winner->id),
             "wins", $winsWinner,
-            "losses", $lossesLoser,
+            "losses", $lossesWinner,
             "percentage", Redis::zscore("percentage", $winner->id),
             "home", Redis::zscore("home", $winner->id),
             "road", Redis::zscore("road", $winner->id),
@@ -218,12 +221,12 @@ class Match
 
     }
 
+
     //Api call for finishing match
     public static function finishMatch($id, $finished)
     {
         $team_match = Team_Match::getByMatchIdForShow($id);
 
-        $loserPreviousStreak = null;
 
         if($finished)
         {
@@ -232,11 +235,11 @@ class Match
                  SET m.isFinished = true");
 
             if ($team_match->home_statistic->points > $team_match->guest_statistic->points) {
-                $loserPreviousStreak = Redis::zscore("streak", $team_match->guest->id);
+                self::$loserPreviousStreak = Redis::zscore("streak", $team_match->guest->id);
                 self::assignMatchResult($team_match->home, $team_match->guest, $team_match);
             }
             else {
-                $loserPreviousStreak = Redis::zscore("streak", $team_match->home->id);
+                self::$loserPreviousStreak = Redis::zscore("streak", $team_match->home->id);
                 self::assignMatchResult($team_match->guest, $team_match->home, $team_match);
             }
 
@@ -248,9 +251,9 @@ class Match
                  SET m.isFinished = false");
 
             if ($team_match->home_statistic->points > $team_match->guest_statistic->points)
-                self::annulMatchResult($team_match->home, $team_match->guest, $team_match, $loserPreviousStreak);
+                self::annulMatchResult($team_match->home, $team_match->guest, $team_match, self::$loserPreviousStreak);
             else
-                self::annulMatchResult($team_match->guest, $team_match->home, $team_match, $loserPreviousStreak);
+                self::annulMatchResult($team_match->guest, $team_match->home, $team_match, self::$loserPreviousStreak);
 
         }
     }

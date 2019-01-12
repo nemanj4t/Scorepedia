@@ -87,6 +87,7 @@ class TeamController extends Controller
         foreach ($team->current_players as $player)
             $player->player->statistics = PlayerStatistic::getById($player->player->id);
 
+
         foreach ($best_players as $key => $stat) {
             foreach ($team->current_players as $player) {
                 if ($stat == null) {
