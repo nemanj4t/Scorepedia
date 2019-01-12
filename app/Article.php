@@ -16,6 +16,7 @@ class Article
 {
     public $id;
     public $content;
+    public $image;
     public $timestamp;
 
     public $taggedTeams = [];
@@ -27,7 +28,8 @@ class Article
         $article = new Article();
         $article->id = $node->identity();
         $article->content = $node->value('content');
-        //$article->timestamp = $node->value('timestamp');
+        $article->image = $node->value('image');
+        $article->timestamp = $node->value('timestamp');
 
         return $article;
     }

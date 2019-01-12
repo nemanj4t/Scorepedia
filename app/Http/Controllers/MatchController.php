@@ -26,6 +26,7 @@ class MatchController extends Controller
 
         foreach ($matches as $match)
         {
+            $match->carbon = (new Carbon($match->date." ".$match->time, 'Europe/Belgrade'))->diffForHumans();
             if ($match->isFinished)
             {
                 $finishedMatches[] = $match;
@@ -52,30 +53,6 @@ class MatchController extends Controller
     {
         // Testiranje
         return view('matches.indexvue');
-
-        $matches = Match::getAll();
-
-        $liveMatches = [];
-        $finishedMatches = [];
-        $upcomingMatches = [];
-
-        foreach ($matches as $match)
-        {
-            if ($match->isFinished)
-            {
-                $finishedMatches[] = $match;
-            }
-            elseif (Match::isLive($match))
-            {
-                $liveMatches[] = $match;
-            }
-            else
-            {
-                $upcomingMatches[] = $match;
-            }
-        }
-
-        return view('matches.index', compact('liveMatches', 'finishedMatches', 'upcomingMatches'));
     }
 
     /**
