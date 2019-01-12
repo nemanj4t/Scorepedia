@@ -74,10 +74,14 @@ Route::post('/coaches/edit/{coach}/team_coach', "TeamCoachController@store");
 // Ukoliko nam mecevi nisu na home page-u
 Route::get('/matches', "MatchController@index");            // prikaz liste meceva (kesirani ???) // prikaz konkretnog meca
 Route::get('/matches/create', "MatchController@create");    // pogled za kreiranje meca
+
+Route::get('/matches/data', "MatchController@getData"); // test za pub/sub
+
 Route::post('/matches', "MatchController@store");           // usnimanje kreiranog meca
 Route::put('/matches', "MatchController@update");
 Route::get('/matches/{match}', "MatchController@show");
 Route::delete('/matches/{match}', "MatchController@destroy");
+
 
 // StatisticController
 Route::get('/statistics', "StatisticController@index");          // prikazuje za svaku od par statistika po 5 igraca npr.

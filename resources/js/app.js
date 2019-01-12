@@ -5,6 +5,8 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+
+
 require('./bootstrap');
 
 window.Vue = require('vue');
@@ -21,6 +23,12 @@ Vue.component('example-component', require('./components/ExampleComponent.vue'))
 Vue.component('match-manager', require('./components/MatchManager.vue'));
 Vue.component('standings', require('./components/Standings.vue'));
 Vue.component('statistics', require('./components/Stats.vue'));
+Vue.component('matches', require('./components/Matches.vue'));
+
+// Ukljucivanje Socket.io za Vue
+// Node server radi na 8890
+import VueSocketIO from 'vue-socket.io';
+Vue.use(new VueSocketIO({connection: 'http://localhost:8890'}));
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))

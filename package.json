@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "npm": "^6.5.0",
+        "vue-socket.io": "^3.0.4",
         "vue-timers": "^1.10.0"
     }
 }
