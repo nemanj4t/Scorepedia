@@ -51,6 +51,44 @@ class PlayerStatistic
         ];
     }
 
+    public static function saveByTeamId($teamId, $playerId) {
+        Redis::zadd(
+            "players:team:{$teamId}:points",
+            0,
+            $playerId
+        );
+
+        Redis::zadd(
+            "players:team:{$teamId}:blocks",
+            0,
+            $playerId
+        );
+
+        Redis::zadd(
+            "players:team:{$teamId}:rebounds",
+            0,
+            $playerId
+        );
+
+        Redis::zadd(
+            "players:team:{$teamId}:steals",
+            0,
+            $playerId
+        );
+
+        Redis::zadd(
+            "players:team:{$teamId}:assists",
+            0,
+            $playerId
+        );
+
+        Redis::zadd(
+            "players:team:{$teamId}:fouls",
+            0,
+            $playerId
+        );
+    }
+
     public static function saveGlobalStats($id) {
         Redis::zadd(
             "players:points",

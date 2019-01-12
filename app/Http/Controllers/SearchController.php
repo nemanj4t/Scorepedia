@@ -8,7 +8,7 @@ use GraphAware\Neo4j\Client\Formatter\Type\Node;
 use App\Player;
 use App\Team;
 use App\Coach;
-use Illuminate\Session\Console;
+use Illuminate\Session;
 class SearchController extends Controller
 {
     //

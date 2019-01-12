@@ -6,9 +6,11 @@ use App\Coach;
 use App\Player_Team;
 use App\Team;
 use App\Team_Coach;
+use App\PlayerStatistic;
 use Illuminate\Http\Request;
 use Ahsan\Neo4j\Facade\Cypher;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Redis;
 
 class TeamController extends Controller
 {
@@ -77,11 +79,26 @@ class TeamController extends Controller
      */
     public function show($id)
     {
-        $team = Team::getTeamById($id);
-        $teamCoach = Team_Coach::getCurrentForTeamId($id);
-        $currentPlayers = Player_Team::getCurrentPlayers($id);
+        $team = Team::getById($id);
+        $standings = Redis::hgetall("team:standings:{$id}");
 
-        return view('teams.show', compact('team', 'teamCoach', 'currentPlayers'));
+        $best_players = ["points" => null, "blocks" => null, "steals" => null, "rebounds" => null, "assists" => null];
+
+        foreach ($team->current_players as $player)
+            $player->player->statistics = PlayerStatistic::getById($player->player->id);
+
+        foreach ($best_players as $key => $stat) {
+            foreach ($team->current_players as $player) {
+                if ($stat == null) {
+                    $best_players[$key] = $player;
+                }
+                else {
+                    if ($best_players[$key] < $player->player->statistics[$key])
+                        $best_players[$key] = $player;
+                }
+            }
+        }
+        return view('teams.show', compact('team', 'standings', 'best_players'));
     }
 
     /**
