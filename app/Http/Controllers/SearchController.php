@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Ahsan\Neo4j\Facade\Cypher;
@@ -11,7 +9,6 @@ use App\Player;
 use App\Team;
 use App\Coach;
 use Illuminate\Session\Console;
-
 class SearchController extends Controller
 {
     //
@@ -20,7 +17,6 @@ class SearchController extends Controller
         $players = [];
         $teams = [];
         $coaches = [];
-
         $searchString = Input::get('q');
         \Session::put('search', $searchString);
         $searchString = strtolower($searchString);
@@ -30,7 +26,6 @@ class SearchController extends Controller
                                OPTIONAL MATCH (t:Team) WHERE toLower(t.name) CONTAINS trim('".$searchString."')
                                OPTIONAL MATCH (c:Coach) WHERE toLower(c.name) CONTAINS trim('".$searchString."')
                                RETURN p, t, c");
-
         $records = $result->getRecords();
         foreach($records as $record)
         {
@@ -40,7 +35,6 @@ class SearchController extends Controller
             $teamNode = $record->value('t');
             /** @var Node $coachNode */
             $coachNode = $record->value('c');
-
             $isInArray = false;
             if ($playerNode != null)
             {
@@ -56,8 +50,6 @@ class SearchController extends Controller
                 }
                 $isInArray = false;
             }
-
-
             if ($teamNode != null)
             {
                 foreach($teams as $t) {
@@ -72,7 +64,6 @@ class SearchController extends Controller
                 }
                 $isInArray = false;
             }
-
             if ($coachNode != null)
             {
                 foreach($coaches as $c) {
@@ -81,14 +72,12 @@ class SearchController extends Controller
                         break;
                     }
                 }
-
                 if (!$isInArray) {
                     $coach = Coach::buildFromNode($coachNode);
                     $coaches [] = $coach;
                 }
             }
         }
-
         return view("search.index", compact('players', 'teams', 'coaches'));
     }
 }
