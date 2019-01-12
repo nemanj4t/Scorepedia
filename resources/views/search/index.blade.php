@@ -33,7 +33,16 @@
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="list">
                                 <table class="table table-striped table-bordered table-list">
-                                    <thead>
+                                    @if(!empty($players))
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Name</th>
+                                            <th>Height</th>
+                                            <th>Status</th>
+                                        </tr>
+                                        </thead>
+                                    @endif
                                     <tbody>
                                     @foreach ($players as $player)
                                         <tr class="ok">
@@ -43,6 +52,16 @@
                                             <td><a href="/players">Player</a></td>
                                         </tr>
                                     @endforeach
+                                    @if(!empty($teams))
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Name</th>
+                                            <th>Abbreviation</th>
+                                            <th>Status</th>
+                                        </tr>
+                                        </thead>
+                                    @endif
                                     @foreach ($teams as $team )
                                         <tr class="ok">
                                             <td class="avatar"><img id="img" src={{$team->image}}></td>
@@ -51,6 +70,16 @@
                                             <td><a href="/teams">Team</a></td>
                                         </tr>
                                     @endforeach
+                                    @if(!empty($coaches))
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Name</th>
+                                            <th>City</th>
+                                            <th>Status</th>
+                                        </tr>
+                                        </thead>
+                                    @endif
                                     @foreach ($coaches as $coach)
                                         <tr class="ok">
                                             <td class="avatar"><img id="img" class="avatar" src={{$coach->image}}></td>
@@ -62,7 +91,6 @@
                                     </tbody>
                                 </table>
                             </div><!-- END id="list" -->
-
                         </div><!-- END tab-content -->
                     </div>
                 </div><!--END panel-table-->

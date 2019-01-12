@@ -69,6 +69,17 @@ class AdminController extends Controller
         Redis::zincrby("players:{$request->key}", $request->value, $request->playerId);
         Redis::hincrby("match:{$id}:team:{$request->teamId}", $request->key, $request->value);
         Redis::hincrby("match:{$id}:team:{$request->teamId}:player:{$request->playerId}", $request->key, $request->value);
+
+        // Publishovanje izmenjenih poena nekog live matcha
+        if($request->key === 'points') {
+            $data = [
+                'matchId' => $id,
+                'teamId' => $request->teamId,
+                'key' => $request->key,
+                'value' => Redis::hget("match:{$id}:team:{$request->teamId}", $request->key),
+            ];
+            Redis::publish("liveMatches", json_encode($data));
+        }
     }
 
     public function adminPlayers()
