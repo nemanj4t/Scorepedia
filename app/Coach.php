@@ -154,4 +154,17 @@ class Coach
 
         Redis::decr("count:coaches");
     }
+
+    public static function cacheCoaches($seconds)
+    {
+        if($value = Redis::get('coaches:cache')) {
+            return json_decode($value);
+        }
+
+        $value = self::getAll();
+
+        Redis::setex('coaches:cache', $seconds, json_encode($value));
+
+        return $value;
+    }
 }
