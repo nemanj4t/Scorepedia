@@ -9,6 +9,7 @@ use App\Player;
 use App\Team;
 use App\Coach;
 use Illuminate\Session;
+use Illuminate\Support\Facades\Redis;
 class SearchController extends Controller
 {
     //
@@ -22,6 +23,12 @@ class SearchController extends Controller
         $searchString = strtolower($searchString);
         $searchString = str_replace("'", "", $searchString);
         $searchString = str_replace('"', "", $searchString);
+
+        if (Redis::zscore('search', $searchString) == null)
+            Redis::zadd('search', 1, $searchString);
+        else
+            Redis::zincrby('search', 1, $searchString);
+
         $result = Cypher::run("OPTIONAL MATCH (p:Player) WHERE toLower(p.name) CONTAINS trim('".$searchString."')
                                OPTIONAL MATCH (t:Team) WHERE toLower(t.name) CONTAINS trim('".$searchString."')
                                OPTIONAL MATCH (c:Coach) WHERE toLower(c.name) CONTAINS trim('".$searchString."')
@@ -78,6 +85,7 @@ class SearchController extends Controller
                 }
             }
         }
-        return view("search.index", compact('players', 'teams', 'coaches'));
+        $mostPopularSearches = Redis::zrevrange('search', 0, 10);
+        return view("search.index", compact('players', 'teams', 'coaches', 'mostPopularSearches'));
     }
 }
