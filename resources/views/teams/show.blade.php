@@ -230,6 +230,8 @@
                 @endif
                 </div>
             </div>
+        {{--Preporuceni artikli za tim--}}
+        @include('articles/recommend')
         </div>
     </div>
     <br>

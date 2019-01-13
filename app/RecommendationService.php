@@ -29,8 +29,8 @@ class RecommendationService
     {
         $now =  \Carbon\Carbon::now()->format('Y-m-d');
         $result = Cypher::Run("MATCH (t:Team)-[:TAGGED_TEAM]-(a:Article) WHERE ID(t)=$id return a UNION 
-            MATCH (t:Team)-[:PLAYS]-(p:Player)-[t:TAGGED_PLAYER]-(a:Article) WHERE ID(t)=$id return a UNION 
-            MATCH (t:Team)-[r1:TEAM_COACH]-(c:Coach)-[:TAGGED_COACH]-(a:Article) WHERE WHERE ID(t)=$id AND r1.coached_until >= '$now' return a");
+            MATCH (t:Team)-[:PLAYS]-(p:Player)-[:TAGGED_PLAYER]-(a:Article) WHERE ID(t)=$id return a UNION 
+            MATCH (t:Team)-[r1:TEAM_COACH]-(:Coach)-[:TAGGED_COACH]-(a:Article) WHERE ID(t)=$id AND r1.coached_until >= '$now' return a");
 
         return self::fromRecordsToArticles($result->getRecords());
     }

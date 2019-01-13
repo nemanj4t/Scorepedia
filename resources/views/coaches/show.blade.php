@@ -115,10 +115,11 @@
                         </div>
                     </div>
                 </div>
+                {{--Preporuceni artikli za trenera--}}
+                @include('articles/recommend')
             </div>
-            {{--Sidebar za preporuke igraca--}}
+            {{--Sidebar za preporuke trenera--}}
             @include('layouts/sidebar')
         </div>
     </div>
-
 @endsection
