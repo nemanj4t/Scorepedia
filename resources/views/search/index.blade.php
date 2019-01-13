@@ -42,16 +42,17 @@
                                             <th>Status</th>
                                         </tr>
                                         </thead>
+                                        <tbody>
+                                            @foreach ($players as $player)
+                                                <tr class="ok">
+                                                    <td class="avatar"><img id="img" class="avatar" src={{$player->image}}></td>
+                                                    <td><a href="/players/{{$player->id}}">{{$player->name}}</a></td>
+                                                    <td>{{$player->height}}m</td>
+                                                    <td><a href="/players">Player</a></td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
                                     @endif
-                                    <tbody>
-                                    @foreach ($players as $player)
-                                        <tr class="ok">
-                                            <td class="avatar"><img id="img" class="avatar" src={{$player->image}}></td>
-                                            <td><a href="/players/{{$player->id}}">{{$player->name}}</a></td>
-                                            <td>{{$player->height}}m</td>
-                                            <td><a href="/players">Player</a></td>
-                                        </tr>
-                                    @endforeach
                                     @if(!empty($teams))
                                         <thead class="thead-dark">
                                         <tr>
@@ -61,15 +62,17 @@
                                             <th>Status</th>
                                         </tr>
                                         </thead>
+                                        <tbody>
+                                        @foreach ($teams as $team )
+                                            <tr class="ok">
+                                                <td class="avatar"><img id="img" src={{$team->image}}></td>
+                                                <td><a href="/teams/{{$team->id}}">{{$team->name}}</a></td>
+                                                <td>{{$team->short_name}}</td>
+                                                <td><a href="/teams">Team</a></td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
                                     @endif
-                                    @foreach ($teams as $team )
-                                        <tr class="ok">
-                                            <td class="avatar"><img id="img" src={{$team->image}}></td>
-                                            <td><a href="/teams/{{$team->id}}">{{$team->name}}</a></td>
-                                            <td>{{$team->short_name}}</td>
-                                            <td><a href="/teams">Team</a></td>
-                                        </tr>
-                                    @endforeach
                                     @if(!empty($coaches))
                                         <thead class="thead-dark">
                                         <tr>
@@ -79,16 +82,17 @@
                                             <th>Status</th>
                                         </tr>
                                         </thead>
+                                        <tbody>
+                                        @foreach ($coaches as $coach)
+                                            <tr class="ok">
+                                                <td class="avatar"><img id="img" class="avatar" src={{$coach->image}}></td>
+                                                <td><a href="/coaches/{{$coach->id}}">{{$coach->name}}</a></td>
+                                                <td>{{$coach->city}}</td>
+                                                <td><a href="/coaches">Coach</a></td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
                                     @endif
-                                    @foreach ($coaches as $coach)
-                                        <tr class="ok">
-                                            <td class="avatar"><img id="img" class="avatar" src={{$coach->image}}></td>
-                                            <td><a href="/coaches/{{$coach->id}}">{{$coach->name}}</a></td>
-                                            <td>{{$coach->city}}</td>
-                                            <td><a href="/coaches">Coach</a></td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
                                 </table>
                             </div><!-- END id="list" -->
                         </div><!-- END tab-content -->

@@ -87,13 +87,14 @@ class TeamController extends Controller
         foreach ($team->current_players as $player)
             $player->player->statistics = PlayerStatistic::getById($player->player->id);
 
+
         foreach ($best_players as $key => $stat) {
             foreach ($team->current_players as $player) {
-                if ($stat == null) {
+                if ($best_players[$key] === null) {
                     $best_players[$key] = $player;
                 }
                 else {
-                    if ($best_players[$key] < $player->player->statistics[$key])
+                    if ($player->player->statistics[$key] != null and intval($best_players[$key]->player->statistics[$key]) < intval($player->player->statistics[$key]))
                         $best_players[$key] = $player;
                 }
             }
