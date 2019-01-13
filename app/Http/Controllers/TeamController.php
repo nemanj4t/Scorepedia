@@ -68,7 +68,7 @@ class TeamController extends Controller
 
         Team::save($request);
 
-        return redirect('/apanel/teams');
+        return redirect('/apanel/teams')->with('success', 'Team saved!');
     }
 
     /**
@@ -141,7 +141,7 @@ class TeamController extends Controller
 
         Team::update($id, $request);
 
-        return redirect("/teams/" . $id);
+        return redirect("/teams/" . $id)->with('success', 'Saved!');
 
     }
 
@@ -156,8 +156,6 @@ class TeamController extends Controller
         // Brise cvor i sve njegove veze
         Team::delete($id);
 
-        // Fali brisanje tog cvora iz redisa
-
-        return redirect('/apanel/teams');
+        return redirect('/apanel/teams')->with('danger', 'Team deleted!');
     }
 }

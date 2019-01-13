@@ -31,7 +31,7 @@ class TeamCoachController extends Controller
             $team_coach->save();
         }
 
-        return redirect('/coaches/' . $id);
+        return redirect('/coaches/' . $id)->with('success', 'Added successfully');
     }
 
     public function update($id, Request $request)
@@ -43,7 +43,7 @@ class TeamCoachController extends Controller
         $team_coach->coached_until = $request['coached_until'];
         $team_coach->update();
 
-        return redirect('/coaches/' . $id);
+        return redirect('/coaches/' . $id)->with('success', 'Updated');
     }
 
     public function destroy($id, Request $request)
@@ -51,6 +51,6 @@ class TeamCoachController extends Controller
 
         Team_Coach::delete($request['team_id'], $id);
 
-        return redirect('/coaches/' . $id);
+        return redirect('/coaches/' . $id)->with('danger', 'Deleted!');
     }
 }

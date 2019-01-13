@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Player;
 use App\Player_Team;
+use App\RecommendationService;
 use GraphAware\Neo4j\Client\Formatter\Result;
 use Illuminate\Http\Request;
 use Ahsan\Neo4j\Facade\Cypher;
@@ -60,7 +61,7 @@ class PlayerController extends Controller
             }
         }
 
-        return redirect('/apanel/players');
+        return redirect('/apanel/players')->with('success', 'Player saved');
     }
 
     /**
@@ -77,24 +78,13 @@ class PlayerController extends Controller
         /** @var Player_Team[] $plays_for_teams */
         $plays_for_teams = Player_Team::getByPlayerId($id);
 
-        // Ovo je bolje kao poseban servis za recommendation da se napravi
-        // i da ima par razlicitih funkcija na osnovu kojih ce da preporucuje
         $recPlayers = [];
-        if (!empty($plays_for_teams)) {
-            // Vraca igrace koji su igrali na toj poziciji
-
-            /** @var Result $recommendedResult */
-            $recommendedResult = Cypher::run("MATCH (n:Player)-[r:PLAYS|PLAYED]-() 
-                WHERE r.position = '" . $plays_for_teams[0]->position .
-                "' AND ID(n) <> " . $player->id . " return distinct n LIMIT 5");
-
-            foreach ($recommendedResult->getRecords() as $record) {
-                $node = $record->value('n');
-                $recPlayer = Player::buildFromNode($node);
-
-                array_push($recPlayers, $recPlayer);
-            }
+        if(!empty($plays_for_teams)) {
+            $recPlayers = RecommendationService::recommendSimilarPlayers(
+                $player->id,
+                $plays_for_teams[0]->position);
         }
+
         return view('players.show', compact('player', 'plays_for_teams', 'recPlayers'));
     }
 
@@ -134,7 +124,7 @@ class PlayerController extends Controller
             city: '$request[city]',
             image: '$request[image]'}");
 
-        return redirect('/players');
+        return redirect('/players')->with('success', 'Saved');
     }
 
     /**
@@ -147,6 +137,6 @@ class PlayerController extends Controller
     {
         Player::deletePlayer($id);
 
-        return redirect('/apanel/players');
+        return redirect('/apanel/players')->with('danger', 'Player deleted!');
     }
 }

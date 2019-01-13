@@ -39,6 +39,10 @@ Vue.use(new VueSocketIO({connection: 'http://localhost:8890'}));
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+$("#message").ready(function(){
+    $("#message").fadeOut(3000);
+});
+
 (function ($) {
     $.fn.countTo = function (options) {
         options = options || {};

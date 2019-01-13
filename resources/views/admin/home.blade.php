@@ -68,14 +68,14 @@
             <div class="col">
                 <div class="counter">
                     <i class="far fa-newspaper fa-2x"></i>
-                    <h2 class="timer count-title count-number" data-to="1700" data-speed="1500"></h2>
+                    <h2 class="timer count-title count-number" data-to="{{$count_articles}}" data-speed="1500"></h2>
                     <p class="count-text ">Count Articles</p>
                 </div>
             </div>
             <div class="col">
                 <div class="counter">
                     <i class="fas fa-comments fa-2x"></i>
-                    <h2 class="timer count-title count-number" data-to="11900" data-speed="1500"></h2>
+                    <h2 class="timer count-title count-number" data-to="{{$count_comments}}" data-speed="1500"></h2>
                     <p class="count-text ">Count Comments</p>
                 </div>
             </div>

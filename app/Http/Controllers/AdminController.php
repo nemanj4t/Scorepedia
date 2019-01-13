@@ -30,9 +30,12 @@ class AdminController extends Controller
         $count_coaches = Redis::get('count:coaches');
         $count_teams = Redis::get('count:teams');
         $count_logins = Redis::get('count:logins');
+        $count_comments = Redis::get('count:comments');
+        $count_articles = Redis::get('count:articles');
 
         return view('admin.home', compact(
-            'count_visits', 'count_coaches', 'count_matches', 'count_players', 'count_teams', 'count_logins'));
+            'count_visits', 'count_coaches', 'count_matches', 'count_players',
+            'count_teams', 'count_logins', 'count_comments', 'count_articles'));
     }
     //Return page where renders MatchManager.vue
     public function matchManager($id)

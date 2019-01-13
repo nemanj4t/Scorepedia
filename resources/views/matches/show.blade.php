@@ -92,12 +92,23 @@
                         <div class="collapse" id="collapseExample">
                             <form action="/matches/{{$match->id}}/comments" method="post">
                                 @csrf
-                                <input type="text" name="name" placeholder="name" class="form-control form-group">
-                                <textarea name="content" placeholder="comment" class="form-control form-group" id="" cols="30" rows="4"></textarea>
+                                <input type="text" name="name" placeholder="name" class="form-control form-group" required>
+                                <textarea name="content" placeholder="comment" class="form-control form-group" id="" cols="30" rows="4" required></textarea>
                                 <button type="submit" class="btn btn-secondary btn-sm form-group">Post</button>
                             </form>
                             @foreach($comments as $comment)
                                 <div class="card card-body">
+                                    <div>
+                                        <small>{{ $comment->convertToDiffForHumans() }}</small>
+                                        @auth
+                                            <form class="float-right" action="/matches/{{$match->id}}/comments" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="_method" value="delete" />
+                                                <input type="hidden" name="id" value="{{$comment->id}}" />
+                                                <button type="submit" class="btn btn-danger btn-sm"><strong>x</strong></button>
+                                            </form>
+                                        @endauth
+                                    </div>
                                     <strong>{{$comment->publisher}}</strong>
                                     <p>{{$comment->content}}</p>
                                 </div>

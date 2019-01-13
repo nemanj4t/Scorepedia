@@ -204,7 +204,9 @@ class Match
             Redis::zincrby("road", -1, $winner->id);
 
         Redis::zincrby("streak", -1, $winner->id);
+
         Redis::zadd("streak", \Session::get('loserPreviousStreak:' . $match->id), $loser->id);
+
 
         Redis::hmset(
             "team:standings:{$winner->id}",

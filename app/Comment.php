@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 
@@ -23,6 +24,7 @@ class Comment
     public function save($id)
     {
         Redis::zadd('match:'.$id.':comments', $this->timestamp, $this->id);
+        Redis::incr('count:comments');
     }
 
     public static function getAllCommentsByMatchId($id)
@@ -38,5 +40,11 @@ class Comment
         }
 
         return $comments;
+    }
+
+    public function convertToDiffForHumans()
+    {
+        $time = strtotime($this->timestamp);
+        return Carbon::createFromTimestamp($time, 'Europe/Belgrade')->diffForHumans();
     }
 }

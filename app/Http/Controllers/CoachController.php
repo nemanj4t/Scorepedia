@@ -66,7 +66,7 @@ class CoachController extends Controller
                 $team_coach->save();
             }
         }
-        return redirect('/apanel/coaches');
+        return redirect('/apanel/coaches')->with('success', 'Coach saved!');
     }
 
     /**
@@ -130,7 +130,7 @@ class CoachController extends Controller
 
         Coach::update($id, $request);
 
-        return redirect("/coaches/" . $id);
+        return redirect("/coaches/" . $id)->with('success', 'Saved!');
     }
 
     /**
@@ -146,6 +146,6 @@ class CoachController extends Controller
 
         // Fali brisanje tog cvora iz redisa
 
-        return redirect('/apanel/coaches');
+        return redirect('/apanel/coaches')->with('danger', 'Coach deleted!');
     }
 }
