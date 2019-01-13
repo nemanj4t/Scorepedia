@@ -84,12 +84,12 @@ class MatchController extends Controller
         //can't pick a past date
         if(Carbon::now() > (new Carbon($request->date." ".$request->time)))
         {
-            return redirect('/matches/create');
+            return redirect('/matches/create')->with('danger', 'Please chose valid date!');
         }
 
         Match::saveMatch($request);
 
-        return redirect('/apanel/matches');
+        return redirect('/apanel/matches')->with('success', 'New match added successfully');
     }
 
     /**
@@ -144,6 +144,6 @@ class MatchController extends Controller
     {
         Match::deleteMatch($id);
 
-        return redirect('/apanel/matches');
+        return redirect('/apanel/matches')->with('danger', 'Match deleted!');
     }
 }

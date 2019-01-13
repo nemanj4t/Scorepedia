@@ -61,7 +61,7 @@ class PlayerController extends Controller
             }
         }
 
-        return redirect('/apanel/players');
+        return redirect('/apanel/players')->with('success', 'Player saved');
     }
 
     /**
@@ -124,7 +124,7 @@ class PlayerController extends Controller
             city: '$request[city]',
             image: '$request[image]'}");
 
-        return redirect('/players');
+        return redirect('/players')->with('success', 'Saved');
     }
 
     /**
@@ -137,6 +137,6 @@ class PlayerController extends Controller
     {
         Player::deletePlayer($id);
 
-        return redirect('/apanel/players');
+        return redirect('/apanel/players')->with('danger', 'Player deleted!');
     }
 }
