@@ -27,7 +27,7 @@
             <h3>No results found</h3>
         @endif
         <div class="row">
-            <div id="user" class="col-md-12" >
+            <div id="user" class="col-md-8" >
                 <div class="panel panel-primary panel-table animated slideInDown">
                     <div class="panel-body">
                         <div class="tab-content">
@@ -98,6 +98,21 @@
                         </div><!-- END tab-content -->
                     </div>
                 </div><!--END panel-table-->
+            </div>
+            <div class="col-md-4">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-header">
+                        <i class="fa fa-search"></i>
+                        Most popular searches
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @foreach($mostPopularSearches as $search)
+                            @if ($search != '')
+                                <li class="list-group-item"><a href="/search?q={{$search}}">{{$search}}</a></li>
+                            @endif
+                        @endforeach
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
