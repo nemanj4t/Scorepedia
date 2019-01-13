@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Coach;
+use App\RecommendationService;
 use App\Team;
 use App\Team_Coach;
 use GraphAware\Neo4j\Client\Formatter\Result;
@@ -99,7 +100,9 @@ class CoachController extends Controller
             }
         }
 
-        return view('coaches.show', compact('coach', 'recPlayers', 'coached_teams'));
+        $articles = RecommendationService::recommendArticlesForCoach($id);
+
+        return view('coaches.show', compact('coach', 'recPlayers', 'coached_teams', 'articles'));
     }
 
 

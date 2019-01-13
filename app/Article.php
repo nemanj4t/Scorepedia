@@ -41,6 +41,7 @@ class Article
     {
         $result = Cypher::Run("MATCH (a:Article) return a");
         $articles = [];
+
         foreach($result->getRecords() as $record) {
             $articleNode = $record->value('a');
             $article = self::buildFromNode($articleNode);
