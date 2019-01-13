@@ -199,12 +199,12 @@ class Match
 
         Redis::zincrby("streak", -1, $winner->id);
         Redis::zadd("streak", $losersPreviousStreak, $loser->id);
-
+        dd(Redis::zscore('points', $winner->id));
         Redis::hmset(
             "team:standings:{$winner->id}",
             "points", Redis::zscore("points", $winner->id),
             "wins", $winsWinner,
-            "losses", $lossesLoser,
+            "losses", $lossesWinner,
             "percentage", Redis::zscore("percentage", $winner->id),
             "home", Redis::zscore("home", $winner->id),
             "road", Redis::zscore("road", $winner->id),
