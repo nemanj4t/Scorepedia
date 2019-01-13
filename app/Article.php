@@ -75,7 +75,6 @@ class Article
     public static function saveArticle($request)
     {
         $timestamp = Carbon::now('Europe/Belgrade')->format('d-m-y h:i:s');
-        //dd($timestamp);
 
         try {
             $result = Cypher::Run("CREATE (a:Article {content: '$request[content]',
