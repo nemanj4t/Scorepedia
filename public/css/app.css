@@ -10770,3 +10770,7 @@ a.text-dark:focus {
   -webkit-box-orient: vertical;
 }
 
+#coach-img {
+  max-width: 200px;
+}
+
