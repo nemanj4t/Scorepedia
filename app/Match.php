@@ -8,6 +8,7 @@ use GraphAware\Neo4j\Client\Formatter\Type\Node;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Carbon\Carbon;
+use Illuminate\Session;
 
 class Match
 {
@@ -133,19 +134,20 @@ class Match
      * @param Team $winner
      * @param  Team $loser
      * @param Team_Match $team_match
+     * @param Match $match
      */
-    public static function assignMatchResult($winner, $loser, $team_match)
+    public static function assignMatchResult($winner, $loser, $team_match, $match)
     {
         Redis::zincrby("points", 3, $winner->id);
         Redis::zincrby("wins", 1, $winner->id);
         Redis::zincrby("losses", 1, $loser->id);
 
-        $winsWinner = Redis::zscore("wins", $winner->id);
-        $lossesWinner = Redis::zscore("losses", $winner->id);
+        $winsWinner = intval(Redis::zscore("wins", $winner->id));
+        $lossesWinner = intval(Redis::zscore("losses", $winner->id));
         Redis::zadd("percentage", round((100 * $winsWinner) / ($winsWinner + $lossesWinner)), $winner->id);
 
-        $winsLoser = Redis::zscore("wins", $loser->id);
-        $lossesLoser = Redis::zscore("losses", $loser->id);
+        $winsLoser = intval(Redis::zscore("wins", $loser->id));
+        $lossesLoser = intval(Redis::zscore("losses", $loser->id));
         Redis::zadd("percentage", round((100*$winsLoser)/($winsLoser + $lossesLoser)), $loser->id);
 
         if ($winner->id == $team_match->home->id)
@@ -154,45 +156,46 @@ class Match
             Redis::zincrby("road", 1, $winner->id);
 
         Redis::zincrby("streak", 1, $winner->id);
+        \Session::put('loserPreviousStreak:' . $match->id, intval(Redis::zscore('streak', $loser->id)));
         Redis::zadd("streak", 0, $loser->id);
 
 
         Redis::hmset(
             "team:standings:{$winner->id}",
-            "points", Redis::zscore("points", $winner->id),
+            "points", intval(Redis::zscore("points", $winner->id)),
             "wins", $winsWinner,
             "losses", $lossesWinner,
-            "percentage", Redis::zscore("percentage", $winner->id),
-            "home", Redis::zscore("home", $winner->id),
-            "road", Redis::zscore("road", $winner->id),
-            "streak", Redis::zscore("streak", $winner->id));
+            "percentage", intval(Redis::zscore("percentage", $winner->id)),
+            "home", intval(Redis::zscore("home", $winner->id)),
+            "road", intval(Redis::zscore("road", $winner->id)),
+            "streak", intval(Redis::zscore("streak", $winner->id)));
 
         Redis::hmset(
             "team:standings:{$loser->id}",
-            "losses", Redis::zscore("losses", $loser->id),
-            "percentage", Redis::zscore("percentage", $loser->id),
-            "streak", Redis::zadd("streak", 0, $loser->id));
+            "losses", intval(Redis::zscore("losses", $loser->id)),
+            "percentage", intval(Redis::zscore("percentage", $loser->id)),
+            "streak", Redis::zscore("streak", $loser->id));
     }
 
     /**
      * @param Team $winner
      * @param Team $loser
      * @param Team_Match $team_match
-     * @param $losersPreviousStreak
+     * @param Match $match
      */
-    public static function annulMatchResult($winner, $loser, $team_match, $losersPreviousStreak)
+    public static function annulMatchResult($winner, $loser, $team_match, $match)
     {
 
         Redis::zincrby("points", -3, $winner->id);
         Redis::zincrby("wins", -1, $winner->id);
         Redis::zincrby("losses", -1, $loser->id);
 
-        $winsWinner = Redis::zscore("wins", $winner->id);
-        $lossesWinner = Redis::zscore("losses", $winner->id);
+        $winsWinner = intval(Redis::zscore("wins", $winner->id));
+        $lossesWinner = intval(Redis::zscore("losses", $winner->id));
         Redis::zadd("percentage", round((100 * $winsWinner) / ($winsWinner + $lossesWinner)), $winner->id);
 
-        $winsLoser = Redis::zscore("wins", $loser->id);
-        $lossesLoser = Redis::zscore("losses", $loser->id);
+        $winsLoser = intval(Redis::zscore("wins", $loser->id));
+        $lossesLoser = intval(Redis::zscore("losses", $loser->id));
         Redis::zadd("percentage", round((100*$winsLoser)/($winsLoser + $lossesLoser)), $loser->id);
 
         if ($winner->id == $team_match->home->id)
@@ -201,23 +204,23 @@ class Match
             Redis::zincrby("road", -1, $winner->id);
 
         Redis::zincrby("streak", -1, $winner->id);
-        Redis::zadd("streak", $losersPreviousStreak, $loser->id);
+        Redis::zadd("streak", \Session::get('loserPreviousStreak:' . $match->id), $loser->id);
 
         Redis::hmset(
             "team:standings:{$winner->id}",
-            "points", Redis::zscore("points", $winner->id),
+            "points", intval(Redis::zscore("points", $winner->id)),
             "wins", $winsWinner,
             "losses", $lossesWinner,
-            "percentage", Redis::zscore("percentage", $winner->id),
-            "home", Redis::zscore("home", $winner->id),
-            "road", Redis::zscore("road", $winner->id),
-            "streak", Redis::zscore("streak", $winner->id));
+            "percentage", intval(Redis::zscore("percentage", $winner->id)),
+            "home", intval(Redis::zscore("home", $winner->id)),
+            "road", intval(Redis::zscore("road", $winner->id)),
+            "streak", intval(Redis::zscore("streak", $winner->id)));
 
         Redis::hmset(
             "team:standings:{$loser->id}",
-            "losses", Redis::zscore("losses", $loser->id),
-            "percentage", Redis::zscore("percentage", $loser->id),
-            "streak", Redis::zscore("streak", $loser->id));
+            "losses", intval(Redis::zscore("losses", $loser->id)),
+            "percentage", intval(Redis::zscore("percentage", $loser->id)),
+            "streak", intval(Redis::zscore("streak", $loser->id)));
 
     }
 
@@ -235,12 +238,76 @@ class Match
                  SET m.isFinished = true");
 
             if ($team_match->home_statistic->points > $team_match->guest_statistic->points) {
-                self::$loserPreviousStreak = Redis::zscore("streak", $team_match->guest->id);
-                self::assignMatchResult($team_match->home, $team_match->guest, $team_match);
+                Redis::zincrby("points", 3, $team_match->home->id);
+                Redis::zincrby("wins", 1, $team_match->home->id);
+                Redis::zincrby("losses", 1, $team_match->guest->id);
+
+                $winsWinner = intval(Redis::zscore("wins", $team_match->home->id));
+                $lossesWinner = intval(Redis::zscore("losses", $team_match->home->id));
+                Redis::zadd("percentage", round((100 * $winsWinner) / ($winsWinner + $lossesWinner)), $team_match->home->id);
+
+                $winsLoser = intval(Redis::zscore("wins", $team_match->guest->id));
+                $lossesLoser = intval(Redis::zscore("losses", $team_match->guest->id));
+                Redis::zadd("percentage", round((100*$winsLoser)/($winsLoser + $lossesLoser)), $team_match->guest->id);
+
+                Redis::zincrby("home", 1, $team_match->home->id);
+
+                Redis::zincrby("streak", 1, $team_match->home->id);
+                \Session::put('loserPreviousStreak:' . $id, intval(Redis::zscore('streak', $team_match->guest->id)));
+                Redis::zadd("streak", 0, $team_match->guest->id);
+
+
+                Redis::hmset(
+                    "team:standings:{$team_match->home->id}",
+                    "points", intval(Redis::zscore("points", $team_match->home->id)),
+                    "wins", $winsWinner,
+                    "losses", $lossesWinner,
+                    "percentage", intval(Redis::zscore("percentage", $team_match->home->id)),
+                    "home", intval(Redis::zscore("home", $team_match->home->id)),
+                    "road", intval(Redis::zscore("road", $team_match->home->id)),
+                    "streak", intval(Redis::zscore("streak", $team_match->home->id)));
+
+                Redis::hmset(
+                    "team:standings:{$team_match->guest->id}",
+                    "losses", intval(Redis::zscore("losses", $team_match->guest->id)),
+                    "percentage", intval(Redis::zscore("percentage", $team_match->guest->id)),
+                    "streak", Redis::zscore("streak", $team_match->guest->id));
             }
             else {
-                self::$loserPreviousStreak = Redis::zscore("streak", $team_match->home->id);
-                self::assignMatchResult($team_match->guest, $team_match->home, $team_match);
+                Redis::zincrby("points", 3, $team_match->guest->id);
+                Redis::zincrby("wins", 1, $team_match->guest->id);
+                Redis::zincrby("losses", 1, $team_match->home->id);
+
+                $winsWinner = intval(Redis::zscore("wins", $team_match->guest->id));
+                $lossesWinner = intval(Redis::zscore("losses", $team_match->guest->id));
+                Redis::zadd("percentage", round((100 * $winsWinner) / ($winsWinner + $lossesWinner)), $team_match->guest->id);
+
+                $winsLoser = intval(Redis::zscore("wins", $team_match->home->id));
+                $lossesLoser = intval(Redis::zscore("losses", $team_match->home->id));
+                Redis::zadd("percentage", round((100*$winsLoser)/($winsLoser + $lossesLoser)), $team_match->home->id);
+
+                Redis::zincrby("road", 1, $team_match->guest->id);
+
+                Redis::zincrby("streak", 1, $team_match->guest->id);
+                \Session::put('loserPreviousStreak:' . $id, intval(Redis::zscore('streak', $team_match->home->id)));
+                Redis::zadd("streak", 0, $team_match->home->id);
+
+
+                Redis::hmset(
+                    "team:standings:{$team_match->guest->id}",
+                    "points", intval(Redis::zscore("points", $team_match->guest->id)),
+                    "wins", $winsWinner,
+                    "losses", $lossesWinner,
+                    "percentage", intval(Redis::zscore("percentage", $team_match->guest->id)),
+                    "home", intval(Redis::zscore("home", $team_match->guest->id)),
+                    "road", intval(Redis::zscore("road", $team_match->guest->id)),
+                    "streak", intval(Redis::zscore("streak", $team_match->guest->id)));
+
+                Redis::hmset(
+                    "team:standings:{$team_match->home->id}",
+                    "losses", intval(Redis::zscore("losses", $team_match->home->id)),
+                    "percentage", intval(Redis::zscore("percentage", $team_match->home->id)),
+                    "streak", Redis::zscore("streak", $team_match->home->id));
             }
 
         }
@@ -251,9 +318,76 @@ class Match
                  SET m.isFinished = false");
 
             if ($team_match->home_statistic->points > $team_match->guest_statistic->points)
-                self::annulMatchResult($team_match->home, $team_match->guest, $team_match, self::$loserPreviousStreak);
+            {
+                Redis::zincrby("points", -3, $team_match->home->id);
+                Redis::zincrby("wins", -1, $team_match->home->id);
+                Redis::zincrby("losses", -1, $team_match->guest->id);
+
+                $winsWinner = intval(Redis::zscore("wins", $team_match->home->id));
+                $lossesWinner = intval(Redis::zscore("losses", $team_match->home->id));
+                Redis::zadd("percentage", round((100 * $winsWinner) / ($winsWinner + $lossesWinner)), $team_match->home->id);
+
+                $winsLoser = intval(Redis::zscore("wins", $team_match->guest->id));
+                $lossesLoser = intval(Redis::zscore("losses", $team_match->guest->id));
+                Redis::zadd("percentage", round((100*$winsLoser)/($winsLoser + $lossesLoser)), $team_match->guest->id);
+
+                Redis::zincrby("home", -1, $team_match->home->id);
+
+                Redis::zincrby("streak", -1, $team_match->home->id);
+                Redis::zadd("streak", \Session::get('loserPreviousStreak:' . $id), $team_match->guest->id);
+
+                Redis::hmset(
+                    "team:standings:{$team_match->home->id}",
+                    "points", intval(Redis::zscore("points", $team_match->home->id)),
+                    "wins", $winsWinner,
+                    "losses", $lossesWinner,
+                    "percentage", intval(Redis::zscore("percentage", $team_match->home->id)),
+                    "home", intval(Redis::zscore("home", $team_match->home->id)),
+                    "road", intval(Redis::zscore("road", $team_match->home->id)),
+                    "streak", intval(Redis::zscore("streak", $team_match->home->id)));
+
+                Redis::hmset(
+                    "team:standings:{$team_match->guest->id}",
+                    "losses", intval(Redis::zscore("losses", $team_match->guest->id)),
+                    "percentage", intval(Redis::zscore("percentage", $team_match->guest->id)),
+                    "streak", intval(Redis::zscore("streak", $team_match->guest->id)));
+            }
+
             else
-                self::annulMatchResult($team_match->guest, $team_match->home, $team_match, self::$loserPreviousStreak);
+            {
+                Redis::zincrby("points", -3, $team_match->guest->id);
+                Redis::zincrby("wins", -1, $team_match->guest->id);
+                Redis::zincrby("losses", -1, $team_match->home->id);
+
+                $winsWinner = intval(Redis::zscore("wins", $team_match->guest->id));
+                $lossesWinner = intval(Redis::zscore("losses", $team_match->guest->id));
+                Redis::zadd("percentage", round((100 * $winsWinner) / ($winsWinner + $lossesWinner)), $team_match->guest->id);
+
+                $winsLoser = intval(Redis::zscore("wins", $team_match->home->id));
+                $lossesLoser = intval(Redis::zscore("losses", $team_match->home->id));
+                Redis::zadd("percentage", round((100*$winsLoser)/($winsLoser + $lossesLoser)), $team_match->home->id);
+
+                Redis::zincrby("road", -1, $team_match->guest->id);
+
+                Redis::zincrby("streak", -1, $team_match->guest->id);
+                Redis::zadd("streak", \Session::get('loserPreviousStreak:' . $id), $team_match->home->id);
+
+                Redis::hmset(
+                    "team:standings:{$team_match->guest->id}",
+                    "points", intval(Redis::zscore("points", $team_match->guest->id)),
+                    "wins", $winsWinner,
+                    "losses", $lossesWinner,
+                    "percentage", intval(Redis::zscore("percentage", $team_match->guest->id)),
+                    "home", intval(Redis::zscore("home", $team_match->guest->id)),
+                    "road", intval(Redis::zscore("road", $team_match->guest->id)),
+                    "streak", intval(Redis::zscore("streak", $team_match->guest->id)));
+
+                Redis::hmset(
+                    "team:standings:{$team_match->home->id}",
+                    "losses", intval(Redis::zscore("losses", $team_match->home->id)),
+                    "percentage", intval(Redis::zscore("percentage", $team_match->home->id)),
+                    "streak", intval(Redis::zscore("streak", $team_match->home->id)));
+            }
 
         }
     }

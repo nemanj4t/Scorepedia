@@ -234,7 +234,6 @@ class Team
     public static function update($id, $request)
     {
         $team = Team::getById($id);
-
         Cypher::run("MATCH (t:Team) WHERE ID(t) = $id 
                      SET t.name = '$request->name', 
                          t.short_name = '$request->short_name', 
@@ -246,10 +245,10 @@ class Team
         if ($request['coach'] != null) {
             $team_coach = Team_Coach::createFromRequest($request, $id);
             if ($team->current_coach != null) {
-                if ($team->current_coach->coach_id == $request->coach) {
+                if ($team->current_coach->id == $request->coach) {
                     $team_coach->update();
                 } else {
-                    Team_Coach::delete($id, $team->current_coach->coach_id);
+                    Team_Coach::delete($id, $team->current_coach->id);
                     $team_coach->save();
                 }
             }
@@ -259,7 +258,7 @@ class Team
         }
         else {
             if ($team->current_coach != null)
-                Team_Coach::delete($id, $team->current_coach->team_id);
+                Team_Coach::delete($id, $team->current_coach->id);
         }
 
     }

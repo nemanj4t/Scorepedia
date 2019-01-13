@@ -83,6 +83,7 @@ class CoachController extends Controller
         $recPlayers = [];
         // Vraca trenere koji su nekada trenirali taj tim
         $current_team = Team_Coach::getCurrentForCoachId($coach->id);
+        $coach->current_team = $current_team;
 
         if ($current_team) {
             $current_team_id = $current_team->team_id;

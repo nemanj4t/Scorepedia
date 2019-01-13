@@ -86,6 +86,7 @@
                                                                 <thead>
                                                                 <tr>
                                                                     <th class="avatar">Image</th>
+                                                                    <th>Name</th>
                                                                     <th>Position</th>
                                                                     <th>Number</th>
                                                                     <th>Played since</th>
@@ -94,11 +95,14 @@
                                                                 </thead>
                                                                 <tbody>
                                                                 @foreach($team->current_players as $current_player)
-                                                                    <td><img id="img" src="{{$current_player->player->image}}"></td>
-                                                                    <td>{{$current_player->position}}</td>
-                                                                    <td>{{$current_player->number}}</td>
-                                                                    <td>{{$current_player->played_since}}</td>
-                                                                    <td>Present</td>
+                                                                    <tr>
+                                                                        <td><img id="img" src="{{$current_player->player->image}}"></td>
+                                                                        <td><a href="/players/{{$current_player->player->id}}">{{$current_player->player->name}}</a></td>
+                                                                        <td>{{$current_player->position}}</td>
+                                                                        <td>{{$current_player->number}}</td>
+                                                                        <td>{{$current_player->played_since}}</td>
+                                                                        <td>Present</td>
+                                                                    </tr>
                                                                 @endforeach
                                                                 </tbody>
                                                             </table>
@@ -123,6 +127,7 @@
                                                                 <thead>
                                                                 <tr>
                                                                     <th class="avatar">Image</th>
+                                                                    <th>Name</th>
                                                                     <th>Position</th>
                                                                     <th>Number</th>
                                                                     <th>Played since</th>
@@ -131,15 +136,18 @@
                                                                 </thead>
                                                                 <tbody>
                                                                 @foreach($team->all_players as $player)
-                                                                    <td><img id="img" src="{{$player['player']['image']}}"></td>
-                                                                    <td>{{$player['plays_for']['position']}}</td>
-                                                                    <td>{{$player['plays_for']['number']}}</td>
-                                                                    <td>{{$player['plays_for']['played_since']}}</td>
-                                                                    @if (array_key_exists('played_until', $player['plays_for']))
+                                                                    <tr>
+                                                                        <td><img id="img" src="{{$player['player']['image']}}"></td>
+                                                                        <td><a href="/players/{{$player['player']['id']}}">{{$player['player']['name']}}</a></td>
+                                                                        <td>{{$player['plays_for']['position']}}</td>
+                                                                        <td>{{$player['plays_for']['number']}}</td>
                                                                         <td>{{$player['plays_for']['played_since']}}</td>
+                                                                        @if (array_key_exists('played_until', $player['plays_for']))
+                                                                            <td>{{$player['plays_for']['played_since']}}</td>
                                                                         @else
-                                                                        <td>Present</td>
-                                                                    @endif
+                                                                            <td>Present</td>
+                                                                        @endif
+                                                                    </tr>
                                                                 @endforeach
                                                                 </tbody>
                                                             </table>
