@@ -14388,6 +14388,10 @@ Vue.use(new __WEBPACK_IMPORTED_MODULE_0_vue_socket_io___default.a({ connection: 
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+$("#message").ready(function () {
+    $("#message").fadeOut(3000);
+});
+
 (function ($) {
     $.fn.countTo = function (options) {
         options = options || {};
@@ -50137,9 +50141,9 @@ var render = function() {
                           _vm._v(" "),
                           _c("div", { staticClass: "col-md-4 text-center" }, [
                             _vm._v(
-                              "\n                                    " +
+                              "\r\n                                    " +
                                 _vm._s(match.carbon) +
-                                "\n                                "
+                                "\r\n                                "
                             )
                           ]),
                           _vm._v(" "),
@@ -50243,9 +50247,9 @@ var render = function() {
                           _vm._v(" "),
                           _c("div", { staticClass: "col-md-4 text-center" }, [
                             _vm._v(
-                              "\n                                    " +
+                              "\r\n                                    " +
                                 _vm._s(match.carbon) +
-                                "\n                                "
+                                "\r\n                                "
                             )
                           ]),
                           _vm._v(" "),
@@ -50349,9 +50353,9 @@ var render = function() {
                           _vm._v(" "),
                           _c("div", { staticClass: "col-md-4 text-center" }, [
                             _vm._v(
-                              "\n                                    " +
+                              "\r\n                                    " +
                                 _vm._s(match.carbon) +
-                                "\n                                "
+                                "\r\n                                "
                             )
                           ]),
                           _vm._v(" "),

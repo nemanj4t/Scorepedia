@@ -55,7 +55,7 @@ class PlaysForTeamController extends Controller
             $player_team->save();
         }
 
-        return redirect('/players/' . $id);
+        return redirect('/players/' . $id)->with('success', 'Added Successfully');
     }
 
     public function update($id, Request $request)
@@ -79,13 +79,13 @@ class PlaysForTeamController extends Controller
 
         $player_team->update();
 
-        return redirect('/players/' . $id);
+        return redirect('/players/' . $id)->with('success', 'Updated');
     }
 
     public function destroy($id, Request $request)
     {
         Player_Team::delete($id, $request['team_id']);
 
-        return redirect('/players/' . $id);
+        return redirect('/players/' . $id)->with('danger', 'Deleted!');
     }
 }
