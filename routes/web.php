@@ -28,6 +28,7 @@ Route::get('/apanel/matches', "AdminController@adminMatches");
 Route::get('/apanel/players', "AdminController@adminPlayers");
 Route::get('/apanel/teams', "AdminController@adminTeams");
 Route::get('/apanel/coaches', "AdminController@adminCoaches");
+Route::get('/apanel/articles', "AdminController@adminArticles");
 Route::post('/admin/matches/data/{match}', "AdminController@postAddition");
 
 
@@ -103,11 +104,11 @@ Route::post('/matches/{match}/comments', "CommentController@store")->middleware(
 Route::delete('/matches/{match}/comments', "CommentController@destroy")->middleware('auth');   // usnimanje novog komentara (mozda ne treba kontroler)
 
 // ArticleController
-Route::get('/articles', "ArticleController@index");
-Route::get('/articles/{article}', "ArticleController@show");
+//Route::get('/articles', "ArticleController@index");
 Route::get('/articles/create', "ArticleController@create")->middleware('auth');
+Route::get('/articles/{article}', "ArticleController@show");
 Route::post('/articles', "ArticleController@store")->middleware('auth');
-Route::delete('/articles', "ArticleController@destroy")->middleware('auth');
+Route::delete('/articles/{article}', "ArticleController@destroy")->middleware('auth');
 
 //SearchController
 Route::get('/search', "SearchController@index");

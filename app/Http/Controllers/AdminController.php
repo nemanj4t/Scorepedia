@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Redis;
 use App\Match;
 use App\PlayerStatistic;
 use App\Player;
+use App\Article;
 
 class AdminController extends Controller
 {
@@ -32,6 +33,7 @@ class AdminController extends Controller
         $count_logins = Redis::get('count:logins');
         $count_comments = Redis::get('count:comments');
         $count_articles = Redis::get('count:articles');
+
 
         return view('admin.home', compact(
             'count_visits', 'count_coaches', 'count_matches', 'count_players',
@@ -131,5 +133,12 @@ class AdminController extends Controller
         }
 
         return view('admin.matches', compact('upcomingMatches', 'finishedMatches', 'liveMatches'));
+    }
+
+    public function adminArticles()
+    {
+        $articles = Article::getAll();
+
+        return view('admin.articles', compact('articles'));
     }
 }

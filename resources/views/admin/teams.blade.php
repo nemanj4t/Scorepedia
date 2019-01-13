@@ -16,6 +16,9 @@
     <li class="nav-item">
         <a class="nav-link" href="/apanel/matches">Matches </a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/apanel/articles">Articles </a>
+    </li>
 @endsection
 
 @section('main')

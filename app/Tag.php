@@ -7,6 +7,7 @@
  */
 
 namespace App;
+use Ahsan\Neo4j\Facade\Cypher;
 
 
 class Tag
@@ -15,21 +16,21 @@ class Tag
     public $player;
     public $team;
 
-    public static function tagPlayer($article_id, $name)
+    public static function tagPlayer($article_id, $id)
     {
-        Cypher::Run("MATCH (a:Article), (p:Player) WHERE ID(a) = $article_id AND p.name = 
-        $name CREATE (a)-[t:TAGGED_PLAYER]->(p)");
+        Cypher::Run("MATCH (a:Article), (p:Player) WHERE ID(a) = $article_id AND ID(p) = 
+        $id CREATE (a)-[:TAGGED_PLAYER]->(p)");
     }
 
-    public static function tagTeam($article_id, $name)
+    public static function tagTeam($article_id, $id)
     {
-        Cypher::Run("MATCH (a:Article), (t:Team) WHERE ID(a) = $article_id AND t.name = 
-        $name (a)-[t:TAGGED_TEAM]->(t)");
+        Cypher::Run("MATCH (a:Article), (t:Team) WHERE ID(a) = $article_id AND ID(t) = 
+        $id CREATE (a)-[:TAGGED_TEAM]->(t)");
     }
 
-    public static function tagCoach($article_id, $name)
+    public static function tagCoach($article_id, $id)
     {
-        Cypher::Run("MATCH (a:Article), (c:Coach) WHERE ID(a) = $article_id AND c.name = 
-        $name (a)-[t:TAGGED_COACH]->(c)");
+        Cypher::Run("MATCH (a:Article), (c:Coach) WHERE ID(a) = $article_id AND ID(c) = 
+        $id CREATE (a)-[:TAGGED_COACH]->(c)");
     }
 }
