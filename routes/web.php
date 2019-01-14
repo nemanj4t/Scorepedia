@@ -10,14 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-use Ahsan\Neo4j\Facade\Cypher;
-
-/*funkcija za vracanje propertija iz recorda $record->getPropertiesOfNode() */
-/*funkcija za vracanje Id-a iz recorda $record->getIdOfNode() */
-
 Route::get('/', "HomeController@index");
-//Admin
+
 Route::get('/admin', "Auth\LoginController@showLoginForm");
 Route::post('/admin', "Auth\LoginController@login")->name('login');
 Route::get('/admin/matches/{match}', "AdminController@matchManager");
@@ -31,28 +25,25 @@ Route::get('/apanel/coaches', "AdminController@adminCoaches");
 Route::get('/apanel/articles', "AdminController@adminArticles");
 Route::post('/admin/matches/data/{match}', "AdminController@postAddition");
 
-
-// TeamController
 Route::get('/teams', "TeamController@index");
-Route::get('/teams/create', "TeamController@create")->middleware('auth');   // pogled za kreiranje tima (zasto je ova ruta morala da se prebaci na vrh?!)
-Route::get('/teams/edit/{team}', "TeamController@edit")->middleware('auth');  // prikaz svih timova
-Route::get('/teams/{team}', "TeamController@show");    // prikaz konkretnog tima
-Route::post('/teams', "TeamController@store")->middleware('auth');          // usnimanje kreiranog tima
+Route::get('/teams/create', "TeamController@create")->middleware('auth');
+Route::get('/teams/edit/{team}', "TeamController@edit")->middleware('auth');
+Route::get('/teams/{team}', "TeamController@show");
+Route::post('/teams', "TeamController@store")->middleware('auth');
 Route::put('/teams/{team}', "TeamController@update")->middleware('auth');
 Route::delete('/teams/{team}', "TeamController@destroy")->middleware('auth');
 
-// PlaysForTeamController
 Route::get('/players/edit/{player}/plays_for_teams', "PlaysForTeamController@edit")->middleware('auth');
 Route::put('/players/edit/{player}/plays_for_teams', "PlaysForTeamController@update")->middleware('auth');
 Route::delete('/players/edit/{player}/plays_for_teams', "PlaysForTeamController@destroy")->middleware('auth');
 Route::post('/players/edit/{player}/plays_for_teams', "PlaysForTeamController@store")->middleware('auth');
 
 // PlayerController
-Route::get('/players', "PlayerController@index");          // prikaz svih igraca
-Route::get('/players/create', "PlayerController@create")->middleware('auth');   // pogled za kreiranje igraca
-Route::get('/players/edit/{player}', "PlayerController@edit")->middleware('auth');  // pogled za editovanje igraca
-Route::get('/players/{player}', "PlayerController@show");  // prikaz konkretnog igraca
-Route::post('/players', "PlayerController@store")->middleware('auth');         // usnimanje kreiranog igraca
+Route::get('/players', "PlayerController@index");
+Route::get('/players/create', "PlayerController@create")->middleware('auth');
+Route::get('/players/edit/{player}', "PlayerController@edit")->middleware('auth');
+Route::get('/players/{player}', "PlayerController@show");
+Route::post('/players', "PlayerController@store")->middleware('auth');
 Route::put('/players/{player}', "PlayerController@update");
 Route::delete('/players/{player}', "PlayerController@destroy")->middleware('auth');
 
@@ -71,24 +62,20 @@ Route::put('/coaches/edit/{coach}/team_coach', "TeamCoachController@update")->mi
 Route::delete('/coaches/edit/{coach}/team_coach', "TeamCoachController@destroy")->middleware('auth');
 Route::post('/coaches/edit/{coach}/team_coach', "TeamCoachController@store")->middleware('auth');
 
-// MatchesController
-// Ukoliko nam mecevi nisu na home page-u
-Route::get('/matches', "MatchController@index");            // prikaz liste meceva (kesirani ???) // prikaz konkretnog meca
-Route::get('/matches/create', "MatchController@create")->middleware('auth');    // pogled za kreiranje meca
 
-Route::get('/matches/data', "MatchController@getData"); // test za pub/sub
+Route::get('/matches', "MatchController@index");
+Route::get('/matches/create', "MatchController@create")->middleware('auth');
 
-Route::post('/matches', "MatchController@store")->middleware('auth');           // usnimanje kreiranog meca
+Route::get('/matches/data', "MatchController@getData");
+
+Route::post('/matches', "MatchController@store")->middleware('auth');
 Route::put('/matches', "MatchController@update")->middleware('auth');
 Route::get('/matches/{match}', "MatchController@show");
 Route::delete('/matches/{match}', "MatchController@destroy")->middleware('auth');
 
+Route::get('/statistics', "StatisticController@index");
+Route::get('/statistics/full', "StatisticController@full");
 
-// StatisticController
-Route::get('/statistics', "StatisticController@index");          // prikazuje za svaku od par statistika po 5 igraca npr.
-Route::get('/statistics/full', "StatisticController@full");    // prikazuje celokupnu stats tabelu
-
-// StandingsController
 Route::get('/standings', "StandingsController@index");
 Route::get('/standings/points', "StandingsController@points");
 Route::get('/standings/wins', "StandingsController@wins");
@@ -98,19 +85,14 @@ Route::get('/standings/home', "StandingsController@home");
 Route::get('/standings/road', "StandingsController@road");
 Route::get('/standings/streak', "StandingsController@streak");
 
-// CommentController
-// Komentari su u okviru meca
-Route::post('/matches/{match}/comments', "CommentController@store")->middleware('auth');   // usnimanje novog komentara (mozda ne treba kontroler)
-Route::delete('/matches/{match}/comments', "CommentController@destroy")->middleware('auth');   // usnimanje novog komentara (mozda ne treba kontroler)
+Route::post('/matches/{match}/comments', "CommentController@store")->middleware('auth');
+Route::delete('/matches/{match}/comments', "CommentController@destroy")->middleware('auth');
 
-// ArticleController
-//Route::get('/articles', "ArticleController@index");
 Route::get('/articles/create', "ArticleController@create")->middleware('auth');
 Route::get('/articles/{article}', "ArticleController@show");
 Route::post('/articles', "ArticleController@store")->middleware('auth');
 Route::delete('/articles/{article}', "ArticleController@destroy")->middleware('auth');
 
-//SearchController
 Route::get('/search', "SearchController@index");
 
 

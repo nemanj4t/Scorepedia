@@ -9,31 +9,28 @@ use GraphAware\Neo4j\Client\Formatter\Result;
 use Illuminate\Http\Request;
 use Ahsan\Neo4j\Facade\Cypher;
 use Illuminate\Support\Facades\Redis;
+use App\Article;
+use App\Match;
+use App\Team_Match;
 
 class HomeController extends Controller
 {
     public function index()
     {
         Redis::incr('user:count');
-        //prvi rekordi iz baze, dok ne ubacimo Redis
 
-        /** @var Result $result */
-        $result = Cypher::run("MATCH (n:Player) RETURN n");
-        $record = $result->getRecord();
-        $node = $record->value('n');
-        $player = Player::buildFromNode($node);
+        $articles = Article::getAll();
+        $liveMatches = [];
+        $query = Cypher::run("MATCH (m:Match) WHERE m.isFinished = false RETURN m");
 
-        /** @var Result $result */
-        $result = Cypher::run("MATCH (n:Team) RETURN n");
-        $record = $result->getRecord();
-        $node = $record->value('n');
-        $team = Team::buildFromNode($node);
+        if($query->hasRecord()) {
+            foreach ($query->getRecords() as $record) {
+                $match = Match::buildFromNode($record->value('m'));
+                $match->team_match = Team_Match::getByMatchId($match->id);
+                $liveMatches[] = $match;
+            }
+        }
 
-        $result = Cypher::run("MATCH (n:Coach) RETURN n");
-        $record = $result->getRecord();
-        $node = $record->value('n');
-        $coach = Coach::buildFromNode($node);
-
-        return view('welcome', compact('player', 'team', 'coach'));
+        return view('welcome', compact('articles', 'liveMatches'));
     }
 }

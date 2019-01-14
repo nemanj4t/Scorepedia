@@ -7,9 +7,9 @@
         /** @var \App\Team_Coach[] $coached_teams */
     @endphp
 
-    <div class="container mt-4">
+    <div class="container col-8 mt-4">
         <div class="row">
-            <div class="col-9">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title mb-4">
