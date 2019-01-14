@@ -123,6 +123,8 @@
                         </div>
                     </div>
                 </div>
+                {{--Preporuceni artikli za igraca--}}
+                @include('articles/recommend')
             </div>
             {{--Sidebar za preporuke igraca--}}
             @include('layouts/sidebar')

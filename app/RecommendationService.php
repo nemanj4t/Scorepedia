@@ -19,7 +19,7 @@ class RecommendationService
     public static function recommendArticlesForPlayer($id)
     {
         $result = Cypher::Run("MATCH (p:Player)-[:TAGGED_PLAYER]-(a:Article) WHERE ID(p)=$id return a UNION 
-            MATCH (p)-[:PLAYS]-(:Team)-[:TAGGED_TEAM]-(a:Article) return a");
+            MATCH (p:Player)-[:PLAYS]-(:Team)-[:TAGGED_TEAM]-(a:Article) WHERE ID(p)=$id return a");
 
         return self::fromRecordsToArticles($result->getRecords());
     }
@@ -29,8 +29,8 @@ class RecommendationService
     {
         $now =  \Carbon\Carbon::now()->format('Y-m-d');
         $result = Cypher::Run("MATCH (t:Team)-[:TAGGED_TEAM]-(a:Article) WHERE ID(t)=$id return a UNION 
-            (t)-[:PLAYS]-(p:Player)-[t:TAGGED_PLAYER]-(a:Article) return a UNION 
-            (t)-[r1:TEAM_COACH]-(c:Coach)-[:TAGGED_COACH]-(a:Article) WHERE r1.coached_until >= '$now' return a");
+            MATCH (t:Team)-[:PLAYS]-(p:Player)-[:TAGGED_PLAYER]-(a:Article) WHERE ID(t)=$id return a UNION 
+            MATCH (t:Team)-[r1:TEAM_COACH]-(:Coach)-[:TAGGED_COACH]-(a:Article) WHERE ID(t)=$id AND r1.coached_until >= '$now' return a");
 
         return self::fromRecordsToArticles($result->getRecords());
     }
@@ -39,8 +39,8 @@ class RecommendationService
     public static function recommendArticlesForCoach($id)
     {
         $now =  \Carbon\Carbon::now()->format('Y-m-d');
-        $result = Cypher::Run("MATCH (C:Coach)-[:TAGGED_COACH]-(a:Article) WHERE ID(c)=$id return a UNION
-            (c)-[r1:TEAM_COACH]-(:Team)-[:TAGGED_TEAM]-(a:Article) WHERE r1.coached_until >= '$now' return a");
+        $result = Cypher::Run("MATCH (c:Coach)-[:TAGGED_COACH]-(a:Article) WHERE ID(c)=$id return a UNION
+            MATCH (c:Coach)-[r1:TEAM_COACH]-(:Team)-[:TAGGED_TEAM]-(a:Article) WHERE ID(c)=$id AND r1.coached_until >= '$now' return a");
 
         return self::fromRecordsToArticles($result->getRecords());
     }
@@ -67,7 +67,7 @@ class RecommendationService
     public static function fromRecordsToArticles($records) {
         $articles = [];
         foreach($records as $record) {
-            $article = Article::buildFromNode($record->valueOfNode('a'));
+            $article = Article::buildFromNode($record->value('a'));
             $articles[] = $article;
         }
 

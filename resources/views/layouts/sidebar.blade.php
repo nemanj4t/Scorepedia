@@ -1,53 +1,28 @@
 
-@if(!empty($recPlayers))
+
 {{--<aside class="col-md-3 blog-sidebar">--}}
 <div class="container col-md-3">
     {{-- Odeljak za slicne igrace sidebaru --}}
-        <div class="container mt-20">
+        @if(!empty($recPlayers))
             <div class="row">
-                <h4 class="font-italic text-center">Recommended</h4>
-            </div>
-            <div class="row">
-                <div id="user" class="col-md-12">
-                    <div class="panel panel-primary panel-table animated slideInDown">
-                        <div class="panel-body">
-                            <div class="tab-content">
-                                    <table class="table table-striped table-bordered table-list">
-                                        <tbody>
-                                        @foreach ($recPlayers as $player)
-                                            <tr class="ok">
-                                                <td class="col-2"><img style="width:100%" src={{$player->image}}></td>
-                                                <td class="col-10"><a href="/players/{{$player->id}}">{{$player->name}}</a></td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div><!-- END id="list" -->
-                            </div><!-- END tab-content -->
+                <div class="col-md-12 text-center m-1">
+                    <h4 class="font-weight-bold">Recommended</h4>
+                    @foreach ($recPlayers as $player)
+                        <div class="row">
+                            <div class="card mb-4 shadow-sm text-white col-md-8 offset-md-2">
+                                <img class="card-img" style="height:7vw;object-fit: fill" src="{{ $player->image }}">
+                                <p class="card-text">
+                                    <a class="link font-weight-bold" href="/players/{{ $player->id }}">
+                                        {{ $player->name }}
+                                    </a>
+                                </p>
+                            </div>
                         </div>
-                    </div><!--END panel-table-->
+                    @endforeach
                 </div>
             </div>
-        </div>
+        @endif
 
-
-            {{--<div class="row col-12 text-center-1">--}}
-                {{--<h3>Recommended</h3>--}}
-            {{--</div>--}}
-            {{--@foreach ($recPlayers as $player)--}}
-                {{--<div class="row col-12 text-center-1">--}}
-                    {{--<div class="card mb-4 shadow-sm">--}}
-                        {{--<div class="card-header">--}}
-                            {{--<h4 class="my-0 font-weight-normal">Player</h4>--}}
-                        {{--</div>--}}
-                        {{--<div class="card-body">--}}
-                            {{--<h1 class="card-title pricing-card-title">{{$player->name}}</h1>--}}
-                            {{--<img style="width:100%;" src="{{$player->image}}">--}}
-                            {{--<a href="/players/{{$player->id}}" class="btn btn-lg btn-block btn-primary">Show More</a>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-            {{--@endforeach--}}
 
     {{--<div class="p-3">--}}
         {{--<h4 class="font-italic">Elsewhere</h4>--}}
@@ -59,5 +34,5 @@
     {{--</div>--}}
 
 {{--</aside>--}}
-@endif
 
+</div>

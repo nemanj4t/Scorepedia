@@ -85,7 +85,9 @@ class PlayerController extends Controller
                 $plays_for_teams[0]->position);
         }
 
-        return view('players.show', compact('player', 'plays_for_teams', 'recPlayers'));
+        $articles = RecommendationService::recommendArticlesForPlayer($id);
+
+        return view('players.show', compact('player', 'plays_for_teams', 'recPlayers', 'articles'));
     }
 
     /**

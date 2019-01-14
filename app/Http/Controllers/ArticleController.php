@@ -19,7 +19,7 @@ class ArticleController extends Controller
     {
         $article = Article::getById($id);
 
-        if($article) {
+        if(!$article) {
             return abort('404');
         }
 

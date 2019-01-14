@@ -50132,9 +50132,9 @@ var render = function() {
                           _vm._v(" "),
                           _c("div", { staticClass: "col-md-4 text-center" }, [
                             _vm._v(
-                              "\r\n                                    " +
+                              "\n                                    " +
                                 _vm._s(match.carbon) +
-                                "\r\n                                "
+                                "\n                                "
                             )
                           ]),
                           _vm._v(" "),
@@ -50238,9 +50238,9 @@ var render = function() {
                           _vm._v(" "),
                           _c("div", { staticClass: "col-md-4 text-center" }, [
                             _vm._v(
-                              "\r\n                                    " +
+                              "\n                                    " +
                                 _vm._s(match.carbon) +
-                                "\r\n                                "
+                                "\n                                "
                             )
                           ]),
                           _vm._v(" "),
@@ -50344,9 +50344,9 @@ var render = function() {
                           _vm._v(" "),
                           _c("div", { staticClass: "col-md-4 text-center" }, [
                             _vm._v(
-                              "\r\n                                    " +
+                              "\n                                    " +
                                 _vm._s(match.carbon) +
-                                "\r\n                                "
+                                "\n                                "
                             )
                           ]),
                           _vm._v(" "),

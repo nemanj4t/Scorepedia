@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Coach;
 use App\Player_Team;
+use App\RecommendationService;
 use App\Team;
 use App\Team_Coach;
 use App\PlayerStatistic;
@@ -99,7 +100,10 @@ class TeamController extends Controller
                 }
             }
         }
-        return view('teams.show', compact('team', 'standings', 'best_players'));
+
+        $articles = RecommendationService::recommendArticlesForTeam($id);
+
+        return view('teams.show', compact('team', 'standings', 'best_players', 'articles'));
     }
 
     /**
