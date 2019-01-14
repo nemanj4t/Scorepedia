@@ -38,19 +38,27 @@
             <div class="card-body">
                 <form method="POST" action="/coaches/edit/{{ $coach_id }}/team_coach">
                     @csrf
+                    <div>
+                        @if ($errors->has('old_team.*.coached_since'))
+                            <div class="alert-danger">{{ $errors->first('old_team.*.coached_since', 'coached since field is required') }}</div>
+                        @endif
+                        @if ($errors->has('old_team.*.coached_until'))
+                            <div class="alert-danger">{{ $errors->first('old_team.*.coached_until', 'coached until field is required') }}</div>
+                        @endif
+                    </div>
                     <div id="input-container-new" class="list-group">
                         <label>Add previous teams:</label>
 
                     </div>
 
                     <button type="button" onclick="addNewInput()" class="btn btn-outline-secondary">Add previous team +</button>
-                    <button type="submit" class="btn btn-primary" value="add">Add</button>
+                    <button type="submit" disabled class="btn btn-primary" value="add" id="submit-button">Add</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <div style="display: none" id="old-team-template">
+    <div style="display: none" id="old-team-template" >
         <div class="list-group-item">
             <button class="button btn-danger" onclick="deleteInput(this)">X</button>
             <label>Team:</label>
@@ -78,9 +86,13 @@
         count++;
 
         document.getElementById('input-container-new').insertAdjacentHTML('beforeend', html);
+        document.getElementById("submit-button").disabled=false;
     }
     function deleteInput(el) {
+        parentElement = el.parentNode.parentNode;
         el.parentNode.parentNode.removeChild(el.parentNode);
+        if (parentElement.childNodes.length === 1)
+            document.getElementById("submit-button").disabled=true;
     }
 
     function changeAction(element) {

@@ -20,22 +20,32 @@ class TeamCoachController extends Controller
 
     public function store($id, Request $request)
     {
-        foreach ($request['old_team'] as $data)
-
-        {
-            $team_coach = new Team_Coach();
-            $team_coach->coach_id = $id;
-            $team_coach->team_id = $data['team_id'];
-            $team_coach->coached_since = $data['coached_since'];
-            $team_coach->coached_until = $data['coached_until'];
-            $team_coach->save();
-        }
+        $request->validate([
+            'old_team.*.coached_since' => 'required|date|date_format:Y-m-d|before:today',
+            'old_team.*.coached_until' => 'required|date|date_format:Y-m-d|before:yesterday',
+        ]);
+        if (isset ($request['old_team']))
+            foreach ($request['old_team'] as $data)
+            {
+                $team_coach = new Team_Coach();
+                $team_coach->coach_id = $id;
+                $team_coach->team_id = $data['team_id'];
+                $team_coach->coached_since = $data['coached_since'];
+                $team_coach->coached_until = $data['coached_until'];
+                $team_coach->save();
+            }
 
         return redirect('/coaches/' . $id)->with('success', 'Added successfully');
     }
 
     public function update($id, Request $request)
     {
+        $request->validate([
+            'prev_name' => 'required',
+            'coached_since' => 'required',
+            'coached_until' => 'required',
+        ]);
+
         $team_coach = new Team_Coach();
         $team_coach->team_id = $request['team_id'];
         $team_coach->coach_id = $id;

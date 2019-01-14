@@ -18,7 +18,7 @@ class StandingsController extends Controller
 
     public function points()
     {
-        $team_ids = array_reverse(Redis::zrange("points", 0, -1));
+        $team_ids = Redis::zrevrange("points", 0, -1);
         $data = [];
 
         foreach ($team_ids as $id) {
@@ -39,7 +39,7 @@ class StandingsController extends Controller
 
     public function wins()
     {
-        $team_ids = array_reverse(Redis::zrange("wins", 0, -1));
+        $team_ids = Redis::zrevrange("wins", 0, -1);
         $data = [];
 
         foreach ($team_ids as $id) {
@@ -59,7 +59,7 @@ class StandingsController extends Controller
 
     public function losses()
     {
-        $team_ids = array_reverse(Redis::zrange("losses", 0, -1));
+        $team_ids = Redis::zrevrange("losses", 0, -1);
         $data = [];
 
         foreach ($team_ids as $id) {
@@ -79,7 +79,7 @@ class StandingsController extends Controller
 
     public function percentage()
     {
-        $team_ids = array_reverse(Redis::zrange("percentage", 0, -1));
+        $team_ids = Redis::zrevrange("percentage", 0, -1);
         $data = [];
 
         foreach ($team_ids as $id) {
@@ -99,7 +99,7 @@ class StandingsController extends Controller
 
     public function home()
     {
-        $team_ids = array_reverse(Redis::zrange("home", 0, -1));
+        $team_ids = Redis::zrevrange("home", 0, -1);
         $data = [];
 
         foreach ($team_ids as $id) {
@@ -119,7 +119,7 @@ class StandingsController extends Controller
 
     public function road()
     {
-        $team_ids = array_reverse(Redis::zrange("road", 0, -1));
+        $team_ids = Redis::zrevrange("road", 0, -1);
         $data = [];
 
         foreach ($team_ids as $id) {
@@ -139,7 +139,7 @@ class StandingsController extends Controller
 
     public function streak()
     {
-        $team_ids = array_reverse(Redis::zrange("streak", 0, -1));
+        $team_ids = Redis::zrevrange("streak", 0, -1);
         $data = [];
 
         foreach ($team_ids as $id) {

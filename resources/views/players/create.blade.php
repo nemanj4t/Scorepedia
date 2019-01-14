@@ -16,31 +16,59 @@
                             <div class="form-group">
                                 <label>Player name:</label>
                                 <input type="text" class="form-control" name="name"  placeholder="Enter name" required="required">
+                                @if ($errors->has('name'))
+                                    <div class="alert-danger">{{ $errors->first('name') }}</div>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label>Bio:</label>
                                 <input type="textarea" class="form-control" name="bio" placeholder="Biography" required="required">
+                                @if ($errors->has('bio'))
+                                    <div class="alert-danger">{{ $errors->first('bio') }}</div>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label>Height(cm):</label>
                                 <input type="text" class="form-control" name="height" placeholder="Height" required="required">
+                                @if ($errors->has('height'))
+                                    <div class="alert-danger">{{ $errors->first('height') }}</div>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label>Weight(kg):</label>
                                 <input type="text" class="form-control" name="weight" placeholder="Weight" required="required">
+                                @if ($errors->has('weight'))
+                                    <div class="alert-danger">{{ $errors->first('weight') }}</div>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label>City:</label>
                                 <input type="text" class="form-control" name="city" placeholder="City" required="required">
+                                @if ($errors->has('city'))
+                                    <div class="alert-danger">{{ $errors->first('city') }}</div>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label>Image url:</label>
                                 <input type="textarea" class="form-control" name="image" placeholder="url" required="required">
+                                @if ($errors->has('image'))
+                                    <div class="alert-danger">{{ $errors->first('image') }}</div>
+                                @endif
                             </div>
                             {{--Unos liste timova za koje igrac igrac igra ili je igrao--}}
                             <div id="input-container" class="list-group">
-
-
+                                @if ($errors->has('all_team.*.team_name'))
+                                    <div class="alert-danger">{{ $errors->first('all_team.*.team_name', 'Team must be selected') }}</div>
+                                @endif
+                                @if ($errors->has('all_team.*.player_number'))
+                                    <div class="alert-danger">{{ $errors->first('all_team.*.player_number', 'Player number must be set') }}</div>
+                                @endif
+                                @if ($errors->has('all_team.*.player_position'))
+                                    <div class="alert-danger">{{ $errors->first('all_team.*.player_position', 'Player position must be set') }}</div>
+                                @endif
+                                @if ($errors->has('all_team.*.player_since'))
+                                    <div class="alert-danger">{{ $errors->first('all_team.*.player_since', 'Field played since must be set') }}</div>
+                                @endif
                             </div>
                             <br>
                             <button type="button" onclick="addNewInput()" class="btn btn-outline-secondary">Add previous team +</button>

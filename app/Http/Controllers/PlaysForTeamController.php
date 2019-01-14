@@ -42,17 +42,24 @@ class PlaysForTeamController extends Controller
 //            'player_until' => $request['player_until']
 //        ]);
 
-        foreach ($request['old_team'] as $data)
+        $request->validate([
+           'old_team.*.team_id' => 'required',
+           'old_team.*.player_number' => 'required',
+           'old_team.*.player_position' => 'required',
+           'old_team.*.player_since' => 'required',
+        ]);
 
-        {
-            $player_team = new Player_Team();
-            $player_team->position = $data['player_position'];
-            $player_team->number = $data['player_number'];
-            $player_team->played_since = $data['player_since'];
-            $player_team->played_until = $data['player_until'];
-            $player_team->player = Player::getById($id);
-            $player_team->team = Team::getById($data['team_id']);
-            $player_team->save();
+        if (isset($request['old_team'])) {
+            foreach ($request['old_team'] as $data) {
+                $player_team = new Player_Team();
+                $player_team->position = $data['player_position'];
+                $player_team->number = $data['player_number'];
+                $player_team->played_since = $data['player_since'];
+                $player_team->played_until = $data['player_until'];
+                $player_team->player = Player::getById($id);
+                $player_team->team = Team::getById($data['team_id']);
+                $player_team->save();
+            }
         }
 
         return redirect('/players/' . $id)->with('success', 'Added Successfully');
@@ -67,6 +74,13 @@ class PlaysForTeamController extends Controller
 //            'player_number' => 'required|numeric',
 //            'player_since' => 'required'
 //        ]);
+
+        $request->validate([
+            'team_id' => 'required',
+            'number' => 'required',
+            'position' => 'required',
+            'since' => 'required',
+        ]);
 
         $player_team = new Player_Team;
 

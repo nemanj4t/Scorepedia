@@ -95,8 +95,8 @@
                                                                             <tr class="ok">
                                                                                 <td class="avatar"><img id="img" src={{$team->team->image}}></td>
                                                                                 <td><a href="/teams/{{$team->team_id}}">{{$team->team->name}}</a></td>
-                                                                                <td>{{$team->coached_since}}</td>
-                                                                                <td>{{$team->coached_until}}</td>
+                                                                                <td>{{Carbon\Carbon::parse($team->coached_since)->format('d-m-Y')}}</td>
+                                                                                <td>{{Carbon\Carbon::parse($team->coached_until)->format('d-m-Y')}}</td>
                                                                             </tr>
                                                                         @endforeach
                                                                         </tbody>

@@ -20,6 +20,9 @@
                                             <option value="{{$team->id}}">{{$team->name}}</option>
                                         @endforeach
                                     </select>
+                                    @if ($errors->has('hometeam'))
+                                        <div class="alert-danger">{{ $errors->first('hometeam', 'Home team and guest team must differ') }}</div>
+                                    @endif
                                 </div>
                             </div>
 
@@ -32,6 +35,9 @@
                                             <option value="{{$team->id}}">{{$team->name}}</option>
                                         @endforeach
                                     </select>
+                                    @if ($errors->has('guestteam'))
+                                        <div class="alert-danger">{{ $errors->first('guestteam', 'Guest team and home team must differ') }}</div>
+                                    @endif
                                 </div>
                             </div>
 
@@ -39,6 +45,9 @@
                                 <label for="date" class="col-md-4 col-form-label text-md-right">Start Date</label>
                                 <div class="col-md-6">
                                     <input type="date" class="form-control" name="date" required>
+                                    @if ($errors->has('date'))
+                                        <div class="alert-danger">{{ $errors->first('date', 'Match can not start before today') }}</div>
+                                    @endif
                                 </div>
                             </div>
 

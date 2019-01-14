@@ -14,11 +14,11 @@
                                 <table class="table table-striped table-bordered table-list">
                                     <thead>
                                     <tr>
-                                        <th class="avatar">Logo</th>
-                                        <th>Tim</th>
-                                        <th>Oznaka</th>
-                                        <th>Grad</th>
-                                        <th>Opis</th>
+                                        <th class="avatar">Image</th>
+                                        <th>Name</th>
+                                        <th>Abbreviation</th>
+                                        <th>City</th>
+                                        <th>Description</th>
                                     </tr>
                                     </thead>
                                     <tbody>

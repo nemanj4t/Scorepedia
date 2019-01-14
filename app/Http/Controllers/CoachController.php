@@ -9,6 +9,7 @@ use App\Team_Coach;
 use GraphAware\Neo4j\Client\Formatter\Result;
 use Illuminate\Http\Request;
 use Ahsan\Neo4j\Facade\Cypher;
+use Illuminate\Session;
 
 class CoachController extends Controller
 {
@@ -44,6 +45,15 @@ class CoachController extends Controller
      */
     public function store(Request $request)
     {
+
+        \Session::put('name', $request['name']);
+        \Session::put('team', $request['team']);
+        \Session::put('bio', $request['bio']);
+        \Session::put('city', $request['city']);
+        \Session::put('image', $request['image']);
+        \Session::put('coached_since', $request['coached_since']);
+        \Session::put('coached_until', $request['coached_until']);
+
         $request->validate([
             'name' => 'required',
             'coached_since' => 'date|date_format:Y-m-d|before:today|nullable',
@@ -126,9 +136,6 @@ class CoachController extends Controller
             'name' => 'required',
             'coached_since' => 'date|date_format:Y-m-d|before:today',
             'coached_until' => 'date|date_format:Y-m-d|after:yesterday',
-            'old_team.*.team_id' => 'required',
-            'old_team.*.coached_since' => 'required|date|date_format:Y-m-d|before:today',
-            'old_team.*.coached_until' => 'required|date|date_format:Y-m-d|before:yesterday',
         ]);
 
         Coach::update($id, $request);

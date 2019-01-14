@@ -22,7 +22,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Team:</label>
-                                <select class="form-control" name="team" >
+                                <select class="form-control" name="team">
                                     <option value="" selected>No current team</option>
                                     @foreach ($teams as $team)
                                         @if ($team->current_coach == null)

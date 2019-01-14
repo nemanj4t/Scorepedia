@@ -44,6 +44,19 @@ class PlayerController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+           'name' => 'required',
+           'bio' => 'required',
+           'height' => 'required',
+           'weight' => 'required',
+           'city' => 'required',
+           'image' => 'required',
+           'all_team.*.team_name' => 'required',
+           'all_team.*.player_number' => 'required',
+           'all_team.*.player_position' => 'required',
+           'all_team.*.player_since' => 'required',
+        ]);
+
         $player = Player::savePlayer($request);
 
         if(isset($request['all_team'])) {
@@ -117,6 +130,15 @@ class PlayerController extends Controller
     {
         // Prva tri inputa su: method, token, id
         //$updatedProps = json_encode(array_slice($request->all(), 3));
+
+        $request->validate([
+           'name' => 'required',
+           'bio' => 'required',
+           'height' => 'required',
+           'weight' => 'required',
+           'city' => 'required',
+           'image' => 'required',
+        ]);
 
         Cypher::Run("MATCH (n:Player) WHERE ID(n) = $id SET n = {
             name: '$request[name]',

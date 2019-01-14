@@ -76,10 +76,10 @@ class MatchController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'date' => 'required',
+            'date' => 'required|after:yesterday',
             'time' => 'required',
-            'hometeam' => 'required',
-            'guestteam' => 'required'
+            'hometeam' => 'required|different:guestteam',
+            'guestteam' => 'required|different:gometeam'
         ]);
         //can't pick a past date
         if(Carbon::now() > (new Carbon($request->date." ".$request->time)))

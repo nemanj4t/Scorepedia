@@ -23,9 +23,15 @@
                                     <select class="form-control" name="team_id">
                                         <option value="{{ $plays->team->id }}">{{ $plays->team->name }}</option>
                                     </select>
+                                    @if ($errors->has('team_id'))
+                                        <div class="alert-danger">{{ $errors->first('team_id', 'Team must be selected') }}</div>
+                                    @endif
                                 </div>
                                 <div class="col-md-2">
                                     <input type="text" class="form-control" name="number" placeholder="Number" value="{{$plays->number}}"/>
+                                    @if ($errors->has('number'))
+                                        <div class="alert-danger">{{ $errors->first('number', 'Player number must be specified') }}</div>
+                                    @endif
                                 </div>
                                 <div class="col-md-2">
                                     <select class="form-control" name="position">
@@ -35,10 +41,16 @@
                                         <option value="PF" {{ $plays->position == "PF" ? "selected":"" }}>Power forward</option>
                                         <option value="C"  {{ $plays->position == "C" ? "selected":"" }}>Center</option>
                                     </select>
+                                    @if ($errors->has('position'))
+                                        <div class="alert-danger">{{ $errors->first('position', 'Player position must be specified') }}</div>
+                                    @endif
                                 </div>
                                 <div class="col-md-2">
                                     <input type="date" class="form-control" name="since"
                                         value="{{ \Carbon\Carbon::parse($plays->played_since)->format('Y-m-d')}}"/>
+                                    @if ($errors->has('since'))
+                                        <div class="alert-danger">{{ $errors->first('since', 'Player since must be specified') }}</div>
+                                    @endif
                                 </div>
 
                                 @if(isset($plays->played_until))
@@ -66,12 +78,24 @@
             <div class="card-body">
                 <form method="POST" action="/players/edit/{{ $player_id }}/plays_for_teams">
                     @csrf
+                    @if ($errors->has('old_team.*.team_id'))
+                        <div class="alert-danger">{{ $errors->first('old_team.*.team_id', 'Team must be selected') }}</div>
+                    @endif
+                    @if ($errors->has('old_team.*.player_number'))
+                        <div class="alert-danger">{{ $errors->first('old_team.*.player_number', 'Player number must be selected') }}</div>
+                    @endif
+                    @if ($errors->has('old_team.*.player_position'))
+                        <div class="alert-danger">{{ $errors->first('old_team.*.player_position', 'Player position must be selected') }}</div>
+                    @endif
+                    @if ($errors->has('old_team.*.player_since'))
+                        <div class="alert-danger">{{ $errors->first('old_team.*.player_since', 'Player since must be specified') }}</div>
+                    @endif
                     <div id="input-container-new">
                         <label>Add new: </label>
                     </div>
                     <br>
                     <button type="button" onclick="addNewInput()" class="btn btn-outline-secondary">Add previous team +</button>
-                    <button type="submit" class="btn btn-primary" value="add">Add</button>
+                    <button type="submit" class="btn btn-primary" value="add" id="submit-button" disabled>Add</button>
                 </form>
             </div>
         </div>
@@ -129,10 +153,14 @@
         count++;
 
         document.getElementById('input-container-new').insertAdjacentHTML('beforeend', html);
+        document.getElementById("submit-button").disabled=false;
     }
 
     function deleteInput(el) {
+        parentElement = el.parentNode.parentNode.parentNode.parentNode;
         el.parentNode.parentNode.parentNode.parentNode.removeChild(el.parentNode.parentNode.parentNode);
+        if (parentElement.childNodes.length === 1)
+            document.getElementById("submit-button").disabled=true;
     }
 
     function changeAction(element) {
