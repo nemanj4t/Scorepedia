@@ -1,139 +1,89 @@
 @extends('layouts.app')
 
 @section('content')
-
-    @php
-        /** @var \App\Player $player */
-        /** @var \App\Team $team */
-        /** @var \App\Coach $coach */
-    @endphp
-    <div class="row">
-        <div class="col-md-3 text-center m-4">
-            <h3>Feautured</h3>
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Player</h4>
-                </div>
-                <div class="card-body">
-                    <h1 class="card-title pricing-card-title">{{$player->name}}</h1>
-                    <img style="width:100%;" src="{{$player->image}}">
-                    <ul class="list-unstyled mt-3 mb-4">
-                        <li>{{$player->city}}</li>
-                    </ul>
-                    <a href="/players/{{$player->id}}" class="btn btn-lg btn-block btn-primary">Show More</a>
-                </div>
-            </div>
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Team</h4>
-                </div>
-                <div class="card-body">
-                    <h1 class="card-title pricing-card-title">{{$team->name}}</h1>
-                    <img style="width:100%;" src="{{$team->image}}">
-                    <ul class="list-unstyled mt-3 mb-4">
-                        <li>{{$team->city}}</li>
-                    </ul>
-                    <a href="/teams/{{$team->id}}" class="btn btn-lg btn-block btn-primary">Show More</a>
-                </div>
-            </div>
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Coach</h4>
-                </div>
-                <div class="card-body">
-                    <h1 class="card-title pricing-card-title">{{$coach->name}}</h1>
-                    <img style="width:100%;" src="{{$coach->image}}">
-                    <ul class="list-unstyled mt-3 mb-4">
-                        <li>{{$coach->city}}</li>
-                    </ul>
-                    <a href="/coaches/{{$coach->id}}" class="btn btn-lg btn-block btn-primary">Show More</a>
+    <div class=" mt-4 mb-4">
+        <div class="row">
+            <div class="col-3 mt-4 ml-4">
+                <div class="contaienr">
+                    @if(!empty($liveMatches))
+                    @foreach($liveMatches as $match)
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <img style="max-width: 100%;" src={{$match->team_match->home->image}}>
+                                    </div>
+                                    <div class="col-md-4" style="font-size: 20px;">
+                                        <div class="col-md-12 text-center">{{$match->team_match->home_statistic->points}} - {{$match->team_match->guest_statistic->points}}</div>
+                                        <div class="col-md-12 text-center"><a href="/matches/{{$match->id}}" class="btn btn-sm btn-dark ">Details</a></div>
+                                        <img src="http://www.pngall.com/wp-content/uploads/2018/03/Live-PNG-File.png" class="col-md-12" style="max-width: 100%; align:center" alt="">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <img class="" style="max-width: 100%;" src={{$match->team_match->guest->image}}>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <strong>{{$match->team_match->home->short_name}}</strong>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <small><i>started {{(new \Carbon\Carbon($match->date." ".$match->time, 'Europe/Belgrade'))->diffForHumans()}}</i></small>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <strong>{{$match->team_match->guest->short_name}}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                    @else
+                        <div class="jumbotron text-center">
+                            <h1 class="display-4">Welcome!</h1>
+                            <p class="lead">There is no live matches currently.</p>
+                            <hr class="my-4">
+                            <p>Enjoy browsing.</p>
+                            <p class="lead">
+                                <a class="btn btn-primary" href="/players">Learn more</a>
+                            </p>
+                        </div>
+                    @endif
                 </div>
             </div>
-        </div>
-        <div class="col-md-8 mt-4">
-            <div class="container">
-                <h3>Matches</h3>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                        <td>@twitter</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="jumbotron justify-content-center text-center">
-                <h1 class="display-4">Content!</h1>
-                <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-                <hr class="my-4">
-                <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-                <p class="lead">
-                    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-                </p>
+            <div class="col-8">
+                <div class="container">
+                @foreach ($articles as $article)
+                    <div class="mt-4">
+                        <div class="span8 row">
+                            <div class="col-md-4">
+                                <img src="{{$article->image}}" style="max-width: 100%" alt="alt">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <p style="font-size: 24px">{{$article->title}} </p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a href="/articles/{{$article->id}}" class="float-right"><strong>Read more ... </strong></a>
+                                    </div>
+                                </div>
+                                <div class="module line-clamp">
+                                    <p>{{$article->content}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        @foreach($article->taggedPlayers as $player)
+                            <a class="btn btn-sm btn-primary mt-2" href="/players/{{$player->id}}">{{$player->name}}</a>
+                        @endforeach
+                        @foreach($article->taggedCoaches as $coach)
+                            <a class="btn btn-sm btn-secondary mt-2" href="/coaches/{{$coach->id}}">{{$coach->name}}</a>
+                        @endforeach
+                        @foreach($article->taggedTeams as $team)
+                            <a class="btn btn-sm btn-dark mt-2" href="/teams/{{$team->id}}">{{$team->name}}</a>
+                        @endforeach
+                        <br>
+                        <hr>
+                    </div>
+                @endforeach
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="container">
-
-
-        <footer class="pt-4 my-md-5 pt-md-5 border-top">
-            <div class="row">
-                <div class="col-12 col-md">
-                    <small class="d-block mb-3 text-muted">&copy; 2017-2018</small>
-                </div>
-                <div class="col-6 col-md">
-                    <h5>Features</h5>
-                    <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="#">Cool stuff</a></li>
-                        <li><a class="text-muted" href="#">Random feature</a></li>
-                        <li><a class="text-muted" href="#">Team feature</a></li>
-                        <li><a class="text-muted" href="#">Stuff for developers</a></li>
-                        <li><a class="text-muted" href="#">Another one</a></li>
-                        <li><a class="text-muted" href="#">Last time</a></li>
-                    </ul>
-                </div>
-                <div class="col-6 col-md">
-                    <h5>Resources</h5>
-                    <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="#">Resource</a></li>
-                        <li><a class="text-muted" href="#">Resource name</a></li>
-                        <li><a class="text-muted" href="#">Another resource</a></li>
-                        <li><a class="text-muted" href="#">Final resource</a></li>
-                    </ul>
-                </div>
-                <div class="col-6 col-md">
-                    <h5>About</h5>
-                    <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="#">Team</a></li>
-                        <li><a class="text-muted" href="#">Locations</a></li>
-                        <li><a class="text-muted" href="#">Privacy</a></li>
-                        <li><a class="text-muted" href="#">Terms</a></li>
-                    </ul>
-                </div>
-            </div>
-        </footer>
     </div>
 @endsection
