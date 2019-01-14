@@ -131,7 +131,7 @@ class MatchController extends Controller
      */
     public function update(Request $request)
     {
-        Match::finishMatch($request->matchId, $request->finished);
+        Match::finishMatch($request->matchId, $request->finished, $request->team_match, $request->winner, $request->loser);
     }
 
     /**

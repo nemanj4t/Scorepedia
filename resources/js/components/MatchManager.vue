@@ -345,7 +345,10 @@
 
                 axios.put('/matches', {
                     matchId: this.id,
-                    finished: this.isFinished
+                    finished: this.isFinished,
+                    team_match: this.team_match,
+                    winner: (this.team_match.home_statistic.points > this.team_match.guest_statistic.points) ? this.team_match.home : this.team_match.guest,
+                    loser: (this.team_match.home_statistic.points < this.team_match.guest_statistic.points) ? this.team_match.home : this.team_match.guest
                 });
             }
         },
@@ -357,7 +360,7 @@
                     this.isFinished = response.data.isFinished;
                     this.finishText = this.isFinished ? "Unfinish" : "Finish";
                     this.finishClass = this.isFinished ? "btn btn-secondary" : "btn btn-danger";
-                    console.log(response.data)
+                    console.log(response.data);;
                 });
             console.log(this.id);
         }
