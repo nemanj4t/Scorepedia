@@ -14,7 +14,7 @@
                                         <img style="max-width: 100%;" src={{$match->team_match->home->image}}>
                                     </div>
                                     <div class="col-md-4" style="font-size: 20px;">
-                                        <div class="col-md-12 text-center">{{$match->team_match->home_statistic->points}} - {{$match->team_match->guest_statistic->points}}</div>
+                                        <div class="col-md-12 text-center" style="font-size: 16px;">{{$match->team_match->home_statistic->points}} - {{$match->team_match->guest_statistic->points}}</div>
                                         <div class="col-md-12 text-center"><a href="/matches/{{$match->id}}" class="btn btn-sm btn-dark ">Details</a></div>
                                         <img src="http://www.pngall.com/wp-content/uploads/2018/03/Live-PNG-File.png" class="col-md-12" style="max-width: 100%; align:center" alt="">
                                     </div>
@@ -25,7 +25,7 @@
                                         <strong>{{$match->team_match->home->short_name}}</strong>
                                     </div>
                                     <div class="col-md-4 text-center">
-                                        <small><i>started {{(new \Carbon\Carbon($match->date." ".$match->time, 'Europe/Belgrade'))->diffForHumans()}}</i></small>
+                                        <small><i>{{(new \Carbon\Carbon($match->date." ".$match->time, 'Europe/Belgrade'))->diffForHumans()}}</i></small>
                                     </div>
                                     <div class="col-md-4 text-center">
                                         <strong>{{$match->team_match->guest->short_name}}</strong>

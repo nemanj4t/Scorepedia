@@ -24,7 +24,7 @@
                         <tbody>
                         @foreach($match->team_match->home->current_players as $current_player)
                             <tr>
-                                <th scope="row">{{$current_player->player->id}}</th>
+                                <th scope="row">{{$current_player->number}}</th>
                                 <td>{{$current_player->player->name}}</td>
                                 <td>{{$current_player->player->statistics->points}}</td>
                                 <td>{{$current_player->player->statistics->blocks}}</td>
