@@ -39,7 +39,7 @@ class Article
 
     public static function getAll()
     {
-        $result = Cypher::Run("MATCH (a:Article) return a");
+        $result = Cypher::Run("MATCH (a:Article) return a ORDER BY a.timestamp DESC");
         $articles = [];
 
         foreach($result->getRecords() as $record) {
