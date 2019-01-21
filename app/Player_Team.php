@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Redis;
 use GraphAware\Neo4j\Client\Formatter\Result;
 use Ahsan\Neo4j\Facade\Cypher;
 use Carbon\Facade;

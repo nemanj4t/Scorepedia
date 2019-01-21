@@ -19,7 +19,7 @@ class HomeController extends Controller
     {
         Redis::incr('user:count');
 
-        $articles = Article::getAll();
+        $articles = Article::cacheArticles(30);
         $liveMatches = [];
         $query = Cypher::run("MATCH (m:Match) WHERE m.isFinished = false RETURN m");
 

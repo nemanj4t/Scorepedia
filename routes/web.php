@@ -85,7 +85,7 @@ Route::get('/standings/home', "StandingsController@home");
 Route::get('/standings/road', "StandingsController@road");
 Route::get('/standings/streak', "StandingsController@streak");
 
-Route::post('/matches/{match}/comments', "CommentController@store")->middleware('auth');
+Route::post('/matches/{match}/comments', "CommentController@store");
 Route::delete('/matches/{match}/comments', "CommentController@destroy")->middleware('auth');
 
 Route::get('/articles/create', "ArticleController@create")->middleware('auth');

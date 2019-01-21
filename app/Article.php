@@ -56,7 +56,7 @@ class Article
 
     public static function getById($id)
     {
-        $query = Cypher::Run("MATCH (a:Article) WHERE ID(a) = $id return a");
+        $query = Cypher::Run("MATCH (a:Article) WHERE ID(a) = $id return a ORDER BY a.timestamp");
 
         try {
             $node = $query->firstRecord()->value('a');
@@ -169,5 +169,18 @@ class Article
         }
 
         return $teams;
+    }
+
+    public static function cacheArticles($seconds)
+    {
+        if($value = Redis::get('articles:cache')) {
+            return json_decode($value);
+        }
+
+        $value = self::getAll();
+
+        Redis::setex('articles:cache', $seconds, json_encode($value));
+
+        return $value;
     }
 }

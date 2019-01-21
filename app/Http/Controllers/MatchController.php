@@ -79,7 +79,7 @@ class MatchController extends Controller
             'date' => 'required|after:yesterday',
             'time' => 'required',
             'hometeam' => 'required|different:guestteam',
-            'guestteam' => 'required|different:gometeam'
+            'guestteam' => 'required|different:hometeam'
         ]);
         //can't pick a past date
         if(Carbon::now() > (new Carbon($request->date." ".$request->time)))
