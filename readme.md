@@ -9,5 +9,5 @@
 
 Livescores/Wikipedia like web app.
 
-Built with Laravel + Vue
-Databases: Redis, NoSQL
+<p>Built with Laravel + Vue</p>
+<p>Databases: Redis, NoSQL</p>
